@@ -1,0 +1,36 @@
+== Parsed Logical Plan ==
+'Project ['id, 'coalesce('a.name, 'b.name) AS name#41, 'age, 'birth_date]
++- Project [id#33, name#34, age#35, name#37, birth_date#38]
+   +- Join Inner, (id#33 = id#36)
+      :- SubqueryAlias a
+      :  +- Relation [id#33,name#34,age#35] parquet
+      +- SubqueryAlias b
+         +- Relation [id#36,name#37,birth_date#38] parquet
+
+== Analyzed Logical Plan ==
+id: int, name: string, age: int, birth_date: date
+Project [id#33, coalesce(name#34, name#37) AS name#41, age#35, birth_date#38]
++- Project [id#33, name#34, age#35, name#37, birth_date#38]
+   +- Join Inner, (id#33 = id#36)
+      :- SubqueryAlias a
+      :  +- Relation [id#33,name#34,age#35] parquet
+      +- SubqueryAlias b
+         +- Relation [id#36,name#37,birth_date#38] parquet
+
+== Optimized Logical Plan ==
+Project [id#33, coalesce(name#34, name#37) AS name#41, age#35, birth_date#38]
++- Join Inner, (id#33 = id#36)
+   :- Filter isnotnull(id#33)
+   :  +- Relation [id#33,name#34,age#35] parquet
+   +- Filter isnotnull(id#36)
+      +- Relation [id#36,name#37,birth_date#38] parquet
+
+== Physical Plan ==
+AdaptiveSparkPlan isFinalPlan=false
++- Project [id#33, coalesce(name#34, name#37) AS name#41, age#35, birth_date#38]
+   +- BroadcastHashJoin [id#33], [id#36], Inner, BuildRight, false
+      :- Filter isnotnull(id#33)
+      :  +- FileScan parquet [id#33,name#34,age#35] Batched: true, DataFilters: [isnotnull(id#33)], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table], PartitionFilters: [], PushedFilters: [IsNotNull(id)], ReadSchema: struct<id:int,name:string,age:int>
+      +- BroadcastExchange HashedRelationBroadcastMode(List(cast(input[0, int, false] as bigint)),false), [plan_id=101]
+         +- Filter isnotnull(id#36)
+            +- FileScan parquet [id#36,name#37,birth_date#38] Batched: true, DataFilters: [isnotnull(id#36)], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table_2], PartitionFilters: [], PushedFilters: [IsNotNull(id)], ReadSchema: struct<id:int,name:string,birth_date:date>

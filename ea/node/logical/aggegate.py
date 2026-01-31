@@ -6,7 +6,7 @@ from ea.util import strip_outer_parentheses
 
 
 class AggregateNode(PlanNode):
-    def __init__(self, node_type: str, level: int, subset_id: str, parameters: str) -> None:
+    def __init__(self, node_type: str, level: int, subset_id: str | None, parameters: str) -> None:
         """Initialize a LogicalRDD instance."""
         super().__init__(node_type, level, subset_id, parameters)
         sections = re.findall(r"\[([^\[]*)\]", parameters)

@@ -5,7 +5,7 @@ from ea.node.plan_node import PlanNode
 
 
 class FileScanNode(PlanNode):
-    def __init__(self, node_type: str, level: int, subset_id: str, parameters: str) -> None:
+    def __init__(self, node_type: str, level: int, subset_id: str | None, parameters: str) -> None:
         """Initialize a FileScan instance."""
         super().__init__(node_type, level, subset_id, parameters)
         pattern = r"(\w*)\s\[(.*)\]\s(.*)"

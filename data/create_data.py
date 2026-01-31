@@ -111,7 +111,20 @@ def create_simple_union_plan(spark: SparkSession) -> str:
     return get_query_plan(df)
 
 
-def create_simple_join_plan(spark: SparkSession) -> str:
+def create_simple_join_plan(spark: SparkSession, how: str) -> str:
+    df1 = spark.read.load(str(TABLE_PATH / "sample_table"))
+    df2 = spark.read.load(str(TABLE_PATH / "sample_table_2"))
+
+    df_joined = (
+        df1.alias("a")
+        .join(df2.alias("b"), "id", how=how)
+        .select("id", f.coalesce("a.name", "b.name").alias("name"), "age", "birth_date")
+    )
+
+    return get_query_plan(df_joined)
+
+
+def create_simple_join_plan2(spark: SparkSession) -> str:
     df1 = spark.read.load(str(TABLE_PATH / "sample_table"))
     df2 = spark.read.load(str(TABLE_PATH / "sample_table_2"))
     df_rel = spark.read.load(str(TABLE_PATH / "relation_table"))
@@ -167,7 +180,10 @@ def create_plans_and_store(spark: SparkSession) -> None:
     store_plan(create_simple_filter_not_in_output_plan(spark), PLAN_PATH / "simple_filter_not_in_output_plan.txt")
     store_plan(create_simple_derive_plan(spark), PLAN_PATH / "simple_derive_plan.txt")
     store_plan(create_simple_union_plan(spark), PLAN_PATH / "simple_union_plan.txt")
-    store_plan(create_simple_join_plan(spark), PLAN_PATH / "simple_join_plan.txt")
+    store_plan(create_simple_join_plan(spark, "inner"), PLAN_PATH / "simple_join_inner_plan.txt")
+    store_plan(create_simple_join_plan(spark, "left"), PLAN_PATH / "simple_join_left_plan.txt")
+    store_plan(create_simple_join_plan(spark, "right"), PLAN_PATH / "simple_join_rigth_plan.txt")
+    store_plan(create_simple_join_plan2(spark), PLAN_PATH / "simple_join_plan2.txt")
     store_plan(create_simple_aggregation_plan(spark), PLAN_PATH / "simple_aggregation_plan.txt")
     store_plan(create_simple_aggregation_plan2(spark), PLAN_PATH / "simple_aggregation_plan2.txt")
     store_plan(create_simple_aggregation_plan3(spark), PLAN_PATH / "simple_aggregation_plan3.txt")

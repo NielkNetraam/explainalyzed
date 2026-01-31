@@ -1,20 +1,20 @@
 == Parsed Logical Plan ==
-'Aggregate ['avg('age) AS avg_age#62, 'max('age) AS max_age#63]
-+- Relation [id#59,name#60,age#61] parquet
+'Aggregate ['avg('age) AS avg_age#89, 'max('age) AS max_age#90]
++- Relation [id#86,name#87,age#88] parquet
 
 == Analyzed Logical Plan ==
 avg_age: double, max_age: int
-Aggregate [avg(age#61) AS avg_age#62, max(age#61) AS max_age#63]
-+- Relation [id#59,name#60,age#61] parquet
+Aggregate [avg(age#88) AS avg_age#89, max(age#88) AS max_age#90]
++- Relation [id#86,name#87,age#88] parquet
 
 == Optimized Logical Plan ==
-Aggregate [avg(age#61) AS avg_age#62, max(age#61) AS max_age#63]
-+- Project [age#61]
-   +- Relation [id#59,name#60,age#61] parquet
+Aggregate [avg(age#88) AS avg_age#89, max(age#88) AS max_age#90]
++- Project [age#88]
+   +- Relation [id#86,name#87,age#88] parquet
 
 == Physical Plan ==
 AdaptiveSparkPlan isFinalPlan=false
-+- HashAggregate(keys=[], functions=[avg(age#61), max(age#61)], output=[avg_age#62, max_age#63])
-   +- Exchange SinglePartition, ENSURE_REQUIREMENTS, [plan_id=163]
-      +- HashAggregate(keys=[], functions=[partial_avg(age#61), partial_max(age#61)], output=[sum#73, count#74L, max#75])
-         +- FileScan parquet [age#61] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<age:int>
++- HashAggregate(keys=[], functions=[avg(age#88), max(age#88)], output=[avg_age#89, max_age#90])
+   +- Exchange SinglePartition, ENSURE_REQUIREMENTS, [plan_id=242]
+      +- HashAggregate(keys=[], functions=[partial_avg(age#88), partial_max(age#88)], output=[sum#100, count#101L, max#102])
+         +- FileScan parquet [age#88] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<age:int>
