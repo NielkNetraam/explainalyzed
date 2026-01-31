@@ -1,0 +1,32 @@
+== Parsed Logical Plan ==
+'Project ['name, 'age, 'birth_date]
++- Union false, false
+   :- Project [id#23, name#24, age#25, null AS birth_date#30]
+   :  +- Relation [id#23,name#24,age#25] parquet
+   +- Project [id#26, name#27, null AS age#29, birth_date#28]
+      +- Relation [id#26,name#27,birth_date#28] parquet
+
+== Analyzed Logical Plan ==
+name: string, age: int, birth_date: date
+Project [name#24, age#25, birth_date#30]
++- Union false, false
+   :- Project [id#23, name#24, age#25, null AS birth_date#30]
+   :  +- Relation [id#23,name#24,age#25] parquet
+   +- Project [id#26, name#27, null AS age#29, birth_date#28]
+      +- Relation [id#26,name#27,birth_date#28] parquet
+
+== Optimized Logical Plan ==
+Union false, false
+:- Project [name#24, age#25, null AS birth_date#30]
+:  +- Relation [id#23,name#24,age#25] parquet
++- Project [name#27, null AS age#29, birth_date#28]
+   +- Relation [id#26,name#27,birth_date#28] parquet
+
+== Physical Plan ==
+Union
+:- *(1) Project [name#24, age#25, null AS birth_date#30]
+:  +- *(1) ColumnarToRow
+:     +- FileScan parquet [name#24,age#25] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<name:string,age:int>
++- *(2) Project [name#27, null AS age#29, birth_date#28]
+   +- *(2) ColumnarToRow
+      +- FileScan parquet [name#27,birth_date#28] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table_2], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<name:string,birth_date:date>
