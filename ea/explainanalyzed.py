@@ -6,12 +6,8 @@ from ea.node.plan_node import GenericNode, PlanNode, PlanNodeType
 from ea.node.registry import logical_class_registry, physical_class_registry
 
 
-def _convert_line(
-    line: str,
-    class_registry: dict[str, type[PlanNodeType]],
-    mapping: dict[str, list[str]] | None = None,
-) -> PlanNode:
-    pattern = r"(:?\s+)?([\+:]-)?\s*(\*\(\d*\))?\s*(\w*)\s*(.*)"
+def _split_line(line: str) -> tuple[int, str | None, str, str]:
+    pattern = r"([:\s\+-]*)?(\*\(\d*\))?\s*(\w*)\s*(.*)"
     matches = re.match(pattern, line)
 
     if matches is None:
@@ -19,16 +15,26 @@ def _convert_line(
         raise ValueError(msg)
 
     groups = matches.groups()
-    level = (int(len(groups[0]) / 3) if groups[0] is not None else 0) + (1 if groups[1] in ["+-", ":-"] else 0)
-    subset_id = groups[2]
-    node_type: str = groups[3]
-    parameters: str = groups[4]
+    level = int(len(groups[0]) / 3) if groups[0] is not None else 0
+    subset_id: str | None = groups[1]
+    node_type: str = groups[2]
+    remainder: str = groups[3]
+
+    return level, subset_id, node_type, remainder
+
+
+def _convert_line(
+    line: str,
+    class_registry: dict[str, type[PlanNodeType]],
+    mapping: dict[str, list[str]] | None = None,
+) -> PlanNode:
+    level, subset_id, node_type, remainder = _split_line(line)
 
     if node_type in class_registry:
         if node_type == "Relation":
-            return RelationNode(node_type, level, subset_id, parameters, mapping=mapping if mapping else {})
-        return class_registry[node_type](node_type, level, subset_id, parameters)
-    return GenericNode(node_type, level, subset_id, parameters)
+            return RelationNode(node_type, level, subset_id, remainder, mapping=mapping if mapping else {})
+        return class_registry[node_type](node_type, level, subset_id, remainder)
+    return GenericNode(node_type, level, subset_id, remainder)
 
 
 def _convert_lines(

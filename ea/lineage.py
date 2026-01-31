@@ -37,15 +37,21 @@ class DerivedLineage(Lineage):
         fields: list[Lineage] | None = None,
         filters: list[Lineage] | None = None,
         grouping_keys: list[Lineage] | None = None,
+        join_keys: list[Lineage] | None = None,
     ) -> None:
         super().__init__(column_id)
         self.fields: list[Lineage] = fields if fields is not None else []
         self.filters: list[Lineage] = filters if filters is not None else []
         self.grouping_keys: list[Lineage] = grouping_keys if grouping_keys is not None else []
+        self.join_keys: list[Lineage] = join_keys if join_keys is not None else []
 
     def __str__(self) -> str:
         """Return a string representation of the DerivedLineage."""
         field_str = ", ".join(str(field) for field in self.fields)
         filter_str = ", ".join(str(flt) for flt in self.filters)
         grouping_key_str = ", ".join(str(flt) for flt in self.grouping_keys)
-        return f"{self.name} (Fields: [{field_str}]; Filters: [{filter_str}]; Grouping keys: [{grouping_key_str}])"
+        join_key_str = ", ".join(str(flt) for flt in self.join_keys)
+        return (
+            f"{self.name} (Fields: [{field_str}]; Filters: [{filter_str}]; "
+            f"Grouping keys: [{grouping_key_str}]; Join keys: [{join_key_str}])"
+        )
