@@ -6,7 +6,7 @@ from ea.util import strip_outer_parentheses
 
 
 class ProjectNode(PlanNode):
-    def __init__(self, node_type: str, level: int, subset_id: str, parameters: str) -> None:
+    def __init__(self, node_type: str, level: int, subset_id: str | None, parameters: str) -> None:
         super().__init__(node_type, level, subset_id, parameters)
 
         fields = strip_outer_parentheses(parameters[1:-1])

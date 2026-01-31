@@ -3,7 +3,7 @@ from pathlib import Path
 from ea.explainanalyzed import ExplainAnalyzed
 from ea.lineage import Lineage
 
-path = Path(__file__).parent / "data/plans/simple_aggregation_plan2.txt"
+path = Path(__file__).parent / "data/plans/simple_join_inner_plan.txt"
 with path.open() as file:
     plan_data = file.readlines()
 

@@ -5,7 +5,7 @@ from ea.node.plan_node import PlanNode
 
 
 class FilterNode(PlanNode):
-    def __init__(self, node_type: str, level: int, subset_id: str, parameters: str) -> None:
+    def __init__(self, node_type: str, level: int, subset_id: str | None, parameters: str) -> None:
         """Initialize a Filter instance."""
         super().__init__(node_type, level, subset_id, parameters)
         self.condition = parameters

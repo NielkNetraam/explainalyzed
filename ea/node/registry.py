@@ -1,6 +1,7 @@
 from ea.explainanlyzed_v1 import GenericNode
 from ea.node.filter import FilterNode
 from ea.node.logical.aggegate import AggregateNode
+from ea.node.logical.join import JoinNode
 from ea.node.logical.logical_rdd import LogicalRDDNode
 from ea.node.logical.relation import RelationNode
 from ea.node.physical.file_scan import FileScanNode
@@ -21,6 +22,7 @@ physical_class_registry: dict[str, type[PlanNodeType]] = {
 logical_class_registry: dict[str, type[PlanNodeType]] = {
     "Aggregate": AggregateNode,
     "Filter": FilterNode,
+    "Join": JoinNode,
     "LogicalRDD": LogicalRDDNode,
     "Project": ProjectNode,
     "Relation": RelationNode,

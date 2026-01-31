@@ -4,7 +4,7 @@ from ea.lineage import Lineage
 
 
 class PlanNode:
-    def __init__(self, node_type: str, level: int, subset_id: str, parameters: str) -> None:
+    def __init__(self, node_type: str, level: int, subset_id: str | None, parameters: str) -> None:
         """Initialize a Node instance."""
         self.node_type = node_type
         self.level = level
