@@ -1,28 +1,42 @@
 from pathlib import Path
 
 from ea.explainanalyzed import ExplainAnalyzed
-from ea.lineage import Lineage
 
 path = Path(__file__).parent / "data/plans/simple_join_inner_plan.txt"
 with path.open() as file:
     plan_data = file.readlines()
 
-ea = ExplainAnalyzed(plan_data)
+ea = ExplainAnalyzed("simple_join_inner", plan_data)
 
-mapping = ea.get_physical_field_table_mapping()
-print(mapping)
-
-tree = ea.get_optimized_logical_plan(mapping=mapping)
-
+tree = ea.get_optimized_logical_plan()
 tree.print_node()
 
+# def print_lineage(lineage: dict[str, Lineage]) -> None:
+#     for name, line in lineage.items():
+#         print(f"{name}: {line}")
 
-def print_lineage(lineage: dict[str, Lineage]) -> None:
-    for name, line in lineage.items():
-        print(f"{name}: {line}")
+
+print(" ------- ")
+lineage = ea.get_lineage()
+for tl in lineage.table_lineage:
+    print(tl)
+print(" ------- ")
+for cl in lineage.column_lineage:
+    print(cl)
+print(" ------- ")
+for cl in lineage.source_lineage("sample_table", "name"):
+    print(cl)
+print(" ------- ")
+for cl in lineage.target_lineage("simple_join_inner", "name"):
+    print(cl)
+
+print
+print(lineage.mermaid())
 
 
-print_lineage(tree.get_lineage())
+path = Path(__file__).parent / "data/mermaid/simple_join_inner.mmd"
+with path.open("w") as file:
+    file.write(lineage.mermaid())
 
 # def print_step(step: PlanStep, indent: int = 0) -> None:
 #     print("   " * indent + f"{step.step_type}: {step.parameters}")

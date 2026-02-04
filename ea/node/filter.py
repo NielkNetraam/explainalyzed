@@ -1,6 +1,6 @@
 import re
 
-from ea.lineage import DerivedLineage, Lineage
+from ea.column_dependency import ColumnDependency, DerivedColumnDependency
 from ea.node.plan_node import PlanNode
 
 
@@ -13,12 +13,12 @@ class FilterNode(PlanNode):
         pattern = r"([\w\d\_\-]*\#\d*)"
         self.filter_fields = list(set(re.findall(pattern, parameters)))
 
-    def get_lineage(self) -> dict[str, Lineage]:
-        lineage: dict[str, Lineage] = super().get_lineage()
+    def get_column_dependencies(self) -> dict[str, ColumnDependency]:
+        column_dependency: dict[str, ColumnDependency] = super().get_column_dependencies()
 
-        filters: list[Lineage] = [lineage[field_id] for field_id in self.filter_fields]
+        filters: list[ColumnDependency] = [column_dependency[field_id] for field_id in self.filter_fields]
 
-        return {k: DerivedLineage(k, fields=[v], filters=filters) for k, v in lineage.items()}
+        return {k: DerivedColumnDependency(k, columns=[v], filters=filters) for k, v in column_dependency.items()}
 
     def __str__(self) -> str:
         """Return a string representation of the Filter node."""

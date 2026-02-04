@@ -1,0 +1,13 @@
+== Parsed Logical Plan ==
+UnresolvedDataSource format: parquet, isStreaming: false, paths: 1 provided
+
+== Analyzed Logical Plan ==
+id: int, name: string, age: int
+Relation [id#0,name#1,age#2] parquet
+
+== Optimized Logical Plan ==
+Relation [id#0,name#1,age#2] parquet
+
+== Physical Plan ==
+*(1) ColumnarToRow
++- FileScan parquet [id#0,name#1,age#2] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<id:int,name:string,age:int>

@@ -1,6 +1,6 @@
 import re
 
-from ea.lineage import Lineage, SourceLineage
+from ea.column_dependency import ColumnDependency, SourceColumnDependency
 from ea.node.plan_node import PlanNode
 
 
@@ -32,11 +32,11 @@ class FileScanNode(PlanNode):
         self.pushed_filters: list[str] = groups[5].split(",") if groups[5] is not None and groups[5] != "" else []
         self.read_schema: str | None = groups[6] if groups[6] is not None and groups[6] != "" else None
 
-        self.fields: dict[str, Lineage] = {
-            field.strip(): SourceLineage(field.strip(), location=self.location) for field in fields
+        self.fields: dict[str, ColumnDependency] = {
+            field.strip(): SourceColumnDependency(field.strip(), location=self.location) for field in fields
         }
 
-    def get_lineage(self) -> dict[str, Lineage]:
+    def get_column_dependencies(self) -> dict[str, ColumnDependency]:
         return self.fields
 
     def __str__(self) -> str:

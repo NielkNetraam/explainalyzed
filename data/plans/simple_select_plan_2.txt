@@ -1,0 +1,16 @@
+== Parsed Logical Plan ==
+'Project ['id, 'name]
++- Relation [id#3,name#4,age#5] parquet
+
+== Analyzed Logical Plan ==
+id: int, name: string
+Project [id#3, name#4]
++- Relation [id#3,name#4,age#5] parquet
+
+== Optimized Logical Plan ==
+Project [id#3, name#4]
++- Relation [id#3,name#4,age#5] parquet
+
+== Physical Plan ==
+*(1) ColumnarToRow
++- FileScan parquet [id#3,name#4] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<id:int,name:string>

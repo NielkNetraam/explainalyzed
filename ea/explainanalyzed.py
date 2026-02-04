@@ -1,5 +1,6 @@
 import re
 
+from ea.lineage import Lineage
 from ea.node.logical.relation import RelationNode
 from ea.node.physical.file_scan import FileScanNode
 from ea.node.plan_node import GenericNode, PlanNode, PlanNodeType
@@ -73,8 +74,14 @@ class ExplainAnalyzed:
     OPTIMIZED_LOGICAL_PLAN = "== Optimized Logical Plan =="
     PHYSICAL_PLAN = "== Physical Plan =="
 
-    def __init__(self, plan_data: list[str]) -> None:
+    def __init__(self, dataset_name: str, plan_data: list[str]) -> None:
+        self.dataset_name = dataset_name
         self.plan_data = [line.rstrip() for line in plan_data]
+        self._parsed_logical_plan: PlanNode | None = None
+        self._analyzed_logical_plan: PlanNode | None = None
+        self._optimized_logical_plan: PlanNode | None = None
+        self._physical_plan: PlanNode | None = None
+        self._lineage: Lineage | None = None
 
     def _get_index(self, marker: str) -> int:
         try:
@@ -95,21 +102,42 @@ class ExplainAnalyzed:
         return self.plan_data[start_index:end_index]
 
     def get_parsed_logical_plan(self, mapping: dict[str, list[str]]) -> PlanNode:
-        plan_lines = self._get_section(self.PARSED_LOGICAL_PLAN, self.ANALYZED_LOGICAL_PLAN)
-        return _convert_lines(plan_lines, class_registry=logical_class_registry, mapping=mapping)
+        if self._parsed_logical_plan is None:
+            plan_lines = self._get_section(self.PARSED_LOGICAL_PLAN, self.ANALYZED_LOGICAL_PLAN)
+            self._parsed_logical_plan = _convert_lines(plan_lines, class_registry=logical_class_registry, mapping=mapping)
+
+        return self._parsed_logical_plan
 
     def get_analyzed_logical_plan(self, mapping: dict[str, list[str]]) -> PlanNode:
-        plan_lines = self._get_section(self.ANALYZED_LOGICAL_PLAN, self.OPTIMIZED_LOGICAL_PLAN, shift=1)
-        return _convert_lines(plan_lines, class_registry=logical_class_registry, mapping=mapping)
+        if self._analyzed_logical_plan is None:
+            plan_lines = self._get_section(self.ANALYZED_LOGICAL_PLAN, self.OPTIMIZED_LOGICAL_PLAN, shift=1)
+            self._analyzed_logical_plan = _convert_lines(plan_lines, class_registry=logical_class_registry, mapping=mapping)
 
-    def get_optimized_logical_plan(self, mapping: dict[str, list[str]]) -> PlanNode:
-        plan_lines = self._get_section(self.OPTIMIZED_LOGICAL_PLAN, self.PHYSICAL_PLAN)
-        return _convert_lines(plan_lines, class_registry=logical_class_registry, mapping=mapping)
+        return self._analyzed_logical_plan
+
+    def get_optimized_logical_plan(self) -> PlanNode:
+        if self._optimized_logical_plan is None:
+            mapping = self._get_physical_field_table_mapping()
+            plan_lines = self._get_section(self.OPTIMIZED_LOGICAL_PLAN, self.PHYSICAL_PLAN)
+            self._optimized_logical_plan = _convert_lines(plan_lines, class_registry=logical_class_registry, mapping=mapping)
+
+        return self._optimized_logical_plan
 
     def get_physical_plan(self) -> PlanNode:
-        plan_lines = self._get_section(self.PHYSICAL_PLAN, None)
-        return _convert_lines(plan_lines, class_registry=physical_class_registry)
+        if self._physical_plan is None:
+            plan_lines = self._get_section(self.PHYSICAL_PLAN, None)
+            self._physical_plan = _convert_lines(plan_lines, class_registry=physical_class_registry)
 
-    def get_physical_field_table_mapping(self) -> dict[str, list[str]]:
+        return self._physical_plan
+
+    def _get_physical_field_table_mapping(self) -> dict[str, list[str]]:
         plan_lines = self._get_section(self.PHYSICAL_PLAN, None)
         return _convert_lines_to_mapping(plan_lines)
+
+    def get_lineage(self) -> Lineage:
+        if self._lineage is None:
+            tree = self.get_optimized_logical_plan()
+
+            self._lineage = tree.get_lineage(self.dataset_name)
+
+        return self._lineage

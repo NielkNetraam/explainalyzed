@@ -1,4 +1,4 @@
-from ea.lineage import DerivedLineage, Lineage
+from ea.column_dependency import ColumnDependency, DerivedColumnDependency
 from ea.node.plan_node import PlanNode
 from ea.util import findall_column_ids
 
@@ -14,18 +14,18 @@ class JoinNode(PlanNode):
 
         self.join_keys: list[str] = findall_column_ids(fields)
 
-    def get_lineage(self) -> dict[str, Lineage]:
-        lineage: dict[str, Lineage] = super().get_lineage()
+    def get_column_dependencies(self) -> dict[str, ColumnDependency]:
+        column_dependency: dict[str, ColumnDependency] = super().get_column_dependencies()
 
-        join_keys: list[Lineage] = [lineage[field_id] for field_id in self.join_keys]
+        join_keys: list[ColumnDependency] = [column_dependency[field_id] for field_id in self.join_keys]
 
         return {
-            k: DerivedLineage(
+            k: DerivedColumnDependency(
                 k,
-                fields=[lineage[k]],
+                columns=[column_dependency[k]],
                 join_keys=join_keys,
             )
-            for k in lineage
+            for k in column_dependency
         }
 
     def __str__(self) -> str:

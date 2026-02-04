@@ -5,9 +5,9 @@ from ea.node.logical.join import JoinNode
 from ea.node.logical.logical_rdd import LogicalRDDNode
 from ea.node.logical.relation import RelationNode
 from ea.node.physical.file_scan import FileScanNode
-from ea.node.physical.union import UnionNode
 from ea.node.plan_node import ColumnarToRowNode, PlanNodeType
 from ea.node.project import ProjectNode
+from ea.node.union import UnionNode
 
 physical_class_registry: dict[str, type[PlanNodeType]] = {
     "ColumnarToRow": ColumnarToRowNode,

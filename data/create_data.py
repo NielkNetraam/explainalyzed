@@ -71,7 +71,12 @@ def create_tables_and_store(spark: SparkSession) -> None:
     store_dataframe(spark.createDataFrame(TRX_DATA, TRX_SCHEMA), TABLE_PATH / "transaction_table")
 
 
-def create_simple_select_plan(spark: SparkSession) -> str:
+def create_simple_select_plan_1(spark: SparkSession) -> str:
+    df = spark.read.load(str(TABLE_PATH / "sample_table"))
+    return get_query_plan(df)
+
+
+def create_simple_select_plan_2(spark: SparkSession) -> str:
     df = spark.read.load(str(TABLE_PATH / "sample_table"))
     df = df.select("id", "name")
     return get_query_plan(df)
@@ -175,7 +180,8 @@ def create_plans_and_store(spark: SparkSession) -> None:
     clean_data_directory(PLAN_PATH)
     PLAN_PATH.mkdir(parents=True, exist_ok=True)
 
-    store_plan(create_simple_select_plan(spark), PLAN_PATH / "simple_select_plan.txt")
+    store_plan(create_simple_select_plan_1(spark), PLAN_PATH / "simple_select_plan_1.txt")
+    store_plan(create_simple_select_plan_2(spark), PLAN_PATH / "simple_select_plan_2.txt")
     store_plan(create_simple_filter_plan(spark), PLAN_PATH / "simple_filter_plan.txt")
     store_plan(create_simple_filter_not_in_output_plan(spark), PLAN_PATH / "simple_filter_not_in_output_plan.txt")
     store_plan(create_simple_derive_plan(spark), PLAN_PATH / "simple_derive_plan.txt")

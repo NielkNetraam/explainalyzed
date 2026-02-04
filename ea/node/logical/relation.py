@@ -1,6 +1,6 @@
 import re
 
-from ea.lineage import Lineage, SourceLineage
+from ea.column_dependency import ColumnDependency, SourceColumnDependency
 from ea.node.plan_node import PlanNode
 
 
@@ -23,13 +23,13 @@ class RelationNode(PlanNode):
         fields: list[str] = groups[0].split(",") if groups[0] is not None and groups[0] != "" else []
         self.source_type: str = groups[1]
 
-        self.fields: dict[str, Lineage] = {
-            field.strip(): SourceLineage(field.strip(), location=mapping[field.strip()])
+        self.fields: dict[str, ColumnDependency] = {
+            field.strip(): SourceColumnDependency(field.strip(), location=mapping[field.strip()])
             for field in fields
             if field.strip() in mapping
         }
 
-    def get_lineage(self) -> dict[str, Lineage]:
+    def get_column_dependencies(self) -> dict[str, ColumnDependency]:
         return self.fields
 
     def __str__(self) -> str:

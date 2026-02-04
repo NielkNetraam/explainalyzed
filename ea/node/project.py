@@ -1,6 +1,6 @@
 import re
 
-from ea.lineage import DerivedLineage, Lineage
+from ea.column_dependency import ColumnDependency, DerivedColumnDependency
 from ea.node.plan_node import PlanNode
 from ea.util import strip_outer_parentheses
 
@@ -23,10 +23,12 @@ class ProjectNode(PlanNode):
             else:
                 self.fields[field] = [field]
 
-    def get_lineage(self) -> dict[str, Lineage]:
-        lineage: dict[str, Lineage] = super().get_lineage()
+    def get_column_dependencies(self) -> dict[str, ColumnDependency]:
+        column_dependency: dict[str, ColumnDependency] = super().get_column_dependencies()
 
         return {
-            k: lineage[k] if k in lineage else DerivedLineage(k, fields=[lineage[fv] for fv in v])
+            k: column_dependency[k]
+            if k in column_dependency
+            else DerivedColumnDependency(k, columns=[column_dependency[fv] for fv in v])
             for k, v in self.fields.items()
         }
