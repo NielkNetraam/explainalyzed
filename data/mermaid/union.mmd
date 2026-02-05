@@ -1,32 +1,23 @@
 ---
 config:
-  theme: 'base'
-  themeVariables:
+theme: 'base'
+themeVariables:
     primaryColor: '#BB2528'
     primaryTextColor: '#fff'
     primaryBorderColor: '#7C0000'
     lineColor: '#F8B229'
-    secondaryColor: '#006100'
+    secondaryColor: '#267826'
     tertiaryColor: '#fff'
 ---
-%% %%{init: {
-%%     'theme': 'base',
-%%     'themeVariables': {
-%%         'primaryColor': '#ffcccc',
-%%         'edgeLabelBackground':'#ffffff',
-%%         'tertiaryColor': '#fff'
-%%     }
-%% }}%%
-
 flowchart LR
-    classDef SOURCE stroke:#00f,fill:#0ff,color:black,primaryColor:#ffcccc
+    classDef SOURCE stroke:#00f,fill:#0ff,color:black
     classDef TARGET stroke:#0f0,fill:#0fa,color:black
     classDef INTERNAL stroke:#f00,fill:#fa0,color:black
 
     target:::TARGET
-    internal:::INTERNAL
-    sample_table:::SOURCE
     sample_table_2:::SOURCE
+    sample_table:::SOURCE
+    internal:::INTERNAL
 
     subgraph internal
         internal.None[None]
