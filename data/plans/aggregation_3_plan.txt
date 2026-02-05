@@ -1,0 +1,35 @@
+== Parsed Logical Plan ==
+'Aggregate ['id], ['id, 'count(1) AS count#131, 'sum(CASE WHEN '`=`('sign, DEBIT) THEN 'amount ELSE 'negative('amount) END) AS total_amount#132]
++- Project [id#123, name#124, age#125, amount#127, sign#128]
+   +- Join LeftOuter, (id#123 = id#126)
+      :- Relation [id#123,name#124,age#125] parquet
+      +- Relation [id#126,amount#127,sign#128] parquet
+
+== Analyzed Logical Plan ==
+id: int, count: bigint, total_amount: decimal(20,2)
+Aggregate [id#123], [id#123, count(1) AS count#131L, sum(CASE WHEN (sign#128 = DEBIT) THEN amount#127 ELSE -amount#127 END) AS total_amount#132]
++- Project [id#123, name#124, age#125, amount#127, sign#128]
+   +- Join LeftOuter, (id#123 = id#126)
+      :- Relation [id#123,name#124,age#125] parquet
+      +- Relation [id#126,amount#127,sign#128] parquet
+
+== Optimized Logical Plan ==
+Aggregate [id#123], [id#123, count(1) AS count#131L, sum(CASE WHEN (sign#128 = DEBIT) THEN amount#127 ELSE -amount#127 END) AS total_amount#132]
++- Project [id#123, amount#127, sign#128]
+   +- Join LeftOuter, (id#123 = id#126)
+      :- Project [id#123]
+      :  +- Relation [id#123,name#124,age#125] parquet
+      +- Filter isnotnull(id#126)
+         +- Relation [id#126,amount#127,sign#128] parquet
+
+== Physical Plan ==
+AdaptiveSparkPlan isFinalPlan=false
++- HashAggregate(keys=[id#123], functions=[count(1), sum(CASE WHEN (sign#128 = DEBIT) THEN amount#127 ELSE -amount#127 END)], output=[id#123, count#131L, total_amount#132])
+   +- Exchange hashpartitioning(id#123, 200), ENSURE_REQUIREMENTS, [plan_id=310]
+      +- HashAggregate(keys=[id#123], functions=[partial_count(1), partial_sum(CASE WHEN (sign#128 = DEBIT) THEN amount#127 ELSE -amount#127 END)], output=[id#123, count#143L, sum#144, isEmpty#145])
+         +- Project [id#123, amount#127, sign#128]
+            +- BroadcastHashJoin [id#123], [id#126], LeftOuter, BuildRight, false
+               :- FileScan parquet [id#123] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<id:int>
+               +- BroadcastExchange HashedRelationBroadcastMode(List(cast(input[0, int, false] as bigint)),false), [plan_id=305]
+                  +- Filter isnotnull(id#126)
+                     +- FileScan parquet [id#126,amount#127,sign#128] Batched: true, DataFilters: [isnotnull(id#126)], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/transaction_table], PartitionFilters: [], PushedFilters: [IsNotNull(id)], ReadSchema: struct<id:int,amount:decimal(10,2),sign:string>

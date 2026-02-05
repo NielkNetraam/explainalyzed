@@ -19,7 +19,7 @@ class AggregateNode(PlanNode):
             name_part: function_part
             for function_part, name_part in (field.rsplit(" AS ", 1) for field in fields if " AS " in field)
         }
-        pattern = r"([\w\d\_\-]*\#\d*)"
+        pattern = r"(\w[\w\d\_\-]*\#\d*)"
         self.derived_fields: dict[str, list[str]] = {key: list(set(re.findall(pattern, d))) for key, d in derived_fields.items()}
 
         self.fields: list[str] = [field if " AS " not in field else field.rsplit(" AS ", 1)[1] for field in fields]

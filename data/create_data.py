@@ -71,30 +71,30 @@ def create_tables_and_store(spark: SparkSession) -> None:
     store_dataframe(spark.createDataFrame(TRX_DATA, TRX_SCHEMA), TABLE_PATH / "transaction_table")
 
 
-def create_simple_select_plan_1(spark: SparkSession) -> str:
+def create_select_1_plan(spark: SparkSession) -> str:
     df = spark.read.load(str(TABLE_PATH / "sample_table"))
     return get_query_plan(df)
 
 
-def create_simple_select_plan_2(spark: SparkSession) -> str:
+def create_select_2_plan(spark: SparkSession) -> str:
     df = spark.read.load(str(TABLE_PATH / "sample_table"))
     df = df.select("id", "name")
     return get_query_plan(df)
 
 
-def create_simple_filter_plan(spark: SparkSession) -> str:
+def create_filter_plan(spark: SparkSession) -> str:
     df = spark.read.load(str(TABLE_PATH / "sample_table"))
     df = df.filter(f.col("id") > 1)
     return get_query_plan(df)
 
 
-def create_simple_filter_not_in_output_plan(spark: SparkSession) -> str:
+def create_filter_not_in_output_plan(spark: SparkSession) -> str:
     df = spark.read.load(str(TABLE_PATH / "sample_table"))
     df = df.filter(f.col("id") > 1).select("name")
     return get_query_plan(df)
 
 
-def create_simple_derive_plan(spark: SparkSession) -> str:
+def create_derive_plan(spark: SparkSession) -> str:
     df = spark.read.load(str(TABLE_PATH / "sample_table"))
     df = df.withColumn("age", f.col("age") + 1)
     df = df.withColumn("name_upper", f.upper(f.col("name")))
@@ -106,17 +106,19 @@ def create_simple_derive_plan(spark: SparkSession) -> str:
         "conditional_value",
         f.when(f.col("id") > 10, f.col("name")).when(f.col("id") < 0, f.upper("name")).otherwise(f.lit("Unknown")),  # noqa: PLR2004
     )
+    df = df.withColumn("name_age", f.struct("name", "age"))
+    df = df.withColumnRenamed("name", "original_name")
     return get_query_plan(df)
 
 
-def create_simple_union_plan(spark: SparkSession) -> str:
+def create_union_plan(spark: SparkSession) -> str:
     df1 = spark.read.load(str(TABLE_PATH / "sample_table"))
     df2 = spark.read.load(str(TABLE_PATH / "sample_table_2"))
     df = df1.unionByName(df2, allowMissingColumns=True).select("name", "age", "birth_date")
     return get_query_plan(df)
 
 
-def create_simple_join_plan(spark: SparkSession, how: str) -> str:
+def create_join_how_plan(spark: SparkSession, how: str) -> str:
     df1 = spark.read.load(str(TABLE_PATH / "sample_table"))
     df2 = spark.read.load(str(TABLE_PATH / "sample_table_2"))
 
@@ -129,7 +131,7 @@ def create_simple_join_plan(spark: SparkSession, how: str) -> str:
     return get_query_plan(df_joined)
 
 
-def create_simple_join_plan2(spark: SparkSession) -> str:
+def create_join_2_plan(spark: SparkSession) -> str:
     df1 = spark.read.load(str(TABLE_PATH / "sample_table"))
     df2 = spark.read.load(str(TABLE_PATH / "sample_table_2"))
     df_rel = spark.read.load(str(TABLE_PATH / "relation_table"))
@@ -146,19 +148,19 @@ def create_simple_join_plan2(spark: SparkSession) -> str:
     return get_query_plan(df_joined)
 
 
-def create_simple_aggregation_plan(spark: SparkSession) -> str:
+def create_aggregation_1_plan(spark: SparkSession) -> str:
     df = spark.read.load(str(TABLE_PATH / "sample_table"))
     df_agg = df.groupBy().agg(f.avg("age").alias("avg_age"), f.max("age").alias("max_age"))
     return get_query_plan(df_agg)
 
 
-def create_simple_aggregation_plan2(spark: SparkSession) -> str:
+def create_aggregation_2_plan(spark: SparkSession) -> str:
     df = spark.read.load(str(TABLE_PATH / "sample_table"))
     df_agg = df.groupBy("age").agg(f.count(f.lit(1)).alias("count"), f.max("name").alias("max_name"))
     return get_query_plan(df_agg)
 
 
-def create_simple_aggregation_plan3(spark: SparkSession) -> str:
+def create_aggregation_3_plan(spark: SparkSession) -> str:
     df = spark.read.load(str(TABLE_PATH / "sample_table"))
     trx = spark.read.load(str(TABLE_PATH / "transaction_table"))
     df_agg = (
@@ -180,16 +182,16 @@ def create_plans_and_store(spark: SparkSession) -> None:
     clean_data_directory(PLAN_PATH)
     PLAN_PATH.mkdir(parents=True, exist_ok=True)
 
-    store_plan(create_simple_select_plan_1(spark), PLAN_PATH / "simple_select_plan_1.txt")
-    store_plan(create_simple_select_plan_2(spark), PLAN_PATH / "simple_select_plan_2.txt")
-    store_plan(create_simple_filter_plan(spark), PLAN_PATH / "simple_filter_plan.txt")
-    store_plan(create_simple_filter_not_in_output_plan(spark), PLAN_PATH / "simple_filter_not_in_output_plan.txt")
-    store_plan(create_simple_derive_plan(spark), PLAN_PATH / "simple_derive_plan.txt")
-    store_plan(create_simple_union_plan(spark), PLAN_PATH / "simple_union_plan.txt")
-    store_plan(create_simple_join_plan(spark, "inner"), PLAN_PATH / "simple_join_inner_plan.txt")
-    store_plan(create_simple_join_plan(spark, "left"), PLAN_PATH / "simple_join_left_plan.txt")
-    store_plan(create_simple_join_plan(spark, "right"), PLAN_PATH / "simple_join_rigth_plan.txt")
-    store_plan(create_simple_join_plan2(spark), PLAN_PATH / "simple_join_plan2.txt")
-    store_plan(create_simple_aggregation_plan(spark), PLAN_PATH / "simple_aggregation_plan.txt")
-    store_plan(create_simple_aggregation_plan2(spark), PLAN_PATH / "simple_aggregation_plan2.txt")
-    store_plan(create_simple_aggregation_plan3(spark), PLAN_PATH / "simple_aggregation_plan3.txt")
+    store_plan(create_select_1_plan(spark), PLAN_PATH / "select_1_plan.txt")
+    store_plan(create_select_2_plan(spark), PLAN_PATH / "select_2_plan.txt")
+    store_plan(create_filter_plan(spark), PLAN_PATH / "filter_plan.txt")
+    store_plan(create_filter_not_in_output_plan(spark), PLAN_PATH / "filter_not_in_output_plan.txt")
+    store_plan(create_derive_plan(spark), PLAN_PATH / "derive_plan.txt")
+    store_plan(create_union_plan(spark), PLAN_PATH / "union_plan.txt")
+    store_plan(create_join_how_plan(spark, "inner"), PLAN_PATH / "join_inner_plan.txt")
+    store_plan(create_join_how_plan(spark, "left"), PLAN_PATH / "join_left_plan.txt")
+    store_plan(create_join_how_plan(spark, "right"), PLAN_PATH / "join_rigth_plan.txt")
+    store_plan(create_join_2_plan(spark), PLAN_PATH / "join_2_plan.txt")
+    store_plan(create_aggregation_1_plan(spark), PLAN_PATH / "aggregation_1_plan.txt")
+    store_plan(create_aggregation_2_plan(spark), PLAN_PATH / "aggregation_2_plan.txt")
+    store_plan(create_aggregation_3_plan(spark), PLAN_PATH / "aggregation_3_plan.txt")

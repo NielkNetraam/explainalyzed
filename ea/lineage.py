@@ -91,6 +91,14 @@ class Lineage:
         return ccl
 
     def mermaid(self) -> str:
+        def table_columns(columns: set[Column]) -> str:
+            mermaid_str = ""
+            for column in sorted(columns, key=lambda t: t.name):
+                if column.table.name == table.name:
+                    mermaid_str += f"        {table.name}.{column.name}[{column.name}]\n"
+
+            return mermaid_str
+
         mermaid_str = (
             "%%{init: {\n"
             "    'theme': 'base',\n"
@@ -111,17 +119,7 @@ class Lineage:
 
         for table in sorted(self.tables, key=lambda t: t.name):
             mermaid_str += f"\n    subgraph {table.name}\n"
-
-            if table.type == TableType.SOURCE:
-                for column in sorted(self.source_columns, key=lambda t: t.name):
-                    if column.table.name == table.name:
-                        mermaid_str += f"        {table.name}.{column.name}[{column.name}]\n"
-
-            if table.type == TableType.TARGET:
-                for column in sorted(self.target_columns, key=lambda t: t.name):
-                    if column.table.name == table.name:
-                        mermaid_str += f"        {table.name}.{column.name}[{column.name}]\n"
-
+            mermaid_str += table_columns(self.source_columns if table.type == TableType.SOURCE else self.target_columns)
             mermaid_str += "    end\n"
 
         mermaid_str += "\n"

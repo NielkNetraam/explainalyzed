@@ -2,7 +2,7 @@ from pathlib import Path
 
 from ea.explainanalyzed import ExplainAnalyzed
 
-path = Path(__file__).parent / "data/plans/simple_join_inner_plan.txt"
+path = Path(__file__).parent / "data/plans/derive_plan.txt"
 with path.open() as file:
     plan_data = file.readlines()
 
