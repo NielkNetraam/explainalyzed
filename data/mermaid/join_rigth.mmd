@@ -1,0 +1,48 @@
+%%{init: {
+    'theme': 'base',
+    'themeVariables': {
+        'primaryColor': '#ffcccc',
+        'edgeLabelBackground':'#ffffff',
+        'tertiaryColor': '#fff'
+    }
+}}%%
+flowchart LR
+    classDef SOURCE stroke:#00f,fill:#0ff,color:black
+    classDef TARGET stroke:#0f0,fill:#0fa,color:black
+    classDef INTERNAL stroke:#f00,fill:#fa0,color:black
+
+    target:::TARGET
+    sample_table:::SOURCE
+    sample_table_2:::SOURCE
+
+    subgraph sample_table
+        sample_table.age[age]
+        sample_table.id[id]
+        sample_table.name[name]
+    end
+
+    subgraph sample_table_2
+        sample_table_2.birth_date[birth_date]
+        sample_table_2.id[id]
+        sample_table_2.name[name]
+    end
+
+    subgraph target
+        target.age[age]
+        target.birth_date[birth_date]
+        target.id[id]
+        target.name[name]
+    end
+
+    sample_table.age -- COLUMN --> target.age
+    sample_table.id -- FILTER,JOIN --> target.age
+    sample_table.id -- JOIN --> target.birth_date
+    sample_table.id -- JOIN --> target.id
+    sample_table.id -- FILTER,JOIN --> target.name
+    sample_table.name -- COLUMN --> target.name
+    sample_table_2.birth_date -- COLUMN --> target.birth_date
+    sample_table_2.id -- JOIN --> target.age
+    sample_table_2.id -- JOIN --> target.birth_date
+    sample_table_2.id -- COLUMN,JOIN --> target.id
+    sample_table_2.id -- JOIN --> target.name
+    sample_table_2.name -- COLUMN --> target.name

@@ -1,0 +1,54 @@
+%%{init: {
+    'theme': 'base',
+    'themeVariables': {
+        'primaryColor': '#ffcccc',
+        'edgeLabelBackground':'#ffffff',
+        'tertiaryColor': '#fff'
+    }
+}}%%
+flowchart LR
+    classDef SOURCE stroke:#00f,fill:#0ff,color:black
+    classDef TARGET stroke:#0f0,fill:#0fa,color:black
+    classDef INTERNAL stroke:#f00,fill:#fa0,color:black
+
+    internal:::INTERNAL
+    sample_table:::SOURCE
+    target:::TARGET
+
+    subgraph internal
+        internal.None[None]
+        internal.literal[literal]
+    end
+
+    subgraph sample_table
+        sample_table.age[age]
+        sample_table.id[id]
+        sample_table.name[name]
+    end
+
+    subgraph target
+        target.age[age]
+        target.conditional_value[conditional_value]
+        target.id[id]
+        target.id_and_name[id_and_name]
+        target.id_str[id_str]
+        target.literal[literal]
+        target.name_age[name_age]
+        target.name_upper[name_upper]
+        target.none_value[none_value]
+        target.original_name[original_name]
+    end
+
+    internal.None -- COLUMN --> target.none_value
+    internal.literal -- COLUMN --> target.literal
+    sample_table.age -- COLUMN --> target.age
+    sample_table.age -- COLUMN --> target.name_age
+    sample_table.id -- COLUMN --> target.conditional_value
+    sample_table.id -- COLUMN --> target.id
+    sample_table.id -- COLUMN --> target.id_and_name
+    sample_table.id -- COLUMN --> target.id_str
+    sample_table.name -- COLUMN --> target.conditional_value
+    sample_table.name -- COLUMN --> target.id_and_name
+    sample_table.name -- COLUMN --> target.name_age
+    sample_table.name -- COLUMN --> target.name_upper
+    sample_table.name -- COLUMN --> target.original_name

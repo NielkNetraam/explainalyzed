@@ -220,7 +220,6 @@ _get_lineage_scenarios = {
 @pytest.mark.parametrize(("dataset", "expected"), _get_lineage_scenarios.values(), ids=_get_lineage_scenarios.keys())
 def test_get_lineage(dataset: str, expected: set[str]) -> None:
     path = Path(__file__).parent.parent.parent.parent / f"data/plans/{dataset}_plan.txt"
-
     with path.open() as file:
         plan_data = file.readlines()
 
@@ -229,3 +228,7 @@ def test_get_lineage(dataset: str, expected: set[str]) -> None:
     lineage = ea.get_lineage()
 
     assert {str(cl) for cl in lineage.column_lineage} == expected
+
+    path = Path(__file__).parent.parent.parent.parent / f"data/mermaid/{dataset}.mmd"
+    with path.open("w") as file:
+        file.write(lineage.mermaid())

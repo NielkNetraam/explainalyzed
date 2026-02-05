@@ -1,0 +1,27 @@
+%%{init: {
+    'theme': 'base',
+    'themeVariables': {
+        'primaryColor': '#ffcccc',
+        'edgeLabelBackground':'#ffffff',
+        'tertiaryColor': '#fff'
+    }
+}}%%
+flowchart LR
+    classDef SOURCE stroke:#00f,fill:#0ff,color:black
+    classDef TARGET stroke:#0f0,fill:#0fa,color:black
+    classDef INTERNAL stroke:#f00,fill:#fa0,color:black
+
+    sample_table:::SOURCE
+    target:::TARGET
+
+    subgraph sample_table
+        sample_table.id[id]
+        sample_table.name[name]
+    end
+
+    subgraph target
+        target.name[name]
+    end
+
+    sample_table.id -- FILTER --> target.name
+    sample_table.name -- COLUMN --> target.name

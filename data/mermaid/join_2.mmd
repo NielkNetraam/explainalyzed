@@ -1,0 +1,53 @@
+%%{init: {
+    'theme': 'base',
+    'themeVariables': {
+        'primaryColor': '#ffcccc',
+        'edgeLabelBackground':'#ffffff',
+        'tertiaryColor': '#fff'
+    }
+}}%%
+flowchart LR
+    classDef SOURCE stroke:#00f,fill:#0ff,color:black
+    classDef TARGET stroke:#0f0,fill:#0fa,color:black
+    classDef INTERNAL stroke:#f00,fill:#fa0,color:black
+
+    target:::TARGET
+    relation_table:::SOURCE
+    sample_table:::SOURCE
+    sample_table_2:::SOURCE
+
+    subgraph relation_table
+        relation_table.id1[id1]
+        relation_table.id2[id2]
+        relation_table.rel_type[rel_type]
+    end
+
+    subgraph sample_table
+        sample_table.id[id]
+        sample_table.name[name]
+    end
+
+    subgraph sample_table_2
+        sample_table_2.id[id]
+        sample_table_2.name[name]
+    end
+
+    subgraph target
+        target.name_a[name_a]
+        target.name_b[name_b]
+    end
+
+    relation_table.id1 -- JOIN --> target.name_a
+    relation_table.id1 -- JOIN --> target.name_b
+    relation_table.id2 -- JOIN --> target.name_a
+    relation_table.id2 -- JOIN --> target.name_b
+    relation_table.rel_type -- JOIN --> target.name_a
+    relation_table.rel_type -- JOIN --> target.name_b
+    sample_table.id -- FILTER,JOIN --> target.name_a
+    sample_table.id -- FILTER,JOIN --> target.name_b
+    sample_table.name -- COLUMN --> target.name_a
+    sample_table.name -- COLUMN --> target.name_b
+    sample_table_2.id -- FILTER,JOIN --> target.name_a
+    sample_table_2.id -- FILTER,JOIN --> target.name_b
+    sample_table_2.name -- COLUMN --> target.name_a
+    sample_table_2.name -- COLUMN --> target.name_b

@@ -111,11 +111,12 @@ class Lineage:
             "flowchart LR\n"
             "    classDef SOURCE stroke:#00f,fill:#0ff,color:black\n"
             "    classDef TARGET stroke:#0f0,fill:#0fa,color:black\n"
+            "    classDef INTERNAL stroke:#f00,fill:#fa0,color:black\n"
             "\n"
         )
 
         for table in self.tables:
-            mermaid_str += f"    {table.name}:::{table.type.name}\n"
+            mermaid_str += f"    {table.name}:::{'INTERNAL' if table.name == 'internal' else table.type.name}\n"
 
         for table in sorted(self.tables, key=lambda t: t.name):
             mermaid_str += f"\n    subgraph {table.name}\n"
