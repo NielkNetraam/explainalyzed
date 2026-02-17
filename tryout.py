@@ -1,42 +1,77 @@
 from pathlib import Path
 
 from ea.explainanalyzed import ExplainAnalyzed
+from ea.lineage import Lineage
 
-path = Path(__file__).parent / "data/plans/derive_plan.txt"
-with path.open() as file:
-    plan_data = file.readlines()
+path = Path(__file__).parent / "data/sample/plans"
+plans = {p.stem: p for p in path.glob("**/*.txt")}
+print(plans)
 
-ea = ExplainAnalyzed("simple_join_inner", plan_data)
+eas: dict[str, ExplainAnalyzed] = {}
+for name, plan in plans.items():
+    print(f"Plan name: {name}")
+    with plan.open() as file:
+        plan_data = file.readlines()
 
-tree = ea.get_optimized_logical_plan()
-tree.print_node()
+    eas[name] = ExplainAnalyzed(name, plan_data)
 
-# def print_lineage(lineage: dict[str, Lineage]) -> None:
-#     for name, line in lineage.items():
-#         print(f"{name}: {line}")
-
-
-print(" ------- ")
-lineage = ea.get_lineage()
-for tl in lineage.table_lineage:
-    print(tl)
-print(" ------- ")
-for cl in lineage.column_lineage:
-    print(cl)
-print(" ------- ")
-for cl in lineage.source_lineage("sample_table", "name"):
-    print(cl)
-print(" ------- ")
-for cl in lineage.target_lineage("simple_join_inner", "name"):
-    print(cl)
-
-print
-print(lineage.mermaid())
+lineage = eas["df_joined"].get_lineage()
+# print(lineage.mermaid())
 
 
-path = Path(__file__).parent / "data/mermaid/simple_join_inner.mmd"
+print(
+    Lineage.mermaid_from_lineages([ea.get_lineage() for ea in eas.values()]),
+)
+
+path = Path(__file__).parent / "data/sample/mermaid/sample.mmd"
 with path.open("w") as file:
-    file.write(lineage.mermaid())
+    file.write(Lineage.mermaid_from_lineages([ea.get_lineage() for ea in eas.values()]))
+
+# path = Path(__file__).parent.parent.parent.parent / f"data/plans/{dataset}_plan.txt"
+#     with path.open() as file:
+#         plan_data = file.readlines()
+
+#     ea = ExplainAnalyzed("target", plan_data)
+
+#     lineage = ea.get_lineage()
+
+# with path.open() as file:
+#     plan_d
+
+
+#     ata = file.readlines()
+
+# ea = ExplainAnalyzed("simple_join_inner", plan_data)
+
+# tree = ea.get_optimized_logical_plan()
+# tree.print_node()
+
+# # def print_lineage(lineage: dict[str, Lineage]) -> None:
+# #     for name, line in lineage.items():
+# #         print(f"{name}: {line}")
+
+
+# print(" ------- ")
+# lineage = ea.get_lineage()
+# for tl in lineage.table_lineage:
+#     print(tl)
+# print(" ------- ")
+# for cl in lineage.column_lineage:
+#     print(cl)
+# print(" ------- ")
+# for cl in lineage.source_lineage("sample_table", "name"):
+#     print(cl)
+# print(" ------- ")
+# for cl in lineage.target_lineage("simple_join_inner", "name"):
+#     print(cl)
+
+# print
+# print(lineage.mermaid())
+
+
+# path = Path(__file__).parent / "data/mermaid/simple_join_inner.mmd"
+# with path.open("w") as file:
+#     file.write(lineage.mermaid())
 
 # def print_step(step: PlanStep, indent: int = 0) -> None:
 #     print("   " * indent + f"{step.step_type}: {step.parameters}")

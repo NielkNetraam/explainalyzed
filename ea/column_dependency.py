@@ -37,7 +37,7 @@ class SourceColumnDependency(ColumnDependency):
         return f"{self.table}.{self.column_name}"
 
     def get_column_lineage(self, dataset_name: str | None = None) -> set[ColumnLineage]:
-        source_table = Table(self.table if self.table else "internal", TableType.SOURCE)
+        source_table = Table(self.table if self.table else "internal", TableType.SOURCE if self.table else TableType.INTERNAL)
         target_table = Table(dataset_name if dataset_name else "target", TableType.TARGET)
         source_column = Column(self.column_name, source_table)
         target_column = Column(self.column_name, target_table)

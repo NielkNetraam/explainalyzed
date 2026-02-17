@@ -174,6 +174,13 @@ def create_aggregation_3_plan(spark: SparkSession) -> str:
     return get_query_plan(df_agg)
 
 
+def create_rdd_plan(spark: SparkSession) -> str:
+    df = spark.read.load(str(TABLE_PATH / "sample_table"))
+    rdd = df.rdd
+    df2 = spark.createDataFrame(rdd, schema=df.schema)
+    return get_query_plan(df2)
+
+
 # - aggregate
 # - type conversion
 # - from table / create df
@@ -195,3 +202,4 @@ def create_plans_and_store(spark: SparkSession) -> None:
     store_plan(create_aggregation_1_plan(spark), PLAN_PATH / "aggregation_1_plan.txt")
     store_plan(create_aggregation_2_plan(spark), PLAN_PATH / "aggregation_2_plan.txt")
     store_plan(create_aggregation_3_plan(spark), PLAN_PATH / "aggregation_3_plan.txt")
+    store_plan(create_rdd_plan(spark), PLAN_PATH / "rdd_plan.txt")

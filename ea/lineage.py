@@ -5,6 +5,8 @@ from enum import Enum
 class TableType(Enum):
     SOURCE = 1
     TARGET = 2
+    INTERMEDIATE = 3
+    INTERNAL = 4
 
 
 class ColumnLineageType(Enum):
@@ -23,6 +25,16 @@ class Table:
         """Return a string representation of the Column."""
         return f"{self.name}"
 
+    def __hash__(self) -> int:
+        """Return hash of the object based on table name and attribute name."""
+        return hash(self.name)
+
+    def __eq__(self, other: object) -> bool:
+        """Check equality based on table name."""
+        if not isinstance(other, Table):
+            return NotImplemented
+        return self.name == other.name
+
 
 @dataclass(frozen=True)
 class Column:
@@ -32,6 +44,16 @@ class Column:
     def __str__(self) -> str:
         """Return a string representation of the Column."""
         return f"{self.table.name}.{self.name}"
+
+    def __hash__(self) -> int:
+        """Return hash of the object based on table name and attribute name."""
+        return hash((self.table.name, self.name))
+
+    def __eq__(self, other: object) -> bool:
+        """Check equality based on table name and attribute name."""
+        if not isinstance(other, Column):
+            return NotImplemented
+        return self.table.name == other.table.name and self.name == other.name
 
 
 @dataclass(frozen=True)
@@ -77,9 +99,10 @@ class Lineage:
             if cl.target_column.table.name == table_name and cl.target_column.name == column_name
         }
 
-    def _compress_column_lineage(self) -> dict[Column, dict[Column, set[ColumnLineageType]]]:
+    @staticmethod
+    def _compress_column_lineage(column_lineage: set[ColumnLineage]) -> dict[Column, dict[Column, set[ColumnLineageType]]]:
         ccl: dict[Column, dict[Column, set[ColumnLineageType]]] = {}
-        for cl in self.column_lineage:
+        for cl in column_lineage:
             if cl.source_column in ccl:
                 if cl.target_column in ccl[cl.source_column]:
                     ccl[cl.source_column][cl.target_column].add(cl.type)
@@ -91,6 +114,16 @@ class Lineage:
         return ccl
 
     def mermaid(self) -> str:
+        compressed_column_lineage = Lineage._compress_column_lineage(self.column_lineage)
+        columns = self.source_columns.union(self.target_columns)
+        return Lineage._mermaid(self.tables, columns, compressed_column_lineage)
+
+    @staticmethod
+    def _mermaid(
+        tables: set[Table],
+        columns: set[Column],
+        compressed_column_lineage: dict[Column, dict[Column, set[ColumnLineageType]]],
+    ) -> str:
         def table_columns(columns: set[Column]) -> str:
             mermaid_str = ""
             for column in sorted(columns, key=lambda t: t.name):
@@ -114,23 +147,43 @@ class Lineage:
             "flowchart LR\n"
             "    classDef SOURCE stroke:#00f,fill:#0ff,color:black\n"
             "    classDef TARGET stroke:#0f0,fill:#0fa,color:black\n"
+            "    classDef INTERMEDIATE stroke:#f00,fill:#fa0,color:black\n"
             "    classDef INTERNAL stroke:#f00,fill:#fa0,color:black\n"
             "\n"
         )
 
-        for table in self.tables:
-            mermaid_str += f"    {table.name}:::{'INTERNAL' if table.name == 'internal' else table.type.name}\n"
+        for table in tables:
+            mermaid_str += f"    {table.name}:::{table.type.name}\n"
 
-        for table in sorted(self.tables, key=lambda t: t.name):
+        for table in sorted(tables, key=lambda t: t.name):
             mermaid_str += f"\n    subgraph {table.name}\n"
-            mermaid_str += table_columns(self.source_columns if table.type == TableType.SOURCE else self.target_columns)
+            mermaid_str += table_columns(columns)
             mermaid_str += "    end\n"
 
         mermaid_str += "\n"
 
-        compressed_colum_lineage = self._compress_column_lineage()
-        for sc, t in sorted(compressed_colum_lineage.items(), key=lambda t: str(t[0])):
+        for sc, t in sorted(compressed_column_lineage.items(), key=lambda t: str(t[0])):
             for tc, types in sorted(t.items(), key=lambda t: str(t[0])):
                 mermaid_str += f"    {sc} -- {','.join(sorted({t.name for t in types}))} --> {tc}\n"
 
         return mermaid_str
+
+    @staticmethod
+    def mermaid_from_lineages(lineages: list["Lineage"]) -> str:
+        table_types: dict[str, TableType] = {}
+        columns: set[Column] = set()
+        compressed_column_lineage: dict[Column, dict[Column, set[ColumnLineageType]]] = {}
+        for lineage in lineages:
+            for table in lineage.tables:
+                if table.name not in table_types:
+                    table_types[table.name] = table.type
+                elif table_types[table.name] != table.type:
+                    table_types[table.name] = TableType.INTERMEDIATE
+
+            _columns = {c for c in lineage.source_columns.union(lineage.target_columns) if c not in columns}
+            columns = columns.union(_columns)
+            compressed_column_lineage = compressed_column_lineage | Lineage._compress_column_lineage(lineage.column_lineage)
+
+        tables: set[Table] = {Table(name=table_name, type=table_type) for table_name, table_type in table_types.items()}
+
+        return Lineage._mermaid(tables, columns, compressed_column_lineage)

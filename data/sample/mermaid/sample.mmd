@@ -1,0 +1,91 @@
+---
+config:
+theme: 'base'
+themeVariables:
+    primaryColor: '#BB2528'
+    primaryTextColor: '#fff'
+    primaryBorderColor: '#7C0000'
+    lineColor: '#F8B229'
+    secondaryColor: '#267826'
+    tertiaryColor: '#fff'
+---
+flowchart LR
+    classDef SOURCE stroke:#00f,fill:#0ff,color:black
+    classDef TARGET stroke:#0f0,fill:#0fa,color:black
+    classDef INTERMEDIATE stroke:#f00,fill:#fa0,color:black
+    classDef INTERNAL stroke:#f00,fill:#fa0,color:black
+
+    sample_table:::SOURCE
+    sample_table_2_prepped:::INTERMEDIATE
+    sample_table_2:::SOURCE
+    df_joined:::TARGET
+    relation_table_prepped:::INTERMEDIATE
+    sample_table_prepped:::INTERMEDIATE
+    relation_table:::SOURCE
+
+    subgraph df_joined
+        df_joined.name_a[name_a]
+        df_joined.name_b[name_b]
+    end
+
+    subgraph relation_table
+        relation_table.id1[id1]
+        relation_table.id2[id2]
+        relation_table.rel_type[rel_type]
+    end
+
+    subgraph relation_table_prepped
+        relation_table_prepped.id1[id1]
+        relation_table_prepped.id2[id2]
+        relation_table_prepped.rel_type[rel_type]
+    end
+
+    subgraph sample_table
+        sample_table.id[id]
+        sample_table.name[name]
+    end
+
+    subgraph sample_table_2
+        sample_table_2.id[id]
+        sample_table_2.name[name]
+    end
+
+    subgraph sample_table_2_prepped
+        sample_table_2_prepped.id[id]
+        sample_table_2_prepped.name_upper[name_upper]
+    end
+
+    subgraph sample_table_prepped
+        sample_table_prepped.id[id]
+        sample_table_prepped.name_upper[name_upper]
+    end
+
+    relation_table.id1 -- COLUMN,FILTER --> relation_table_prepped.id1
+    relation_table.id1 -- FILTER --> relation_table_prepped.id2
+    relation_table.id1 -- FILTER --> relation_table_prepped.rel_type
+    relation_table.id2 -- FILTER --> relation_table_prepped.id1
+    relation_table.id2 -- COLUMN,FILTER --> relation_table_prepped.id2
+    relation_table.id2 -- FILTER --> relation_table_prepped.rel_type
+    relation_table.rel_type -- FILTER --> relation_table_prepped.id1
+    relation_table.rel_type -- FILTER --> relation_table_prepped.id2
+    relation_table.rel_type -- COLUMN,FILTER --> relation_table_prepped.rel_type
+    relation_table_prepped.id1 -- JOIN --> df_joined.name_a
+    relation_table_prepped.id1 -- JOIN --> df_joined.name_b
+    relation_table_prepped.id2 -- JOIN --> df_joined.name_a
+    relation_table_prepped.id2 -- JOIN --> df_joined.name_b
+    relation_table_prepped.rel_type -- JOIN --> df_joined.name_a
+    relation_table_prepped.rel_type -- JOIN --> df_joined.name_b
+    sample_table.id -- COLUMN,FILTER --> sample_table_prepped.id
+    sample_table.id -- FILTER --> sample_table_prepped.name_upper
+    sample_table.name -- COLUMN --> sample_table_prepped.name_upper
+    sample_table_2.id -- COLUMN,FILTER --> sample_table_2_prepped.id
+    sample_table_2.id -- FILTER --> sample_table_2_prepped.name_upper
+    sample_table_2.name -- COLUMN --> sample_table_2_prepped.name_upper
+    sample_table_2_prepped.id -- FILTER,JOIN --> df_joined.name_a
+    sample_table_2_prepped.id -- FILTER,JOIN --> df_joined.name_b
+    sample_table_2_prepped.name_upper -- COLUMN --> df_joined.name_a
+    sample_table_2_prepped.name_upper -- COLUMN --> df_joined.name_b
+    sample_table_prepped.id -- FILTER,JOIN --> df_joined.name_a
+    sample_table_prepped.id -- FILTER,JOIN --> df_joined.name_b
+    sample_table_prepped.name_upper -- COLUMN --> df_joined.name_a
+    sample_table_prepped.name_upper -- COLUMN --> df_joined.name_b
