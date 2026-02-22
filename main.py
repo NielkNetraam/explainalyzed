@@ -8,7 +8,7 @@ def main() -> None:
     spark = SparkSession.builder.appName("Testing PySpark Example").getOrCreate()
     if False:
         create_tables_and_store(spark)
-        create_plans_and_store(spark)
+    create_plans_and_store(spark)
     create_sample_plans(spark)
 
     spark.stop()

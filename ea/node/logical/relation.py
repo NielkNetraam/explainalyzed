@@ -28,6 +28,7 @@ class RelationNode(PlanNode):
             for field in fields
             if field.strip() in mapping
         }
+        self.table: str = next(field.table for field in self.fields.values() if field.table is not None)  # ty:ignore[unresolved-attribute]
 
     def get_column_dependencies(self) -> dict[str, ColumnDependency]:
         return self.fields
@@ -35,3 +36,6 @@ class RelationNode(PlanNode):
     def __str__(self) -> str:
         """Return a string representation of the FileScan node."""
         return f"{self.node_type} (Level: {self.level}) (Fields: {self.fields}) (Source Type: {self.source_type})"
+
+    def mermaid(self, node_id_str: str) -> str:
+        return f'{self.node_type}#{node_id_str}["{self.table}: {self.parameters}"]'

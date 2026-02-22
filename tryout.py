@@ -2,30 +2,72 @@ from pathlib import Path
 
 from ea.explainanalyzed import ExplainAnalyzed
 from ea.lineage import Lineage
+from ea.node.plan_node import PlanNode
 
 path = Path(__file__).parent / "data/sample/plans"
 plans = {p.stem: p for p in path.glob("**/*.txt")}
 print(plans)
 
-eas: dict[str, ExplainAnalyzed] = {}
-for name, plan in plans.items():
-    print(f"Plan name: {name}")
-    with plan.open() as file:
-        plan_data = file.readlines()
+if True:
+    eas: dict[str, ExplainAnalyzed] = {}
+    for name, plan in plans.items():
+        print(f"Plan name: {name}")
+        with plan.open() as file:
+            plan_data = file.readlines()
 
-    eas[name] = ExplainAnalyzed(name, plan_data)
+        eas[name] = ExplainAnalyzed(name, plan_data)
 
-lineage = eas["df_joined"].get_lineage()
-# print(lineage.mermaid())
+    lineage = eas["df_joined"].get_lineage()
+    # print(lineage.mermaid())
+
+if False:
+    print(
+        Lineage.mermaid_from_lineages([ea.get_lineage() for ea in eas.values()]),
+    )
+
+if False:
+    path = Path(__file__).parent / "data/sample/mermaid/sample.mmd"
+    with path.open("w") as file:
+        file.write(Lineage.mermaid_from_lineages([ea.get_lineage() for ea in eas.values()]))
 
 
-print(
-    Lineage.mermaid_from_lineages([ea.get_lineage() for ea in eas.values()]),
-)
+def print_plan_node(node: PlanNode, indent: int = 0) -> None:
+    print("   " * indent + f"{node.node_type}: {node.parameters}")
+    for child in node.children:
+        print_plan_node(child, indent + 1)
 
-path = Path(__file__).parent / "data/sample/mermaid/sample.mmd"
-with path.open("w") as file:
-    file.write(Lineage.mermaid_from_lineages([ea.get_lineage() for ea in eas.values()]))
+
+def nodes(node: PlanNode, node_id: str = "", indent: int = 0) -> str:
+    node_str = ""
+    node_id_str = "1" if node_id == "" else node_id
+    node_str = (
+        "    " * indent + f'{node.node_type}#{node_id_str}["{node.node_type}: {node.parameters}"]:::{node.node_type.upper()}\n'
+    )
+
+    for idx, child in enumerate(node.children):
+        node_str += nodes(child, node_id=f"{node_id_str}{idx + 1}", indent=indent)
+
+    return node_str
+
+
+def edges(node: PlanNode, node_id: str = "", indent: int = 0) -> str:
+    edge_str = ""
+    node_id_str = "1" if node_id == "" else node_id
+
+    for idx, child in enumerate(node.children):
+        edge_str += "    " * indent + f"{node.node_type}#{node_id_str} --> {child.node_type}#{node_id_str}{idx + 1}\n"
+        edge_str += edges(child, node_id=f"{node_id_str}{idx + 1}", indent=indent + 1)
+
+    return edge_str
+
+
+# lineage = eas["df_joined"].get_optimized_logical_plan()
+# nodes_str = nodes(lineage, indent=1)
+# print(nodes_str)
+# edges_str = edges(lineage, indent=1)
+# print(edges_str)
+# print_plan_node(lineage)
+print(eas["df_joined"].mermaid())
 
 # path = Path(__file__).parent.parent.parent.parent / f"data/plans/{dataset}_plan.txt"
 #     with path.open() as file:

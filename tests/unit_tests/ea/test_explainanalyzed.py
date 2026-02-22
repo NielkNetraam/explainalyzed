@@ -135,8 +135,8 @@ _get_lineage_scenarios = {
             "sample_table_2.id -- FILTER --> target.birth_date",
         },
     ),
-    "IF join_rigth THEN success": (
-        "join_rigth",
+    "IF join_right THEN success": (
+        "join_right",
         {
             "sample_table_2.id -- COLUMN --> target.id",
             "sample_table.id -- JOIN --> target.id",
@@ -214,6 +214,55 @@ _get_lineage_scenarios = {
             "transaction_table.id -- JOIN --> target.total_amount",
         },
     ),
+    "IF union_forest THEN success": (
+        "union_forest",
+        {
+            "sample_table.id -- JOIN --> target.simple_id",
+            "sample_table.id -- COLUMN --> target.simple_id",
+            "sample_table.name -- FILTER --> target.simple_id",
+            "sample_table.id -- FILTER --> target.name_b",
+            "sample_table.name -- JOIN --> target.name_a",
+            "sample_table.name -- JOIN --> target.simple_id",
+            "sample_table_2.id -- JOIN --> target.name_a",
+            "sample_table.id -- FILTER --> target.name_a",
+            "sample_table_2.name -- FILTER --> target.name_a",
+            "relation_table.rel_type -- JOIN --> target.name_a",
+            "sample_table.name -- FILTER --> target.complex_id",
+            "internal.None -- COLUMN --> target.complex_id",
+            "relation_table.id2 -- JOIN --> target.complex_id",
+            "relation_table.id1 -- JOIN --> target.simple_id",
+            "sample_table_2.name -- JOIN --> target.name_b",
+            "sample_table_2.name -- COLUMN --> target.name_a",
+            "relation_table.id1 -- JOIN --> target.name_b",
+            "internal.None -- COLUMN --> target.simple_id",
+            "sample_table_2.name -- JOIN --> target.name_a",
+            "relation_table.id2 -- JOIN --> target.name_b",
+            "sample_table_2.name -- JOIN --> target.simple_id",
+            "relation_table.rel_type -- JOIN --> target.name_b",
+            "sample_table_2.id -- FILTER --> target.name_b",
+            "relation_table.rel_type -- JOIN --> target.complex_id",
+            "sample_table_2.id -- FILTER --> target.name_a",
+            "sample_table_2.id -- JOIN --> target.simple_id",
+            "sample_table_2.id -- JOIN --> target.name_b",
+            "sample_table.id -- JOIN --> target.complex_id",
+            "relation_table.id2 -- JOIN --> target.name_a",
+            "sample_table_2.name -- COLUMN --> target.name_b",
+            "relation_table.id2 -- JOIN --> target.simple_id",
+            "relation_table.id1 -- JOIN --> target.name_a",
+            "sample_table.id -- JOIN --> target.name_b",
+            "relation_table.rel_type -- JOIN --> target.simple_id",
+            "relation_table.id1 -- JOIN --> target.complex_id",
+            "sample_table.name -- FILTER --> target.name_a",
+            "sample_table.id -- JOIN --> target.name_a",
+            "sample_table_2.name -- JOIN --> target.complex_id",
+            "sample_table.name -- COLUMN --> target.name_b",
+            "sample_table_2.id -- JOIN --> target.complex_id",
+            "sample_table.name -- JOIN --> target.complex_id",
+            "sample_table.id -- COLUMN --> target.complex_id",
+            "sample_table.name -- COLUMN --> target.name_a",
+            "sample_table.name -- JOIN --> target.name_b",
+        },
+    ),
 }
 
 
@@ -229,6 +278,10 @@ def test_get_lineage(dataset: str, expected: set[str]) -> None:
 
     assert {str(cl) for cl in lineage.column_lineage} == expected
 
-    path = Path(__file__).parent.parent.parent.parent / f"data/mermaid/{dataset}.mmd"
+    path = Path(__file__).parent.parent.parent.parent / f"data/lineage/{dataset}.mmd"
     with path.open("w") as file:
         file.write(lineage.mermaid())
+
+    path = Path(__file__).parent.parent.parent.parent / f"data/visualization/{dataset}.mmd"
+    with path.open("w") as file:
+        file.write(ea.mermaid())

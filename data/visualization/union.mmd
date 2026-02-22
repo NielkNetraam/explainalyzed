@@ -1,0 +1,29 @@
+---
+config:
+theme: 'base'
+themeVariables:
+    primaryColor: '#BB2528'
+    primaryTextColor: '#fff'
+    primaryBorderColor: '#7C0000'
+    lineColor: '#F8B229'
+    secondaryColor: '#267826'
+    tertiaryColor: '#fff'
+---
+flowchart TD
+    classDef PROJECT stroke:Blue,fill:LightBlue,color:black
+    classDef FILTER stroke:Green,fill:LightGreen,color:black
+    classDef UNION stroke:Purple,fill:Violet,color:black
+    classDef JOIN stroke:DarkOrange,fill:Orange,color:black
+    classDef RELATION stroke:Yellow,fill:Gold,color:black
+    classDef AGGREGATE stroke:Brown,fill:Chocolate,color:black
+
+    Union#1["Union"]:::UNION
+    Project#11["Project: [name#29, age#30, null AS birth_date#35]"]:::PROJECT
+    Relation#111["sample_table: [id#28,name#29,age#30] parquet"]:::RELATION
+    Project#12["Project: [name#32, null AS age#34, birth_date#33]"]:::PROJECT
+    Relation#121["sample_table_2: [id#31,name#32,birth_date#33] parquet"]:::RELATION
+
+    Union#1 --> Project#11
+        Project#11 --> Relation#111
+    Union#1 --> Project#12
+        Project#12 --> Relation#121

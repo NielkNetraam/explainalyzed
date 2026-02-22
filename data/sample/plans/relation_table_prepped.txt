@@ -1,21 +1,21 @@
 == Parsed Logical Plan ==
 'Filter '`=`('rel_type, friend)
-+- Filter (id2#11 < 10)
-   +- Filter (id1#10 > 1)
-      +- Relation [id1#10,id2#11,rel_type#12] parquet
++- Filter (id2#286 < 10)
+   +- Filter (id1#285 > 1)
+      +- Relation [id1#285,id2#286,rel_type#287] parquet
 
 == Analyzed Logical Plan ==
 id1: int, id2: int, rel_type: string
-Filter (rel_type#12 = friend)
-+- Filter (id2#11 < 10)
-   +- Filter (id1#10 > 1)
-      +- Relation [id1#10,id2#11,rel_type#12] parquet
+Filter (rel_type#287 = friend)
++- Filter (id2#286 < 10)
+   +- Filter (id1#285 > 1)
+      +- Relation [id1#285,id2#286,rel_type#287] parquet
 
 == Optimized Logical Plan ==
-Filter (((isnotnull(id1#10) AND isnotnull(id2#11)) AND isnotnull(rel_type#12)) AND ((id1#10 > 1) AND ((id2#11 < 10) AND (rel_type#12 = friend))))
-+- Relation [id1#10,id2#11,rel_type#12] parquet
+Filter (((isnotnull(id1#285) AND isnotnull(id2#286)) AND isnotnull(rel_type#287)) AND ((id1#285 > 1) AND ((id2#286 < 10) AND (rel_type#287 = friend))))
++- Relation [id1#285,id2#286,rel_type#287] parquet
 
 == Physical Plan ==
-*(1) Filter (((((isnotnull(id1#10) AND isnotnull(id2#11)) AND isnotnull(rel_type#12)) AND (id1#10 > 1)) AND (id2#11 < 10)) AND (rel_type#12 = friend))
+*(1) Filter (((((isnotnull(id1#285) AND isnotnull(id2#286)) AND isnotnull(rel_type#287)) AND (id1#285 > 1)) AND (id2#286 < 10)) AND (rel_type#287 = friend))
 +- *(1) ColumnarToRow
-   +- FileScan parquet [id1#10,id2#11,rel_type#12] Batched: true, DataFilters: [isnotnull(id1#10), isnotnull(id2#11), isnotnull(rel_type#12), (id1#10 > 1), (id2#11 < 10), (rel_type#12 = friend)], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/relation_table], PartitionFilters: [], PushedFilters: [IsNotNull(id1), IsNotNull(id2), IsNotNull(rel_type), GreaterThan(id1,1), LessThan(id2,10), EqualTo(rel_type,friend)], ReadSchema: struct<id1:int,id2:int,rel_type:string>
+   +- FileScan parquet [id1#285,id2#286,rel_type#287] Batched: true, DataFilters: [isnotnull(id1#285), isnotnull(id2#286), isnotnull(rel_type#287), (id1#285 > 1), (id2#286 < 10), (rel_type#287 = friend)], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/relation_table], PartitionFilters: [], PushedFilters: [IsNotNull(id1), IsNotNull(id2), IsNotNull(rel_type), GreaterThan(id1,1), LessThan(id2,10), EqualTo(rel_type,friend)], ReadSchema: struct<id1:int,id2:int,rel_type:string>

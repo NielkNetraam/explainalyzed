@@ -1,0 +1,29 @@
+---
+config:
+theme: 'base'
+themeVariables:
+    primaryColor: '#BB2528'
+    primaryTextColor: '#fff'
+    primaryBorderColor: '#7C0000'
+    lineColor: '#F8B229'
+    secondaryColor: '#267826'
+    tertiaryColor: '#fff'
+---
+flowchart TD
+    classDef PROJECT stroke:Blue,fill:LightBlue,color:black
+    classDef FILTER stroke:Green,fill:LightGreen,color:black
+    classDef UNION stroke:Purple,fill:Violet,color:black
+    classDef JOIN stroke:DarkOrange,fill:Orange,color:black
+    classDef RELATION stroke:Yellow,fill:Gold,color:black
+    classDef AGGREGATE stroke:Brown,fill:Chocolate,color:black
+
+    Project#1["Project: [id#47, coalesce(name#48, name#51) AS name#55, age#49, birth_date#52]"]:::PROJECT
+    Join#11["Join: LeftOuter, (id#47 = id#50)"]:::JOIN
+    Relation#111["sample_table: [id#47,name#48,age#49] parquet"]:::RELATION
+    Filter#112["Filter: isnotnull(id#50)"]:::FILTER
+    Relation#1121["sample_table_2: [id#50,name#51,birth_date#52] parquet"]:::RELATION
+
+    Project#1 --> Join#11
+        Join#11 --> Relation#111
+        Join#11 --> Filter#112
+            Filter#112 --> Relation#1121

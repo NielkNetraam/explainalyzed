@@ -1,0 +1,23 @@
+---
+config:
+theme: 'base'
+themeVariables:
+    primaryColor: '#BB2528'
+    primaryTextColor: '#fff'
+    primaryBorderColor: '#7C0000'
+    lineColor: '#F8B229'
+    secondaryColor: '#267826'
+    tertiaryColor: '#fff'
+---
+flowchart TD
+    classDef PROJECT stroke:Blue,fill:LightBlue,color:black
+    classDef FILTER stroke:Green,fill:LightGreen,color:black
+    classDef UNION stroke:Purple,fill:Violet,color:black
+    classDef JOIN stroke:DarkOrange,fill:Orange,color:black
+    classDef RELATION stroke:Yellow,fill:Gold,color:black
+    classDef AGGREGATE stroke:Brown,fill:Chocolate,color:black
+
+    Filter#1["Filter: (isnotnull(id#7) AND (id#7 > 1))"]:::FILTER
+    Relation#11["sample_table: [id#7,name#8,age#9] parquet"]:::RELATION
+
+    Filter#1 --> Relation#11

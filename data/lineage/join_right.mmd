@@ -1,0 +1,52 @@
+---
+config:
+theme: 'base'
+themeVariables:
+    primaryColor: '#BB2528'
+    primaryTextColor: '#fff'
+    primaryBorderColor: '#7C0000'
+    lineColor: '#F8B229'
+    secondaryColor: '#267826'
+    tertiaryColor: '#fff'
+---
+flowchart TD
+    classDef SOURCE stroke:Blue,fill:LightBlue,color:black
+    classDef TARGET stroke:Green,fill:LightGreen,color:black
+    classDef INTERMEDIATE stroke:DarkOrange,fill:Orange,color:black
+    classDef INTERNAL stroke:Purple,fill:Violet,color:black
+
+    sample_table:::SOURCE
+    sample_table_2:::SOURCE
+    target:::TARGET
+
+    subgraph sample_table
+        sample_table.age[age]
+        sample_table.id[id]
+        sample_table.name[name]
+    end
+
+    subgraph sample_table_2
+        sample_table_2.birth_date[birth_date]
+        sample_table_2.id[id]
+        sample_table_2.name[name]
+    end
+
+    subgraph target
+        target.age[age]
+        target.birth_date[birth_date]
+        target.id[id]
+        target.name[name]
+    end
+
+    sample_table.age -- COLUMN --> target.age
+    sample_table.id -- FILTER,JOIN --> target.age
+    sample_table.id -- JOIN --> target.birth_date
+    sample_table.id -- JOIN --> target.id
+    sample_table.id -- FILTER,JOIN --> target.name
+    sample_table.name -- COLUMN --> target.name
+    sample_table_2.birth_date -- COLUMN --> target.birth_date
+    sample_table_2.id -- JOIN --> target.age
+    sample_table_2.id -- JOIN --> target.birth_date
+    sample_table_2.id -- COLUMN,JOIN --> target.id
+    sample_table_2.id -- JOIN --> target.name
+    sample_table_2.name -- COLUMN --> target.name

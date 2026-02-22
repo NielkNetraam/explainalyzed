@@ -3,7 +3,7 @@ from decimal import Decimal
 from pathlib import Path
 
 import pyspark.sql.functions as f
-from pyspark.sql import SparkSession
+from pyspark.sql import DataFrame, SparkSession
 from pyspark.sql.types import DateType, DecimalType, IntegerType, StringType, StructField, StructType
 
 from data.utils import clean_data_directory, get_query_plan, store_dataframe, store_plan
@@ -131,21 +131,19 @@ def create_join_how_plan(spark: SparkSession, how: str) -> str:
     return get_query_plan(df_joined)
 
 
-def create_join_2_plan(spark: SparkSession) -> str:
+def join_2_query(spark: SparkSession) -> DataFrame:
     df1 = spark.read.load(str(TABLE_PATH / "sample_table"))
     df2 = spark.read.load(str(TABLE_PATH / "sample_table_2"))
     df_rel = spark.read.load(str(TABLE_PATH / "relation_table"))
 
     df = df1.unionByName(df2, allowMissingColumns=True)
 
-    df_joined = (
+    return (
         df.alias("df_a")
         .join(df_rel.filter(f.col("rel_type") == "friend"), f.col("df_a.id") == df_rel.id1, how="inner")
         .join(df.alias("df_b"), f.col("df_b.id") == df_rel.id2, how="inner")
         .select(f.col("df_a.name").alias("name_a"), f.col("df_b.name").alias("name_b"))
     )
-
-    return get_query_plan(df_joined)
 
 
 def create_aggregation_1_plan(spark: SparkSession) -> str:
@@ -181,6 +179,25 @@ def create_rdd_plan(spark: SparkSession) -> str:
     return get_query_plan(df2)
 
 
+def split_and_union(df: DataFrame, split: str, join_df: DataFrame, colum_to_add: str) -> DataFrame:
+    df1 = df.filter(f.col("name_a").rlike(split))
+    df2 = (
+        df.filter(~f.col("name_a").rlike(split))
+        .join(join_df, on=(f.col("name_a") == f.col("name")), how="left")
+        .withColumnRenamed("id", colum_to_add)
+        .drop("name", "age")
+    )
+    return df1.unionByName(df2, allowMissingColumns=True)
+
+
+def union_forest_query(spark: SparkSession) -> DataFrame:
+    df1 = join_2_query(spark)
+    df2 = spark.read.load(str(TABLE_PATH / "sample_table"))
+
+    df1 = split_and_union(df1, "simple", df2, "simple_id")
+    return split_and_union(df1, "complex", df2, "complex_id")
+
+
 # - aggregate
 # - type conversion
 # - from table / create df
@@ -197,9 +214,10 @@ def create_plans_and_store(spark: SparkSession) -> None:
     store_plan(create_union_plan(spark), PLAN_PATH / "union_plan.txt")
     store_plan(create_join_how_plan(spark, "inner"), PLAN_PATH / "join_inner_plan.txt")
     store_plan(create_join_how_plan(spark, "left"), PLAN_PATH / "join_left_plan.txt")
-    store_plan(create_join_how_plan(spark, "right"), PLAN_PATH / "join_rigth_plan.txt")
-    store_plan(create_join_2_plan(spark), PLAN_PATH / "join_2_plan.txt")
+    store_plan(create_join_how_plan(spark, "right"), PLAN_PATH / "join_right_plan.txt")
+    store_plan(get_query_plan(join_2_query(spark)), PLAN_PATH / "join_2_plan.txt")
     store_plan(create_aggregation_1_plan(spark), PLAN_PATH / "aggregation_1_plan.txt")
     store_plan(create_aggregation_2_plan(spark), PLAN_PATH / "aggregation_2_plan.txt")
     store_plan(create_aggregation_3_plan(spark), PLAN_PATH / "aggregation_3_plan.txt")
     store_plan(create_rdd_plan(spark), PLAN_PATH / "rdd_plan.txt")
+    store_plan(get_query_plan(union_forest_query(spark)), PLAN_PATH / "union_forest_plan.txt")

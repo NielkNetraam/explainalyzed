@@ -4,8 +4,8 @@ from enum import Enum
 
 class TableType(Enum):
     SOURCE = 1
-    TARGET = 2
-    INTERMEDIATE = 3
+    INTERMEDIATE = 2
+    TARGET = 3
     INTERNAL = 4
 
 
@@ -34,6 +34,10 @@ class Table:
         if not isinstance(other, Table):
             return NotImplemented
         return self.name == other.name
+
+    def __lt__(self, other: "Table") -> bool:
+        """Compare tables based on their names for sorting."""
+        return self.type.value < other.type.value or (self.type == other.type and self.name < other.name)
 
 
 @dataclass(frozen=True)
@@ -144,18 +148,18 @@ class Lineage:
             "    secondaryColor: '#267826'\n"
             "    tertiaryColor: '#fff'\n"
             "---\n"
-            "flowchart LR\n"
-            "    classDef SOURCE stroke:#00f,fill:#0ff,color:black\n"
-            "    classDef TARGET stroke:#0f0,fill:#0fa,color:black\n"
-            "    classDef INTERMEDIATE stroke:#f00,fill:#fa0,color:black\n"
-            "    classDef INTERNAL stroke:#f00,fill:#fa0,color:black\n"
+            "flowchart TD\n"
+            "    classDef SOURCE stroke:Blue,fill:LightBlue,color:black\n"
+            "    classDef TARGET stroke:Green,fill:LightGreen,color:black\n"
+            "    classDef INTERMEDIATE stroke:DarkOrange,fill:Orange,color:black\n"
+            "    classDef INTERNAL stroke:Purple,fill:Violet,color:black\n"
             "\n"
         )
 
-        for table in tables:
+        for table in sorted(tables):
             mermaid_str += f"    {table.name}:::{table.type.name}\n"
 
-        for table in sorted(tables, key=lambda t: t.name):
+        for table in sorted(tables):
             mermaid_str += f"\n    subgraph {table.name}\n"
             mermaid_str += table_columns(columns)
             mermaid_str += "    end\n"

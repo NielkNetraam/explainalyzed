@@ -1,0 +1,25 @@
+---
+config:
+theme: 'base'
+themeVariables:
+    primaryColor: '#BB2528'
+    primaryTextColor: '#fff'
+    primaryBorderColor: '#7C0000'
+    lineColor: '#F8B229'
+    secondaryColor: '#267826'
+    tertiaryColor: '#fff'
+---
+flowchart TD
+    classDef PROJECT stroke:Blue,fill:LightBlue,color:black
+    classDef FILTER stroke:Green,fill:LightGreen,color:black
+    classDef UNION stroke:Purple,fill:Violet,color:black
+    classDef JOIN stroke:DarkOrange,fill:Orange,color:black
+    classDef RELATION stroke:Yellow,fill:Gold,color:black
+    classDef AGGREGATE stroke:Brown,fill:Chocolate,color:black
+
+    Project#1["Project: [id#15, name#16 AS original_name#27, age#19, name_upper#20, id_str#21, id_and_name#22, constant_value AS literal#23, null AS none_value#24, conditional_value#25, struct(name, name#16, age, age#19) AS name_age#26]"]:::PROJECT
+    Project#11["Project: [id#15, name#16, (age#17 + 1) AS age#19, upper(name#16) AS name_upper#20, cast(id#15 as string) AS id_str#21, concat_ws(~, cast(id#15 as string), name#16) AS id_and_name#22, CASE WHEN (id#15 > 10) THEN name#16 WHEN (id#15 < 0) THEN upper(name#16) ELSE Unknown END AS conditional_value#25]"]:::PROJECT
+    Relation#111["sample_table: [id#15,name#16,age#17] parquet"]:::RELATION
+
+    Project#1 --> Project#11
+        Project#11 --> Relation#111

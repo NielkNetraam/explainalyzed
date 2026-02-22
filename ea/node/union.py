@@ -3,6 +3,9 @@ from ea.node.plan_node import PlanNode
 
 
 class UnionNode(PlanNode):
+    def mermaid(self, node_id_str: str) -> str:
+        return f'{self.node_type}#{node_id_str}["{self.node_type}"]'
+
     def get_column_dependencies(self) -> dict[str, ColumnDependency]:
         combined_column_dependency = [child.get_column_dependencies() for child in self.children]
 

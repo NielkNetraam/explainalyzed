@@ -9,13 +9,14 @@ themeVariables:
     secondaryColor: '#267826'
     tertiaryColor: '#fff'
 ---
-flowchart LR
-    classDef SOURCE stroke:#00f,fill:#0ff,color:black
-    classDef TARGET stroke:#0f0,fill:#0fa,color:black
-    classDef INTERNAL stroke:#f00,fill:#fa0,color:black
+flowchart TD
+    classDef SOURCE stroke:Blue,fill:LightBlue,color:black
+    classDef TARGET stroke:Green,fill:LightGreen,color:black
+    classDef INTERMEDIATE stroke:DarkOrange,fill:Orange,color:black
+    classDef INTERNAL stroke:Purple,fill:Violet,color:black
 
-    target:::TARGET
     sample_table:::SOURCE
+    target:::TARGET
 
     subgraph sample_table
         sample_table.age[age]

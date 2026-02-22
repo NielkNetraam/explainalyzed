@@ -141,3 +141,52 @@ class ExplainAnalyzed:
             self._lineage = tree.get_lineage(self.dataset_name)
 
         return self._lineage
+
+    def mermaid(self) -> str:
+        def nodes(node: PlanNode, node_id: str = "", indent: int = 0) -> str:
+            node_str = ""
+            node_id_str = "1" if node_id == "" else node_id
+            node_str = "    " * indent + node.mermaid(node_id_str) + f":::{node.node_type.upper()}\n"
+
+            for idx, child in enumerate(node.children):
+                node_str += nodes(child, node_id=f"{node_id_str}{idx + 1}", indent=indent)
+
+            return node_str
+
+        def edges(node: PlanNode, node_id: str = "", indent: int = 0) -> str:
+            edge_str = ""
+            node_id_str = "1" if node_id == "" else node_id
+
+            for idx, child in enumerate(node.children):
+                edge_str += "    " * indent + f"{node.node_type}#{node_id_str} --> {child.node_type}#{node_id_str}{idx + 1}\n"
+                edge_str += edges(child, node_id=f"{node_id_str}{idx + 1}", indent=indent + 1)
+
+            return edge_str
+
+        olp = self.get_optimized_logical_plan()
+
+        mermaid_str = (
+            "---\n"
+            "config:\n"
+            "theme: 'base'\n"
+            "themeVariables:\n"
+            "    primaryColor: '#BB2528'\n"
+            "    primaryTextColor: '#fff'\n"
+            "    primaryBorderColor: '#7C0000'\n"
+            "    lineColor: '#F8B229'\n"
+            "    secondaryColor: '#267826'\n"
+            "    tertiaryColor: '#fff'\n"
+            "---\n"
+            "flowchart TD\n"
+            "    classDef PROJECT stroke:Blue,fill:LightBlue,color:black\n"
+            "    classDef FILTER stroke:Green,fill:LightGreen,color:black\n"
+            "    classDef UNION stroke:Purple,fill:Violet,color:black\n"
+            "    classDef JOIN stroke:DarkOrange,fill:Orange,color:black\n"
+            "    classDef RELATION stroke:Yellow,fill:Gold,color:black\n"
+            "    classDef AGGREGATE stroke:Brown,fill:Chocolate,color:black\n"
+            "\n"
+        )
+
+        mermaid_str += nodes(olp, indent=1) + "\n"
+        mermaid_str += edges(olp, indent=1)
+        return mermaid_str
