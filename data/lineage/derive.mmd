@@ -1,46 +1,36 @@
----
-config:
-theme: 'base'
-themeVariables:
-    primaryColor: '#BB2528'
-    primaryTextColor: '#fff'
-    primaryBorderColor: '#7C0000'
-    lineColor: '#F8B229'
-    secondaryColor: '#267826'
-    tertiaryColor: '#fff'
----
-flowchart TD
+flowchart LR
     classDef SOURCE stroke:Blue,fill:LightBlue,color:black
     classDef TARGET stroke:Green,fill:LightGreen,color:black
     classDef INTERMEDIATE stroke:DarkOrange,fill:Orange,color:black
     classDef INTERNAL stroke:Purple,fill:Violet,color:black
+    classDef FIELD stroke:Orange,fill:Gold,color:black
 
     sample_table:::SOURCE
     target:::TARGET
     internal:::INTERNAL
 
     subgraph sample_table
-        sample_table.age[age]
-        sample_table.id[id]
-        sample_table.name[name]
+        sample_table.age[age]:::FIELD
+        sample_table.id[id]:::FIELD
+        sample_table.name[name]:::FIELD
     end
 
     subgraph target
-        target.age[age]
-        target.conditional_value[conditional_value]
-        target.id[id]
-        target.id_and_name[id_and_name]
-        target.id_str[id_str]
-        target.literal[literal]
-        target.name_age[name_age]
-        target.name_upper[name_upper]
-        target.none_value[none_value]
-        target.original_name[original_name]
+        target.age[age]:::FIELD
+        target.conditional_value[conditional_value]:::FIELD
+        target.id[id]:::FIELD
+        target.id_and_name[id_and_name]:::FIELD
+        target.id_str[id_str]:::FIELD
+        target.literal[literal]:::FIELD
+        target.name_age[name_age]:::FIELD
+        target.name_upper[name_upper]:::FIELD
+        target.none_value[none_value]:::FIELD
+        target.original_name[original_name]:::FIELD
     end
 
     subgraph internal
-        internal.None[None]
-        internal.literal[literal]
+        internal.None[None]:::FIELD
+        internal.literal[literal]:::FIELD
     end
 
     internal.None -- COLUMN --> target.none_value

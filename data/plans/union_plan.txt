@@ -1,32 +1,32 @@
 == Parsed Logical Plan ==
 'Project ['name, 'age, 'birth_date]
 +- Union false, false
-   :- Project [id#28, name#29, age#30, null AS birth_date#35]
-   :  +- Relation [id#28,name#29,age#30] parquet
-   +- Project [id#31, name#32, null AS age#34, birth_date#33]
-      +- Relation [id#31,name#32,birth_date#33] parquet
+   :- Project [id#38, name#39, age#40, null AS birth_date#45]
+   :  +- Relation [id#38,name#39,age#40] parquet
+   +- Project [id#41, name#42, null AS age#44, birth_date#43]
+      +- Relation [id#41,name#42,birth_date#43] parquet
 
 == Analyzed Logical Plan ==
 name: string, age: int, birth_date: date
-Project [name#29, age#30, birth_date#35]
+Project [name#39, age#40, birth_date#45]
 +- Union false, false
-   :- Project [id#28, name#29, age#30, null AS birth_date#35]
-   :  +- Relation [id#28,name#29,age#30] parquet
-   +- Project [id#31, name#32, null AS age#34, birth_date#33]
-      +- Relation [id#31,name#32,birth_date#33] parquet
+   :- Project [id#38, name#39, age#40, null AS birth_date#45]
+   :  +- Relation [id#38,name#39,age#40] parquet
+   +- Project [id#41, name#42, null AS age#44, birth_date#43]
+      +- Relation [id#41,name#42,birth_date#43] parquet
 
 == Optimized Logical Plan ==
 Union false, false
-:- Project [name#29, age#30, null AS birth_date#35]
-:  +- Relation [id#28,name#29,age#30] parquet
-+- Project [name#32, null AS age#34, birth_date#33]
-   +- Relation [id#31,name#32,birth_date#33] parquet
+:- Project [name#39, age#40, null AS birth_date#45]
+:  +- Relation [id#38,name#39,age#40] parquet
++- Project [name#42, null AS age#44, birth_date#43]
+   +- Relation [id#41,name#42,birth_date#43] parquet
 
 == Physical Plan ==
 Union
-:- *(1) Project [name#29, age#30, null AS birth_date#35]
+:- *(1) Project [name#39, age#40, null AS birth_date#45]
 :  +- *(1) ColumnarToRow
-:     +- FileScan parquet [name#29,age#30] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<name:string,age:int>
-+- *(2) Project [name#32, null AS age#34, birth_date#33]
+:     +- FileScan parquet [name#39,age#40] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<name:string,age:int>
++- *(2) Project [name#42, null AS age#44, birth_date#43]
    +- *(2) ColumnarToRow
-      +- FileScan parquet [name#32,birth_date#33] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table_2], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<name:string,birth_date:date>
+      +- FileScan parquet [name#42,birth_date#43] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table_2], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<name:string,birth_date:date>

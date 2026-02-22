@@ -1,19 +1,9 @@
----
-config:
-theme: 'base'
-themeVariables:
-    primaryColor: '#BB2528'
-    primaryTextColor: '#fff'
-    primaryBorderColor: '#7C0000'
-    lineColor: '#F8B229'
-    secondaryColor: '#267826'
-    tertiaryColor: '#fff'
----
-flowchart TD
+flowchart LR
     classDef SOURCE stroke:Blue,fill:LightBlue,color:black
     classDef TARGET stroke:Green,fill:LightGreen,color:black
     classDef INTERMEDIATE stroke:DarkOrange,fill:Orange,color:black
     classDef INTERNAL stroke:Purple,fill:Violet,color:black
+    classDef FIELD stroke:Orange,fill:Gold,color:black
 
     relation_table:::SOURCE
     sample_table:::SOURCE
@@ -21,24 +11,24 @@ flowchart TD
     target:::TARGET
 
     subgraph relation_table
-        relation_table.id1[id1]
-        relation_table.id2[id2]
-        relation_table.rel_type[rel_type]
+        relation_table.id1[id1]:::FIELD
+        relation_table.id2[id2]:::FIELD
+        relation_table.rel_type[rel_type]:::FIELD
     end
 
     subgraph sample_table
-        sample_table.id[id]
-        sample_table.name[name]
+        sample_table.id[id]:::FIELD
+        sample_table.name[name]:::FIELD
     end
 
     subgraph sample_table_2
-        sample_table_2.id[id]
-        sample_table_2.name[name]
+        sample_table_2.id[id]:::FIELD
+        sample_table_2.name[name]:::FIELD
     end
 
     subgraph target
-        target.name_a[name_a]
-        target.name_b[name_b]
+        target.name_a[name_a]:::FIELD
+        target.name_b[name_b]:::FIELD
     end
 
     relation_table.id1 -- JOIN --> target.name_a

@@ -1,23 +1,23 @@
 == Parsed Logical Plan ==
 'Project ['id, 'name_upper]
-+- Project [id#275, name#276, age#277, upper(name#276) AS name_upper#279]
-   +- Filter (id#275 > 1)
-      +- Relation [id#275,name#276,age#277] parquet
++- Project [id#285, name#286, age#287, upper(name#286) AS name_upper#289]
+   +- Filter (id#285 > 1)
+      +- Relation [id#285,name#286,age#287] parquet
 
 == Analyzed Logical Plan ==
 id: int, name_upper: string
-Project [id#275, name_upper#279]
-+- Project [id#275, name#276, age#277, upper(name#276) AS name_upper#279]
-   +- Filter (id#275 > 1)
-      +- Relation [id#275,name#276,age#277] parquet
+Project [id#285, name_upper#289]
++- Project [id#285, name#286, age#287, upper(name#286) AS name_upper#289]
+   +- Filter (id#285 > 1)
+      +- Relation [id#285,name#286,age#287] parquet
 
 == Optimized Logical Plan ==
-Project [id#275, upper(name#276) AS name_upper#279]
-+- Filter (isnotnull(id#275) AND (id#275 > 1))
-   +- Relation [id#275,name#276,age#277] parquet
+Project [id#285, upper(name#286) AS name_upper#289]
++- Filter (isnotnull(id#285) AND (id#285 > 1))
+   +- Relation [id#285,name#286,age#287] parquet
 
 == Physical Plan ==
-*(1) Project [id#275, upper(name#276) AS name_upper#279]
-+- *(1) Filter (isnotnull(id#275) AND (id#275 > 1))
+*(1) Project [id#285, upper(name#286) AS name_upper#289]
++- *(1) Filter (isnotnull(id#285) AND (id#285 > 1))
    +- *(1) ColumnarToRow
-      +- FileScan parquet [id#275,name#276] Batched: true, DataFilters: [isnotnull(id#275), (id#275 > 1)], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table], PartitionFilters: [], PushedFilters: [IsNotNull(id), GreaterThan(id,1)], ReadSchema: struct<id:int,name:string>
+      +- FileScan parquet [id#285,name#286] Batched: true, DataFilters: [isnotnull(id#285), (id#285 > 1)], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table], PartitionFilters: [], PushedFilters: [IsNotNull(id), GreaterThan(id,1)], ReadSchema: struct<id:int,name:string>

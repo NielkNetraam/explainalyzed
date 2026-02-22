@@ -1,19 +1,9 @@
----
-config:
-theme: 'base'
-themeVariables:
-    primaryColor: '#BB2528'
-    primaryTextColor: '#fff'
-    primaryBorderColor: '#7C0000'
-    lineColor: '#F8B229'
-    secondaryColor: '#267826'
-    tertiaryColor: '#fff'
----
-flowchart TD
+flowchart LR
     classDef SOURCE stroke:Blue,fill:LightBlue,color:black
     classDef TARGET stroke:Green,fill:LightGreen,color:black
     classDef INTERMEDIATE stroke:DarkOrange,fill:Orange,color:black
     classDef INTERNAL stroke:Purple,fill:Violet,color:black
+    classDef FIELD stroke:Orange,fill:Gold,color:black
 
     sample_table:::SOURCE
     sample_table_2:::SOURCE
@@ -21,23 +11,23 @@ flowchart TD
     internal:::INTERNAL
 
     subgraph sample_table
-        sample_table.age[age]
-        sample_table.name[name]
+        sample_table.age[age]:::FIELD
+        sample_table.name[name]:::FIELD
     end
 
     subgraph sample_table_2
-        sample_table_2.birth_date[birth_date]
-        sample_table_2.name[name]
+        sample_table_2.birth_date[birth_date]:::FIELD
+        sample_table_2.name[name]:::FIELD
     end
 
     subgraph target
-        target.age[age]
-        target.birth_date[birth_date]
-        target.name[name]
+        target.age[age]:::FIELD
+        target.birth_date[birth_date]:::FIELD
+        target.name[name]:::FIELD
     end
 
     subgraph internal
-        internal.None[None]
+        internal.None[None]:::FIELD
     end
 
     internal.None -- COLUMN --> target.age

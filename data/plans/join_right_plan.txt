@@ -1,34 +1,34 @@
 == Parsed Logical Plan ==
-'Project ['id, 'coalesce('a.name, 'b.name) AS name#64, 'age, 'birth_date]
-+- Project [id#59, name#57, age#58, name#60, birth_date#61]
-   +- Join RightOuter, (id#56 = id#59)
+'Project ['id, 'coalesce('a.name, 'b.name) AS name#74, 'age, 'birth_date]
++- Project [id#69, name#67, age#68, name#70, birth_date#71]
+   +- Join RightOuter, (id#66 = id#69)
       :- SubqueryAlias a
-      :  +- Relation [id#56,name#57,age#58] parquet
+      :  +- Relation [id#66,name#67,age#68] parquet
       +- SubqueryAlias b
-         +- Relation [id#59,name#60,birth_date#61] parquet
+         +- Relation [id#69,name#70,birth_date#71] parquet
 
 == Analyzed Logical Plan ==
 id: int, name: string, age: int, birth_date: date
-Project [id#59, coalesce(name#57, name#60) AS name#64, age#58, birth_date#61]
-+- Project [id#59, name#57, age#58, name#60, birth_date#61]
-   +- Join RightOuter, (id#56 = id#59)
+Project [id#69, coalesce(name#67, name#70) AS name#74, age#68, birth_date#71]
++- Project [id#69, name#67, age#68, name#70, birth_date#71]
+   +- Join RightOuter, (id#66 = id#69)
       :- SubqueryAlias a
-      :  +- Relation [id#56,name#57,age#58] parquet
+      :  +- Relation [id#66,name#67,age#68] parquet
       +- SubqueryAlias b
-         +- Relation [id#59,name#60,birth_date#61] parquet
+         +- Relation [id#69,name#70,birth_date#71] parquet
 
 == Optimized Logical Plan ==
-Project [id#59, coalesce(name#57, name#60) AS name#64, age#58, birth_date#61]
-+- Join RightOuter, (id#56 = id#59)
-   :- Filter isnotnull(id#56)
-   :  +- Relation [id#56,name#57,age#58] parquet
-   +- Relation [id#59,name#60,birth_date#61] parquet
+Project [id#69, coalesce(name#67, name#70) AS name#74, age#68, birth_date#71]
++- Join RightOuter, (id#66 = id#69)
+   :- Filter isnotnull(id#66)
+   :  +- Relation [id#66,name#67,age#68] parquet
+   +- Relation [id#69,name#70,birth_date#71] parquet
 
 == Physical Plan ==
 AdaptiveSparkPlan isFinalPlan=false
-+- Project [id#59, coalesce(name#57, name#60) AS name#64, age#58, birth_date#61]
-   +- BroadcastHashJoin [id#56], [id#59], RightOuter, BuildLeft, false
-      :- BroadcastExchange HashedRelationBroadcastMode(List(cast(input[0, int, false] as bigint)),false), [plan_id=164]
-      :  +- Filter isnotnull(id#56)
-      :     +- FileScan parquet [id#56,name#57,age#58] Batched: true, DataFilters: [isnotnull(id#56)], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table], PartitionFilters: [], PushedFilters: [IsNotNull(id)], ReadSchema: struct<id:int,name:string,age:int>
-      +- FileScan parquet [id#59,name#60,birth_date#61] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table_2], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<id:int,name:string,birth_date:date>
++- Project [id#69, coalesce(name#67, name#70) AS name#74, age#68, birth_date#71]
+   +- BroadcastHashJoin [id#66], [id#69], RightOuter, BuildLeft, false
+      :- BroadcastExchange HashedRelationBroadcastMode(List(cast(input[0, int, false] as bigint)),false), [plan_id=175]
+      :  +- Filter isnotnull(id#66)
+      :     +- FileScan parquet [id#66,name#67,age#68] Batched: true, DataFilters: [isnotnull(id#66)], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table], PartitionFilters: [], PushedFilters: [IsNotNull(id)], ReadSchema: struct<id:int,name:string,age:int>
+      +- FileScan parquet [id#69,name#70,birth_date#71] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table_2], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<id:int,name:string,birth_date:date>

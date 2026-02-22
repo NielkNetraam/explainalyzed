@@ -132,27 +132,17 @@ class Lineage:
             mermaid_str = ""
             for column in sorted(columns, key=lambda t: t.name):
                 if column.table.name == table.name:
-                    mermaid_str += f"        {table.name}.{column.name}[{column.name}]\n"
+                    mermaid_str += f"        {table.name}.{column.name}[{column.name}]:::FIELD\n"
 
             return mermaid_str
 
         mermaid_str = (
-            "---\n"
-            "config:\n"
-            "theme: 'base'\n"
-            "themeVariables:\n"
-            "    primaryColor: '#BB2528'\n"
-            "    primaryTextColor: '#fff'\n"
-            "    primaryBorderColor: '#7C0000'\n"
-            "    lineColor: '#F8B229'\n"
-            "    secondaryColor: '#267826'\n"
-            "    tertiaryColor: '#fff'\n"
-            "---\n"
-            "flowchart TD\n"
+            "flowchart LR\n"
             "    classDef SOURCE stroke:Blue,fill:LightBlue,color:black\n"
             "    classDef TARGET stroke:Green,fill:LightGreen,color:black\n"
             "    classDef INTERMEDIATE stroke:DarkOrange,fill:Orange,color:black\n"
             "    classDef INTERNAL stroke:Purple,fill:Violet,color:black\n"
+            "    classDef FIELD stroke:Orange,fill:Gold,color:black\n"
             "\n"
         )
 

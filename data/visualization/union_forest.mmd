@@ -1,14 +1,3 @@
----
-config:
-theme: 'base'
-themeVariables:
-    primaryColor: '#BB2528'
-    primaryTextColor: '#fff'
-    primaryBorderColor: '#7C0000'
-    lineColor: '#F8B229'
-    secondaryColor: '#267826'
-    tertiaryColor: '#fff'
----
 flowchart TD
     classDef PROJECT stroke:Blue,fill:LightBlue,color:black
     classDef FILTER stroke:Green,fill:LightGreen,color:black
@@ -18,106 +7,106 @@ flowchart TD
     classDef AGGREGATE stroke:Brown,fill:Chocolate,color:black
 
     Union#1["Union"]:::UNION
-    Project#11["Project: [name#153 AS name_a#176, name#167 AS name_b#177, null AS simple_id#204, null AS complex_id#262]"]:::PROJECT
-    Join#111["Join: Inner, (id#166 = id2#159)"]:::JOIN
-    Project#1111["Project: [name#153, id2#159]"]:::PROJECT
-    Join#11111["Join: Inner, (id#152 = id1#158)"]:::JOIN
+    Project#11["Project: [name#163 AS name_a#186, name#177 AS name_b#187, null AS simple_id#214, null AS complex_id#272]"]:::PROJECT
+    Join#111["Join: Inner, (id#176 = id2#169)"]:::JOIN
+    Project#1111["Project: [name#163, id2#169]"]:::PROJECT
+    Join#11111["Join: Inner, (id#162 = id1#168)"]:::JOIN
     Union#111111["Union"]:::UNION
-    Project#1111111["Project: [id#152, name#153]"]:::PROJECT
-    Filter#11111111["Filter: ((isnotnull(name#153) AND (RLIKE(name#153, simple) AND RLIKE(name#153, complex))) AND isnotnull(id#152))"]:::FILTER
-    Relation#111111111["sample_table: [id#152,name#153,age#154] parquet"]:::RELATION
-    Project#1111112["Project: [id#155, name#156]"]:::PROJECT
-    Filter#11111121["Filter: ((isnotnull(name#156) AND (RLIKE(name#156, simple) AND RLIKE(name#156, complex))) AND isnotnull(id#155))"]:::FILTER
-    Relation#111111211["sample_table_2: [id#155,name#156,birth_date#157] parquet"]:::RELATION
-    Project#111112["Project: [id1#158, id2#159]"]:::PROJECT
-    Filter#1111121["Filter: ((isnotnull(rel_type#160) AND (rel_type#160 = friend)) AND (isnotnull(id1#158) AND isnotnull(id2#159)))"]:::FILTER
-    Relation#11111211["relation_table: [id1#158,id2#159,rel_type#160] parquet"]:::RELATION
+    Project#1111111["Project: [id#162, name#163]"]:::PROJECT
+    Filter#11111111["Filter: ((isnotnull(name#163) AND (RLIKE(name#163, simple) AND RLIKE(name#163, complex))) AND isnotnull(id#162))"]:::FILTER
+    Relation#111111111["sample_table: [id#162,name#163,age#164] parquet"]:::RELATION
+    Project#1111112["Project: [id#165, name#166]"]:::PROJECT
+    Filter#11111121["Filter: ((isnotnull(name#166) AND (RLIKE(name#166, simple) AND RLIKE(name#166, complex))) AND isnotnull(id#165))"]:::FILTER
+    Relation#111111211["sample_table_2: [id#165,name#166,birth_date#167] parquet"]:::RELATION
+    Project#111112["Project: [id1#168, id2#169]"]:::PROJECT
+    Filter#1111121["Filter: ((isnotnull(rel_type#170) AND (rel_type#170 = friend)) AND (isnotnull(id1#168) AND isnotnull(id2#169)))"]:::FILTER
+    Relation#11111211["relation_table: [id1#168,id2#169,rel_type#170] parquet"]:::RELATION
     Union#1112["Union"]:::UNION
-    Project#11121["Project: [id#166, name#167]"]:::PROJECT
-    Filter#111211["Filter: isnotnull(id#166)"]:::FILTER
-    Relation#1112111["sample_table: [id#166,name#167,age#168] parquet"]:::RELATION
-    Project#11122["Project: [id#170, name#171]"]:::PROJECT
-    Filter#111221["Filter: isnotnull(id#170)"]:::FILTER
-    Relation#1112211["sample_table_2: [id#170,name#171,birth_date#172] parquet"]:::RELATION
-    Project#12["Project: [name_a#202, name_b#203, id#178 AS simple_id#182, null AS complex_id#274]"]:::PROJECT
-    Join#121["Join: LeftOuter, (name_a#202 = name#179)"]:::JOIN
-    Project#1211["Project: [name#184 AS name_a#202, name#195 AS name_b#203]"]:::PROJECT
-    Join#12111["Join: Inner, (id#194 = id2#192)"]:::JOIN
-    Project#121111["Project: [name#184, id2#192]"]:::PROJECT
-    Join#1211111["Join: Inner, (id#183 = id1#191)"]:::JOIN
+    Project#11121["Project: [id#176, name#177]"]:::PROJECT
+    Filter#111211["Filter: isnotnull(id#176)"]:::FILTER
+    Relation#1112111["sample_table: [id#176,name#177,age#178] parquet"]:::RELATION
+    Project#11122["Project: [id#180, name#181]"]:::PROJECT
+    Filter#111221["Filter: isnotnull(id#180)"]:::FILTER
+    Relation#1112211["sample_table_2: [id#180,name#181,birth_date#182] parquet"]:::RELATION
+    Project#12["Project: [name_a#212, name_b#213, id#188 AS simple_id#192, null AS complex_id#284]"]:::PROJECT
+    Join#121["Join: LeftOuter, (name_a#212 = name#189)"]:::JOIN
+    Project#1211["Project: [name#194 AS name_a#212, name#205 AS name_b#213]"]:::PROJECT
+    Join#12111["Join: Inner, (id#204 = id2#202)"]:::JOIN
+    Project#121111["Project: [name#194, id2#202]"]:::PROJECT
+    Join#1211111["Join: Inner, (id#193 = id1#201)"]:::JOIN
     Union#12111111["Union"]:::UNION
-    Project#121111111["Project: [id#183, name#184]"]:::PROJECT
-    Filter#1211111111["Filter: ((isnotnull(name#184) AND (NOT RLIKE(name#184, simple) AND RLIKE(name#184, complex))) AND isnotnull(id#183))"]:::FILTER
-    Relation#12111111111["sample_table: [id#183,name#184,age#185] parquet"]:::RELATION
-    Project#121111112["Project: [id#187, name#188]"]:::PROJECT
-    Filter#1211111121["Filter: ((isnotnull(name#188) AND (NOT RLIKE(name#188, simple) AND RLIKE(name#188, complex))) AND isnotnull(id#187))"]:::FILTER
-    Relation#12111111211["sample_table_2: [id#187,name#188,birth_date#189] parquet"]:::RELATION
-    Project#12111112["Project: [id1#191, id2#192]"]:::PROJECT
-    Filter#121111121["Filter: ((isnotnull(rel_type#193) AND (rel_type#193 = friend)) AND (isnotnull(id1#191) AND isnotnull(id2#192)))"]:::FILTER
-    Relation#1211111211["relation_table: [id1#191,id2#192,rel_type#193] parquet"]:::RELATION
+    Project#121111111["Project: [id#193, name#194]"]:::PROJECT
+    Filter#1211111111["Filter: ((isnotnull(name#194) AND (NOT RLIKE(name#194, simple) AND RLIKE(name#194, complex))) AND isnotnull(id#193))"]:::FILTER
+    Relation#12111111111["sample_table: [id#193,name#194,age#195] parquet"]:::RELATION
+    Project#121111112["Project: [id#197, name#198]"]:::PROJECT
+    Filter#1211111121["Filter: ((isnotnull(name#198) AND (NOT RLIKE(name#198, simple) AND RLIKE(name#198, complex))) AND isnotnull(id#197))"]:::FILTER
+    Relation#12111111211["sample_table_2: [id#197,name#198,birth_date#199] parquet"]:::RELATION
+    Project#12111112["Project: [id1#201, id2#202]"]:::PROJECT
+    Filter#121111121["Filter: ((isnotnull(rel_type#203) AND (rel_type#203 = friend)) AND (isnotnull(id1#201) AND isnotnull(id2#202)))"]:::FILTER
+    Relation#1211111211["relation_table: [id1#201,id2#202,rel_type#203] parquet"]:::RELATION
     Union#121112["Union"]:::UNION
-    Project#1211121["Project: [id#194, name#195]"]:::PROJECT
-    Filter#12111211["Filter: isnotnull(id#194)"]:::FILTER
-    Relation#121112111["sample_table: [id#194,name#195,age#196] parquet"]:::RELATION
-    Project#1211122["Project: [id#198, name#199]"]:::PROJECT
-    Filter#12111221["Filter: isnotnull(id#198)"]:::FILTER
-    Relation#121112211["sample_table_2: [id#198,name#199,birth_date#200] parquet"]:::RELATION
-    Project#1212["Project: [id#178, name#179]"]:::PROJECT
-    Filter#12121["Filter: ((NOT RLIKE(name#179, simple) AND RLIKE(name#179, complex)) AND isnotnull(name#179))"]:::FILTER
-    Relation#121211["sample_table: [id#178,name#179,age#180] parquet"]:::RELATION
-    Project#13["Project: [name_a#234, name_b#235, simple_id#236, id#210 AS complex_id#214]"]:::PROJECT
-    Join#131["Join: LeftOuter, (name_a#234 = name#211)"]:::JOIN
+    Project#1211121["Project: [id#204, name#205]"]:::PROJECT
+    Filter#12111211["Filter: isnotnull(id#204)"]:::FILTER
+    Relation#121112111["sample_table: [id#204,name#205,age#206] parquet"]:::RELATION
+    Project#1211122["Project: [id#208, name#209]"]:::PROJECT
+    Filter#12111221["Filter: isnotnull(id#208)"]:::FILTER
+    Relation#121112211["sample_table_2: [id#208,name#209,birth_date#210] parquet"]:::RELATION
+    Project#1212["Project: [id#188, name#189]"]:::PROJECT
+    Filter#12121["Filter: ((NOT RLIKE(name#189, simple) AND RLIKE(name#189, complex)) AND isnotnull(name#189))"]:::FILTER
+    Relation#121211["sample_table: [id#188,name#189,age#190] parquet"]:::RELATION
+    Project#13["Project: [name_a#244, name_b#245, simple_id#246, id#220 AS complex_id#224]"]:::PROJECT
+    Join#131["Join: LeftOuter, (name_a#244 = name#221)"]:::JOIN
     Union#1311["Union"]:::UNION
-    Project#13111["Project: [name#216 AS name_a#234, name#227 AS name_b#235, null AS simple_id#236]"]:::PROJECT
-    Join#131111["Join: Inner, (id#226 = id2#224)"]:::JOIN
-    Project#1311111["Project: [name#216, id2#224]"]:::PROJECT
-    Join#13111111["Join: Inner, (id#215 = id1#223)"]:::JOIN
+    Project#13111["Project: [name#226 AS name_a#244, name#237 AS name_b#245, null AS simple_id#246]"]:::PROJECT
+    Join#131111["Join: Inner, (id#236 = id2#234)"]:::JOIN
+    Project#1311111["Project: [name#226, id2#234]"]:::PROJECT
+    Join#13111111["Join: Inner, (id#225 = id1#233)"]:::JOIN
     Union#131111111["Union"]:::UNION
-    Project#1311111111["Project: [id#215, name#216]"]:::PROJECT
-    Filter#13111111111["Filter: ((isnotnull(name#216) AND (RLIKE(name#216, simple) AND NOT RLIKE(name#216, complex))) AND isnotnull(id#215))"]:::FILTER
-    Relation#131111111111["sample_table: [id#215,name#216,age#217] parquet"]:::RELATION
-    Project#1311111112["Project: [id#219, name#220]"]:::PROJECT
-    Filter#13111111121["Filter: ((isnotnull(name#220) AND (RLIKE(name#220, simple) AND NOT RLIKE(name#220, complex))) AND isnotnull(id#219))"]:::FILTER
-    Relation#131111111211["sample_table_2: [id#219,name#220,birth_date#221] parquet"]:::RELATION
-    Project#131111112["Project: [id1#223, id2#224]"]:::PROJECT
-    Filter#1311111121["Filter: ((isnotnull(rel_type#225) AND (rel_type#225 = friend)) AND (isnotnull(id1#223) AND isnotnull(id2#224)))"]:::FILTER
-    Relation#13111111211["relation_table: [id1#223,id2#224,rel_type#225] parquet"]:::RELATION
+    Project#1311111111["Project: [id#225, name#226]"]:::PROJECT
+    Filter#13111111111["Filter: ((isnotnull(name#226) AND (RLIKE(name#226, simple) AND NOT RLIKE(name#226, complex))) AND isnotnull(id#225))"]:::FILTER
+    Relation#131111111111["sample_table: [id#225,name#226,age#227] parquet"]:::RELATION
+    Project#1311111112["Project: [id#229, name#230]"]:::PROJECT
+    Filter#13111111121["Filter: ((isnotnull(name#230) AND (RLIKE(name#230, simple) AND NOT RLIKE(name#230, complex))) AND isnotnull(id#229))"]:::FILTER
+    Relation#131111111211["sample_table_2: [id#229,name#230,birth_date#231] parquet"]:::RELATION
+    Project#131111112["Project: [id1#233, id2#234]"]:::PROJECT
+    Filter#1311111121["Filter: ((isnotnull(rel_type#235) AND (rel_type#235 = friend)) AND (isnotnull(id1#233) AND isnotnull(id2#234)))"]:::FILTER
+    Relation#13111111211["relation_table: [id1#233,id2#234,rel_type#235] parquet"]:::RELATION
     Union#1311112["Union"]:::UNION
-    Project#13111121["Project: [id#226, name#227]"]:::PROJECT
-    Filter#131111211["Filter: isnotnull(id#226)"]:::FILTER
-    Relation#1311112111["sample_table: [id#226,name#227,age#228] parquet"]:::RELATION
-    Project#13111122["Project: [id#230, name#231]"]:::PROJECT
-    Filter#131111221["Filter: isnotnull(id#230)"]:::FILTER
-    Relation#1311112211["sample_table_2: [id#230,name#231,birth_date#232] parquet"]:::RELATION
-    Project#13112["Project: [name_a#256, name_b#257, id#258 AS simple_id#261]"]:::PROJECT
-    Join#131121["Join: LeftOuter, (name_a#256 = name#259)"]:::JOIN
-    Project#1311211["Project: [name#238 AS name_a#256, name#249 AS name_b#257]"]:::PROJECT
-    Join#13112111["Join: Inner, (id#248 = id2#246)"]:::JOIN
-    Project#131121111["Project: [name#238, id2#246]"]:::PROJECT
-    Join#1311211111["Join: Inner, (id#237 = id1#245)"]:::JOIN
+    Project#13111121["Project: [id#236, name#237]"]:::PROJECT
+    Filter#131111211["Filter: isnotnull(id#236)"]:::FILTER
+    Relation#1311112111["sample_table: [id#236,name#237,age#238] parquet"]:::RELATION
+    Project#13111122["Project: [id#240, name#241]"]:::PROJECT
+    Filter#131111221["Filter: isnotnull(id#240)"]:::FILTER
+    Relation#1311112211["sample_table_2: [id#240,name#241,birth_date#242] parquet"]:::RELATION
+    Project#13112["Project: [name_a#266, name_b#267, id#268 AS simple_id#271]"]:::PROJECT
+    Join#131121["Join: LeftOuter, (name_a#266 = name#269)"]:::JOIN
+    Project#1311211["Project: [name#248 AS name_a#266, name#259 AS name_b#267]"]:::PROJECT
+    Join#13112111["Join: Inner, (id#258 = id2#256)"]:::JOIN
+    Project#131121111["Project: [name#248, id2#256]"]:::PROJECT
+    Join#1311211111["Join: Inner, (id#247 = id1#255)"]:::JOIN
     Union#13112111111["Union"]:::UNION
-    Project#131121111111["Project: [id#237, name#238]"]:::PROJECT
-    Filter#1311211111111["Filter: ((isnotnull(name#238) AND (NOT RLIKE(name#238, simple) AND NOT RLIKE(name#238, complex))) AND isnotnull(id#237))"]:::FILTER
-    Relation#13112111111111["sample_table: [id#237,name#238,age#239] parquet"]:::RELATION
-    Project#131121111112["Project: [id#241, name#242]"]:::PROJECT
-    Filter#1311211111121["Filter: ((isnotnull(name#242) AND (NOT RLIKE(name#242, simple) AND NOT RLIKE(name#242, complex))) AND isnotnull(id#241))"]:::FILTER
-    Relation#13112111111211["sample_table_2: [id#241,name#242,birth_date#243] parquet"]:::RELATION
-    Project#13112111112["Project: [id1#245, id2#246]"]:::PROJECT
-    Filter#131121111121["Filter: ((isnotnull(rel_type#247) AND (rel_type#247 = friend)) AND (isnotnull(id1#245) AND isnotnull(id2#246)))"]:::FILTER
-    Relation#1311211111211["relation_table: [id1#245,id2#246,rel_type#247] parquet"]:::RELATION
+    Project#131121111111["Project: [id#247, name#248]"]:::PROJECT
+    Filter#1311211111111["Filter: ((isnotnull(name#248) AND (NOT RLIKE(name#248, simple) AND NOT RLIKE(name#248, complex))) AND isnotnull(id#247))"]:::FILTER
+    Relation#13112111111111["sample_table: [id#247,name#248,age#249] parquet"]:::RELATION
+    Project#131121111112["Project: [id#251, name#252]"]:::PROJECT
+    Filter#1311211111121["Filter: ((isnotnull(name#252) AND (NOT RLIKE(name#252, simple) AND NOT RLIKE(name#252, complex))) AND isnotnull(id#251))"]:::FILTER
+    Relation#13112111111211["sample_table_2: [id#251,name#252,birth_date#253] parquet"]:::RELATION
+    Project#13112111112["Project: [id1#255, id2#256]"]:::PROJECT
+    Filter#131121111121["Filter: ((isnotnull(rel_type#257) AND (rel_type#257 = friend)) AND (isnotnull(id1#255) AND isnotnull(id2#256)))"]:::FILTER
+    Relation#1311211111211["relation_table: [id1#255,id2#256,rel_type#257] parquet"]:::RELATION
     Union#131121112["Union"]:::UNION
-    Project#1311211121["Project: [id#248, name#249]"]:::PROJECT
-    Filter#13112111211["Filter: isnotnull(id#248)"]:::FILTER
-    Relation#131121112111["sample_table: [id#248,name#249,age#250] parquet"]:::RELATION
-    Project#1311211122["Project: [id#252, name#253]"]:::PROJECT
-    Filter#13112111221["Filter: isnotnull(id#252)"]:::FILTER
-    Relation#131121112211["sample_table_2: [id#252,name#253,birth_date#254] parquet"]:::RELATION
-    Project#1311212["Project: [id#258, name#259]"]:::PROJECT
-    Filter#13112121["Filter: ((NOT RLIKE(name#259, simple) AND NOT RLIKE(name#259, complex)) AND isnotnull(name#259))"]:::FILTER
-    Relation#131121211["sample_table: [id#258,name#259,age#260] parquet"]:::RELATION
-    Project#1312["Project: [id#210, name#211]"]:::PROJECT
-    Filter#13121["Filter: ((NOT RLIKE(name#211, complex) AND isnotnull(RLIKE(name#211, simple))) AND isnotnull(name#211))"]:::FILTER
-    Relation#131211["sample_table: [id#210,name#211,age#212] parquet"]:::RELATION
+    Project#1311211121["Project: [id#258, name#259]"]:::PROJECT
+    Filter#13112111211["Filter: isnotnull(id#258)"]:::FILTER
+    Relation#131121112111["sample_table: [id#258,name#259,age#260] parquet"]:::RELATION
+    Project#1311211122["Project: [id#262, name#263]"]:::PROJECT
+    Filter#13112111221["Filter: isnotnull(id#262)"]:::FILTER
+    Relation#131121112211["sample_table_2: [id#262,name#263,birth_date#264] parquet"]:::RELATION
+    Project#1311212["Project: [id#268, name#269]"]:::PROJECT
+    Filter#13112121["Filter: ((NOT RLIKE(name#269, simple) AND NOT RLIKE(name#269, complex)) AND isnotnull(name#269))"]:::FILTER
+    Relation#131121211["sample_table: [id#268,name#269,age#270] parquet"]:::RELATION
+    Project#1312["Project: [id#220, name#221]"]:::PROJECT
+    Filter#13121["Filter: ((NOT RLIKE(name#221, complex) AND isnotnull(RLIKE(name#221, simple))) AND isnotnull(name#221))"]:::FILTER
+    Relation#131211["sample_table: [id#220,name#221,age#222] parquet"]:::RELATION
 
     Union#1 --> Project#11
         Project#11 --> Join#111

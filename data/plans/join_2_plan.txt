@@ -1,83 +1,83 @@
 == Parsed Logical Plan ==
-'Project ['df_a.name AS name_a#89, 'df_b.name AS name_b#90]
-+- Join Inner, (id#79 = id2#72)
-   :- Join Inner, (id#65 = id1#71)
+'Project ['df_a.name AS name_a#99, 'df_b.name AS name_b#100]
++- Join Inner, (id#89 = id2#82)
+   :- Join Inner, (id#75 = id1#81)
    :  :- SubqueryAlias df_a
    :  :  +- Union false, false
-   :  :     :- Project [id#65, name#66, age#67, null AS birth_date#75]
-   :  :     :  +- Relation [id#65,name#66,age#67] parquet
-   :  :     +- Project [id#68, name#69, null AS age#74, birth_date#70]
-   :  :        +- Relation [id#68,name#69,birth_date#70] parquet
-   :  +- Filter (rel_type#73 = friend)
-   :     +- Relation [id1#71,id2#72,rel_type#73] parquet
+   :  :     :- Project [id#75, name#76, age#77, null AS birth_date#85]
+   :  :     :  +- Relation [id#75,name#76,age#77] parquet
+   :  :     +- Project [id#78, name#79, null AS age#84, birth_date#80]
+   :  :        +- Relation [id#78,name#79,birth_date#80] parquet
+   :  +- Filter (rel_type#83 = friend)
+   :     +- Relation [id1#81,id2#82,rel_type#83] parquet
    +- SubqueryAlias df_b
       +- Union false, false
-         :- Project [id#79, name#80, age#81, null AS birth_date#82]
-         :  +- Relation [id#79,name#80,age#81] parquet
-         +- Project [id#83, name#84, null AS age#86, birth_date#85]
-            +- Relation [id#83,name#84,birth_date#85] parquet
+         :- Project [id#89, name#90, age#91, null AS birth_date#92]
+         :  +- Relation [id#89,name#90,age#91] parquet
+         +- Project [id#93, name#94, null AS age#96, birth_date#95]
+            +- Relation [id#93,name#94,birth_date#95] parquet
 
 == Analyzed Logical Plan ==
 name_a: string, name_b: string
-Project [name#66 AS name_a#89, name#80 AS name_b#90]
-+- Join Inner, (id#79 = id2#72)
-   :- Join Inner, (id#65 = id1#71)
+Project [name#76 AS name_a#99, name#90 AS name_b#100]
++- Join Inner, (id#89 = id2#82)
+   :- Join Inner, (id#75 = id1#81)
    :  :- SubqueryAlias df_a
    :  :  +- Union false, false
-   :  :     :- Project [id#65, name#66, age#67, null AS birth_date#75]
-   :  :     :  +- Relation [id#65,name#66,age#67] parquet
-   :  :     +- Project [id#68, name#69, null AS age#74, birth_date#70]
-   :  :        +- Relation [id#68,name#69,birth_date#70] parquet
-   :  +- Filter (rel_type#73 = friend)
-   :     +- Relation [id1#71,id2#72,rel_type#73] parquet
+   :  :     :- Project [id#75, name#76, age#77, null AS birth_date#85]
+   :  :     :  +- Relation [id#75,name#76,age#77] parquet
+   :  :     +- Project [id#78, name#79, null AS age#84, birth_date#80]
+   :  :        +- Relation [id#78,name#79,birth_date#80] parquet
+   :  +- Filter (rel_type#83 = friend)
+   :     +- Relation [id1#81,id2#82,rel_type#83] parquet
    +- SubqueryAlias df_b
       +- Union false, false
-         :- Project [id#79, name#80, age#81, null AS birth_date#82]
-         :  +- Relation [id#79,name#80,age#81] parquet
-         +- Project [id#83, name#84, null AS age#86, birth_date#85]
-            +- Relation [id#83,name#84,birth_date#85] parquet
+         :- Project [id#89, name#90, age#91, null AS birth_date#92]
+         :  +- Relation [id#89,name#90,age#91] parquet
+         +- Project [id#93, name#94, null AS age#96, birth_date#95]
+            +- Relation [id#93,name#94,birth_date#95] parquet
 
 == Optimized Logical Plan ==
-Project [name#66 AS name_a#89, name#80 AS name_b#90]
-+- Join Inner, (id#79 = id2#72)
-   :- Project [name#66, id2#72]
-   :  +- Join Inner, (id#65 = id1#71)
+Project [name#76 AS name_a#99, name#90 AS name_b#100]
++- Join Inner, (id#89 = id2#82)
+   :- Project [name#76, id2#82]
+   :  +- Join Inner, (id#75 = id1#81)
    :     :- Union false, false
-   :     :  :- Project [id#65, name#66]
-   :     :  :  +- Filter isnotnull(id#65)
-   :     :  :     +- Relation [id#65,name#66,age#67] parquet
-   :     :  +- Project [id#68, name#69]
-   :     :     +- Filter isnotnull(id#68)
-   :     :        +- Relation [id#68,name#69,birth_date#70] parquet
-   :     +- Project [id1#71, id2#72]
-   :        +- Filter ((isnotnull(rel_type#73) AND (rel_type#73 = friend)) AND (isnotnull(id1#71) AND isnotnull(id2#72)))
-   :           +- Relation [id1#71,id2#72,rel_type#73] parquet
+   :     :  :- Project [id#75, name#76]
+   :     :  :  +- Filter isnotnull(id#75)
+   :     :  :     +- Relation [id#75,name#76,age#77] parquet
+   :     :  +- Project [id#78, name#79]
+   :     :     +- Filter isnotnull(id#78)
+   :     :        +- Relation [id#78,name#79,birth_date#80] parquet
+   :     +- Project [id1#81, id2#82]
+   :        +- Filter ((isnotnull(rel_type#83) AND (rel_type#83 = friend)) AND (isnotnull(id1#81) AND isnotnull(id2#82)))
+   :           +- Relation [id1#81,id2#82,rel_type#83] parquet
    +- Union false, false
-      :- Project [id#79, name#80]
-      :  +- Filter isnotnull(id#79)
-      :     +- Relation [id#79,name#80,age#81] parquet
-      +- Project [id#83, name#84]
-         +- Filter isnotnull(id#83)
-            +- Relation [id#83,name#84,birth_date#85] parquet
+      :- Project [id#89, name#90]
+      :  +- Filter isnotnull(id#89)
+      :     +- Relation [id#89,name#90,age#91] parquet
+      +- Project [id#93, name#94]
+         +- Filter isnotnull(id#93)
+            +- Relation [id#93,name#94,birth_date#95] parquet
 
 == Physical Plan ==
 AdaptiveSparkPlan isFinalPlan=false
-+- Project [name#66 AS name_a#89, name#80 AS name_b#90]
-   +- BroadcastHashJoin [id2#72], [id#79], Inner, BuildRight, false
-      :- Project [name#66, id2#72]
-      :  +- BroadcastHashJoin [id#65], [id1#71], Inner, BuildRight, false
++- Project [name#76 AS name_a#99, name#90 AS name_b#100]
+   +- BroadcastHashJoin [id2#82], [id#89], Inner, BuildRight, false
+      :- Project [name#76, id2#82]
+      :  +- BroadcastHashJoin [id#75], [id1#81], Inner, BuildRight, false
       :     :- Union
-      :     :  :- Filter isnotnull(id#65)
-      :     :  :  +- FileScan parquet [id#65,name#66] Batched: true, DataFilters: [isnotnull(id#65)], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table], PartitionFilters: [], PushedFilters: [IsNotNull(id)], ReadSchema: struct<id:int,name:string>
-      :     :  +- Filter isnotnull(id#68)
-      :     :     +- FileScan parquet [id#68,name#69] Batched: true, DataFilters: [isnotnull(id#68)], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table_2], PartitionFilters: [], PushedFilters: [IsNotNull(id)], ReadSchema: struct<id:int,name:string>
-      :     +- BroadcastExchange HashedRelationBroadcastMode(List(cast(input[0, int, true] as bigint)),false), [plan_id=237]
-      :        +- Project [id1#71, id2#72]
-      :           +- Filter (((isnotnull(rel_type#73) AND (rel_type#73 = friend)) AND isnotnull(id1#71)) AND isnotnull(id2#72))
-      :              +- FileScan parquet [id1#71,id2#72,rel_type#73] Batched: true, DataFilters: [isnotnull(rel_type#73), (rel_type#73 = friend), isnotnull(id1#71), isnotnull(id2#72)], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/relation_table], PartitionFilters: [], PushedFilters: [IsNotNull(rel_type), EqualTo(rel_type,friend), IsNotNull(id1), IsNotNull(id2)], ReadSchema: struct<id1:int,id2:int,rel_type:string>
-      +- BroadcastExchange HashedRelationBroadcastMode(List(cast(input[0, int, false] as bigint)),false), [plan_id=241]
+      :     :  :- Filter isnotnull(id#75)
+      :     :  :  +- FileScan parquet [id#75,name#76] Batched: true, DataFilters: [isnotnull(id#75)], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table], PartitionFilters: [], PushedFilters: [IsNotNull(id)], ReadSchema: struct<id:int,name:string>
+      :     :  +- Filter isnotnull(id#78)
+      :     :     +- FileScan parquet [id#78,name#79] Batched: true, DataFilters: [isnotnull(id#78)], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table_2], PartitionFilters: [], PushedFilters: [IsNotNull(id)], ReadSchema: struct<id:int,name:string>
+      :     +- BroadcastExchange HashedRelationBroadcastMode(List(cast(input[0, int, true] as bigint)),false), [plan_id=248]
+      :        +- Project [id1#81, id2#82]
+      :           +- Filter (((isnotnull(rel_type#83) AND (rel_type#83 = friend)) AND isnotnull(id1#81)) AND isnotnull(id2#82))
+      :              +- FileScan parquet [id1#81,id2#82,rel_type#83] Batched: true, DataFilters: [isnotnull(rel_type#83), (rel_type#83 = friend), isnotnull(id1#81), isnotnull(id2#82)], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/relation_table], PartitionFilters: [], PushedFilters: [IsNotNull(rel_type), EqualTo(rel_type,friend), IsNotNull(id1), IsNotNull(id2)], ReadSchema: struct<id1:int,id2:int,rel_type:string>
+      +- BroadcastExchange HashedRelationBroadcastMode(List(cast(input[0, int, false] as bigint)),false), [plan_id=252]
          +- Union
-            :- Filter isnotnull(id#79)
-            :  +- FileScan parquet [id#79,name#80] Batched: true, DataFilters: [isnotnull(id#79)], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table], PartitionFilters: [], PushedFilters: [IsNotNull(id)], ReadSchema: struct<id:int,name:string>
-            +- Filter isnotnull(id#83)
-               +- FileScan parquet [id#83,name#84] Batched: true, DataFilters: [isnotnull(id#83)], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table_2], PartitionFilters: [], PushedFilters: [IsNotNull(id)], ReadSchema: struct<id:int,name:string>
+            :- Filter isnotnull(id#89)
+            :  +- FileScan parquet [id#89,name#90] Batched: true, DataFilters: [isnotnull(id#89)], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table], PartitionFilters: [], PushedFilters: [IsNotNull(id)], ReadSchema: struct<id:int,name:string>
+            +- Filter isnotnull(id#93)
+               +- FileScan parquet [id#93,name#94] Batched: true, DataFilters: [isnotnull(id#93)], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table_2], PartitionFilters: [], PushedFilters: [IsNotNull(id)], ReadSchema: struct<id:int,name:string>

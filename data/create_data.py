@@ -82,6 +82,20 @@ def create_select_2_plan(spark: SparkSession) -> str:
     return get_query_plan(df)
 
 
+def select_re_query(spark: SparkSession) -> DataFrame:
+    df = spark.read.load(str(TABLE_PATH / "sample_table"))
+    df = df.select("id", f.col("name").alias("name_re1"), f.col("name").alias("name_re2"))
+
+    replace_strs = ["test", "sample", "example"]
+    replace_re = "|".join(f"\\b{replace_str}\\b" for replace_str in replace_strs)
+    df = df.withColumn("name_re1", f.regexp_replace("name_re1", replace_re, ""))
+
+    for replace_str in replace_strs:
+        df = df.withColumn("name_re2", f.regexp_replace("name_re2", f"\\b{replace_str}\\b", ""))
+
+    return df
+
+
 def create_filter_plan(spark: SparkSession) -> str:
     df = spark.read.load(str(TABLE_PATH / "sample_table"))
     df = df.filter(f.col("id") > 1)
@@ -208,6 +222,7 @@ def create_plans_and_store(spark: SparkSession) -> None:
 
     store_plan(create_select_1_plan(spark), PLAN_PATH / "select_1_plan.txt")
     store_plan(create_select_2_plan(spark), PLAN_PATH / "select_2_plan.txt")
+    store_plan(get_query_plan(select_re_query(spark)), PLAN_PATH / "select_re_plan.txt")
     store_plan(create_filter_plan(spark), PLAN_PATH / "filter_plan.txt")
     store_plan(create_filter_not_in_output_plan(spark), PLAN_PATH / "filter_not_in_output_plan.txt")
     store_plan(create_derive_plan(spark), PLAN_PATH / "derive_plan.txt")

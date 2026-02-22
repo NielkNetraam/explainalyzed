@@ -1,0 +1,25 @@
+== Parsed Logical Plan ==
+'Project [unresolvedstarwithcolumns(name_re2, 'regexp_replace('name_re2, \bexample\b, ), None)]
++- Project [id#7, name_re1#13, regexp_replace(name_re2#14, \bsample\b, , 1) AS name_re2#15]
+   +- Project [id#7, name_re1#13, regexp_replace(name_re2#11, \btest\b, , 1) AS name_re2#14]
+      +- Project [id#7, regexp_replace(name_re1#10, \btest\b|\bsample\b|\bexample\b, , 1) AS name_re1#13, name_re2#11]
+         +- Project [id#7, name#8 AS name_re1#10, name#8 AS name_re2#11]
+            +- Relation [id#7,name#8,age#9] parquet
+
+== Analyzed Logical Plan ==
+id: int, name_re1: string, name_re2: string
+Project [id#7, name_re1#13, regexp_replace(name_re2#15, \bexample\b, , 1) AS name_re2#16]
++- Project [id#7, name_re1#13, regexp_replace(name_re2#14, \bsample\b, , 1) AS name_re2#15]
+   +- Project [id#7, name_re1#13, regexp_replace(name_re2#11, \btest\b, , 1) AS name_re2#14]
+      +- Project [id#7, regexp_replace(name_re1#10, \btest\b|\bsample\b|\bexample\b, , 1) AS name_re1#13, name_re2#11]
+         +- Project [id#7, name#8 AS name_re1#10, name#8 AS name_re2#11]
+            +- Relation [id#7,name#8,age#9] parquet
+
+== Optimized Logical Plan ==
+Project [id#7, regexp_replace(name#8, \btest\b|\bsample\b|\bexample\b, , 1) AS name_re1#13, regexp_replace(regexp_replace(regexp_replace(name#8, \btest\b, , 1), \bsample\b, , 1), \bexample\b, , 1) AS name_re2#16]
++- Relation [id#7,name#8,age#9] parquet
+
+== Physical Plan ==
+*(1) Project [id#7, regexp_replace(name#8, \btest\b|\bsample\b|\bexample\b, , 1) AS name_re1#13, regexp_replace(regexp_replace(regexp_replace(name#8, \btest\b, , 1), \bsample\b, , 1), \bexample\b, , 1) AS name_re2#16]
++- *(1) ColumnarToRow
+   +- FileScan parquet [id#7,name#8] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<id:int,name:string>

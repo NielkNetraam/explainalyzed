@@ -166,17 +166,6 @@ class ExplainAnalyzed:
         olp = self.get_optimized_logical_plan()
 
         mermaid_str = (
-            "---\n"
-            "config:\n"
-            "theme: 'base'\n"
-            "themeVariables:\n"
-            "    primaryColor: '#BB2528'\n"
-            "    primaryTextColor: '#fff'\n"
-            "    primaryBorderColor: '#7C0000'\n"
-            "    lineColor: '#F8B229'\n"
-            "    secondaryColor: '#267826'\n"
-            "    tertiaryColor: '#fff'\n"
-            "---\n"
             "flowchart TD\n"
             "    classDef PROJECT stroke:Blue,fill:LightBlue,color:black\n"
             "    classDef FILTER stroke:Green,fill:LightGreen,color:black\n"

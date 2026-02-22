@@ -1,14 +1,3 @@
----
-config:
-theme: 'base'
-themeVariables:
-    primaryColor: '#BB2528'
-    primaryTextColor: '#fff'
-    primaryBorderColor: '#7C0000'
-    lineColor: '#F8B229'
-    secondaryColor: '#267826'
-    tertiaryColor: '#fff'
----
 flowchart TD
     classDef PROJECT stroke:Blue,fill:LightBlue,color:black
     classDef FILTER stroke:Green,fill:LightGreen,color:black
@@ -17,9 +6,9 @@ flowchart TD
     classDef RELATION stroke:Yellow,fill:Gold,color:black
     classDef AGGREGATE stroke:Brown,fill:Chocolate,color:black
 
-    Aggregate#1["Aggregate: [age#110], [age#110, count(1) AS count#111L, max(name#109) AS max_name#112]"]:::AGGREGATE
-    Project#11["Project: [name#109, age#110]"]:::PROJECT
-    Relation#111["sample_table: [id#108,name#109,age#110] parquet"]:::RELATION
+    Aggregate#1["Aggregate: [age#120], [age#120, count(1) AS count#121L, max(name#119) AS max_name#122]"]:::AGGREGATE
+    Project#11["Project: [name#119, age#120]"]:::PROJECT
+    Relation#111["sample_table: [id#118,name#119,age#120] parquet"]:::RELATION
 
     Aggregate#1 --> Project#11
         Project#11 --> Relation#111

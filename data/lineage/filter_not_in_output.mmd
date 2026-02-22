@@ -1,30 +1,20 @@
----
-config:
-theme: 'base'
-themeVariables:
-    primaryColor: '#BB2528'
-    primaryTextColor: '#fff'
-    primaryBorderColor: '#7C0000'
-    lineColor: '#F8B229'
-    secondaryColor: '#267826'
-    tertiaryColor: '#fff'
----
-flowchart TD
+flowchart LR
     classDef SOURCE stroke:Blue,fill:LightBlue,color:black
     classDef TARGET stroke:Green,fill:LightGreen,color:black
     classDef INTERMEDIATE stroke:DarkOrange,fill:Orange,color:black
     classDef INTERNAL stroke:Purple,fill:Violet,color:black
+    classDef FIELD stroke:Orange,fill:Gold,color:black
 
     sample_table:::SOURCE
     target:::TARGET
 
     subgraph sample_table
-        sample_table.id[id]
-        sample_table.name[name]
+        sample_table.id[id]:::FIELD
+        sample_table.name[name]:::FIELD
     end
 
     subgraph target
-        target.name[name]
+        target.name[name]:::FIELD
     end
 
     sample_table.id -- FILTER --> target.name

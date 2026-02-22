@@ -1,30 +1,20 @@
----
-config:
-theme: 'base'
-themeVariables:
-    primaryColor: '#BB2528'
-    primaryTextColor: '#fff'
-    primaryBorderColor: '#7C0000'
-    lineColor: '#F8B229'
-    secondaryColor: '#267826'
-    tertiaryColor: '#fff'
----
-flowchart TD
+flowchart LR
     classDef SOURCE stroke:Blue,fill:LightBlue,color:black
     classDef TARGET stroke:Green,fill:LightGreen,color:black
     classDef INTERMEDIATE stroke:DarkOrange,fill:Orange,color:black
     classDef INTERNAL stroke:Purple,fill:Violet,color:black
+    classDef FIELD stroke:Orange,fill:Gold,color:black
 
     sample_table:::SOURCE
     target:::TARGET
 
     subgraph sample_table
-        sample_table.age[age]
+        sample_table.age[age]:::FIELD
     end
 
     subgraph target
-        target.avg_age[avg_age]
-        target.max_age[max_age]
+        target.avg_age[avg_age]:::FIELD
+        target.max_age[max_age]:::FIELD
     end
 
     sample_table.age -- COLUMN --> target.avg_age

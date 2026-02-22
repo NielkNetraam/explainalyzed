@@ -1,14 +1,3 @@
----
-config:
-theme: 'base'
-themeVariables:
-    primaryColor: '#BB2528'
-    primaryTextColor: '#fff'
-    primaryBorderColor: '#7C0000'
-    lineColor: '#F8B229'
-    secondaryColor: '#267826'
-    tertiaryColor: '#fff'
----
 flowchart TD
     classDef PROJECT stroke:Blue,fill:LightBlue,color:black
     classDef FILTER stroke:Green,fill:LightGreen,color:black
@@ -17,13 +6,13 @@ flowchart TD
     classDef RELATION stroke:Yellow,fill:Gold,color:black
     classDef AGGREGATE stroke:Brown,fill:Chocolate,color:black
 
-    Aggregate#1["Aggregate: [id#123], [id#123, count(1) AS count#131L, sum(CASE WHEN (sign#128 = DEBIT) THEN amount#127 ELSE -amount#127 END) AS total_amount#132]"]:::AGGREGATE
-    Project#11["Project: [id#123, amount#127, sign#128]"]:::PROJECT
-    Join#111["Join: LeftOuter, (id#123 = id#126)"]:::JOIN
-    Project#1111["Project: [id#123]"]:::PROJECT
-    Relation#11111["sample_table: [id#123,name#124,age#125] parquet"]:::RELATION
-    Filter#1112["Filter: isnotnull(id#126)"]:::FILTER
-    Relation#11121["transaction_table: [id#126,amount#127,sign#128] parquet"]:::RELATION
+    Aggregate#1["Aggregate: [id#133], [id#133, count(1) AS count#141L, sum(CASE WHEN (sign#138 = DEBIT) THEN amount#137 ELSE -amount#137 END) AS total_amount#142]"]:::AGGREGATE
+    Project#11["Project: [id#133, amount#137, sign#138]"]:::PROJECT
+    Join#111["Join: LeftOuter, (id#133 = id#136)"]:::JOIN
+    Project#1111["Project: [id#133]"]:::PROJECT
+    Relation#11111["sample_table: [id#133,name#134,age#135] parquet"]:::RELATION
+    Filter#1112["Filter: isnotnull(id#136)"]:::FILTER
+    Relation#11121["transaction_table: [id#136,amount#137,sign#138] parquet"]:::RELATION
 
     Aggregate#1 --> Project#11
         Project#11 --> Join#111
