@@ -1,0 +1,14 @@
+flowchart TD
+    classDef PROJECT stroke:Blue,fill:LightBlue,color:black
+    classDef FILTER stroke:Green,fill:LightGreen,color:black
+    classDef UNION stroke:Purple,fill:Violet,color:black
+    classDef JOIN stroke:DarkOrange,fill:Orange,color:black
+    classDef RELATION stroke:Yellow,fill:Gold,color:black
+    classDef AGGREGATE stroke:Brown,fill:Chocolate,color:black
+
+    Project#1["Project: [id#285, upper(name#286) AS name_upper#289]"]:::PROJECT
+    Filter#11["Filter: (isnotnull(id#285) AND (id#285 > 1))"]:::FILTER
+    Relation#111["sample_table: [id#285,name#286,age#287] parquet"]:::RELATION
+
+    Project#1 --> Filter#11
+        Filter#11 --> Relation#111

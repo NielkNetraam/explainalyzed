@@ -68,7 +68,7 @@ def prep_relation_table(spark: SparkSession) -> DataFrame:
     )
 
 
-def create_sample_plans(spark: SparkSession) -> None:
+def create_complex_example_plans(spark: SparkSession) -> None:
     spark.conf.set("spark.sql.debug.maxToStringFields", "1000")
     spark.conf.set("spark.sql.maxMetadataStringLength", "10000")
 

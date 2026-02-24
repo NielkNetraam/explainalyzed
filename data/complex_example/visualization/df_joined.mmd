@@ -1,0 +1,42 @@
+flowchart TD
+    classDef PROJECT stroke:Blue,fill:LightBlue,color:black
+    classDef FILTER stroke:Green,fill:LightGreen,color:black
+    classDef UNION stroke:Purple,fill:Violet,color:black
+    classDef JOIN stroke:DarkOrange,fill:Orange,color:black
+    classDef RELATION stroke:Yellow,fill:Gold,color:black
+    classDef AGGREGATE stroke:Brown,fill:Chocolate,color:black
+
+    Project#1["Project: [name_upper#300 AS name_a#313, name_upper#309 AS name_b#314]"]:::PROJECT
+    Join#11["Join: Inner, (id#308 = id2#304)"]:::JOIN
+    Project#111["Project: [name_upper#300, id2#304]"]:::PROJECT
+    Join#1111["Join: Inner, (id#299 = id1#303)"]:::JOIN
+    Union#11111["Union"]:::UNION
+    Filter#111111["Filter: isnotnull(id#299)"]:::FILTER
+    Relation#1111111["sample_table_prepped: [id#299,name_upper#300] parquet"]:::RELATION
+    Filter#111112["Filter: isnotnull(id#301)"]:::FILTER
+    Relation#1111121["sample_table_2_prepped: [id#301,name_upper#302] parquet"]:::RELATION
+    Project#11112["Project: [id1#303, id2#304]"]:::PROJECT
+    Filter#111121["Filter: ((isnotnull(rel_type#305) AND (rel_type#305 = friend)) AND (isnotnull(id1#303) AND isnotnull(id2#304)))"]:::FILTER
+    Relation#1111211["relation_table_prepped: [id1#303,id2#304,rel_type#305] parquet"]:::RELATION
+    Union#112["Union"]:::UNION
+    Filter#1121["Filter: isnotnull(id#308)"]:::FILTER
+    Relation#11211["sample_table_prepped: [id#308,name_upper#309] parquet"]:::RELATION
+    Filter#1122["Filter: isnotnull(id#310)"]:::FILTER
+    Relation#11221["sample_table_2_prepped: [id#310,name_upper#311] parquet"]:::RELATION
+
+    Project#1 --> Join#11
+        Join#11 --> Project#111
+            Project#111 --> Join#1111
+                Join#1111 --> Union#11111
+                    Union#11111 --> Filter#111111
+                        Filter#111111 --> Relation#1111111
+                    Union#11111 --> Filter#111112
+                        Filter#111112 --> Relation#1111121
+                Join#1111 --> Project#11112
+                    Project#11112 --> Filter#111121
+                        Filter#111121 --> Relation#1111211
+        Join#11 --> Union#112
+            Union#112 --> Filter#1121
+                Filter#1121 --> Relation#11211
+            Union#112 --> Filter#1122
+                Filter#1122 --> Relation#11221

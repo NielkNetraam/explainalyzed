@@ -28,6 +28,23 @@ def get_query_plan(df: DataFrame) -> str:
     return df._jdf.queryExecution().toString()  # noqa: SLF001
 
 
+def get_active_spark_session() -> SparkSession:
+    """Get the active SparkSession or raise an error if none is found."""
+    spark = SparkSession.getActiveSession()
+
+    if spark is None:
+        msg = "No active SparkSession found."
+        raise RuntimeError(msg)
+
+    return spark
+
+
+def set_spark_conf_for_lineage() -> None:
+    spark = get_active_spark_session()
+    spark.conf.set("spark.sql.debug.maxToStringFields", "1000")
+    spark.conf.set("spark.sql.maxMetadataStringLength", "10000")
+
+
 def write_and_read(df: DataFrame, data_location: Path, plan_location: Path, dataset_name: str) -> DataFrame:
     """Write the DataFrame to a temporary location, store the query plan and read it back."""
     plan = get_query_plan(df)
@@ -35,10 +52,4 @@ def write_and_read(df: DataFrame, data_location: Path, plan_location: Path, data
 
     df.write.mode("overwrite").format("parquet").save(str(data_location / dataset_name))
 
-    spark = SparkSession.getActiveSession()
-
-    if spark is None:
-        msg = "No active SparkSession found."
-        raise RuntimeError(msg)
-
-    return spark.read.parquet(str(data_location / dataset_name))
+    return get_active_spark_session().read.parquet(str(data_location / dataset_name))
