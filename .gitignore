@@ -10,5 +10,5 @@ wheels/
 .venv
 data/.DS_Store
 .DS_Store
-data/sample/tables
+data/complex_example/tables
 data/tables

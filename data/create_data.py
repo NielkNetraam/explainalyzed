@@ -145,10 +145,13 @@ def create_join_how_plan(spark: SparkSession, how: str) -> str:
     return get_query_plan(df_joined)
 
 
-def join_2_query(spark: SparkSession) -> DataFrame:
+def join_2_query(spark: SparkSession, *, broadcast: bool = False) -> DataFrame:
     df1 = spark.read.load(str(TABLE_PATH / "sample_table"))
     df2 = spark.read.load(str(TABLE_PATH / "sample_table_2"))
     df_rel = spark.read.load(str(TABLE_PATH / "relation_table"))
+
+    if broadcast:
+        df_rel = f.broadcast(df_rel)
 
     df = df1.unionByName(df2, allowMissingColumns=True)
 
@@ -204,8 +207,11 @@ def split_and_union(df: DataFrame, split: str, join_df: DataFrame, colum_to_add:
     return df1.unionByName(df2, allowMissingColumns=True)
 
 
-def union_forest_query(spark: SparkSession) -> DataFrame:
+def union_forest_query(spark: SparkSession, *, cache: bool = False) -> DataFrame:
     df1 = join_2_query(spark)
+    if cache:
+        df1 = df1.cache()
+
     df2 = spark.read.load(str(TABLE_PATH / "sample_table"))
 
     df1 = split_and_union(df1, "simple", df2, "simple_id")
@@ -231,8 +237,10 @@ def create_plans_and_store(spark: SparkSession) -> None:
     store_plan(create_join_how_plan(spark, "left"), PLAN_PATH / "join_left_plan.txt")
     store_plan(create_join_how_plan(spark, "right"), PLAN_PATH / "join_right_plan.txt")
     store_plan(get_query_plan(join_2_query(spark)), PLAN_PATH / "join_2_plan.txt")
+    store_plan(get_query_plan(join_2_query(spark, broadcast=True)), PLAN_PATH / "join_2_broadcast_plan.txt")
     store_plan(create_aggregation_1_plan(spark), PLAN_PATH / "aggregation_1_plan.txt")
     store_plan(create_aggregation_2_plan(spark), PLAN_PATH / "aggregation_2_plan.txt")
     store_plan(create_aggregation_3_plan(spark), PLAN_PATH / "aggregation_3_plan.txt")
     store_plan(create_rdd_plan(spark), PLAN_PATH / "rdd_plan.txt")
     store_plan(get_query_plan(union_forest_query(spark)), PLAN_PATH / "union_forest_plan.txt")
+    store_plan(get_query_plan(union_forest_query(spark, cache=True)), PLAN_PATH / "union_forest_cache_plan.txt")

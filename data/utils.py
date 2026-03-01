@@ -6,7 +6,7 @@ from pyspark.sql import DataFrame, SparkSession
 
 def clean_data_directory(path: Path) -> None:
     if path.exists():
-        print(f"Cleaning up existing data at {path}")
+        print(f"Cleaning up existing data at {path}")  # noqa: T201
         rmtree(str(path))
 
 
@@ -37,12 +37,6 @@ def get_active_spark_session() -> SparkSession:
         raise RuntimeError(msg)
 
     return spark
-
-
-def set_spark_conf_for_lineage() -> None:
-    spark = get_active_spark_session()
-    spark.conf.set("spark.sql.debug.maxToStringFields", "1000")
-    spark.conf.set("spark.sql.maxMetadataStringLength", "10000")
 
 
 def write_and_read(df: DataFrame, data_location: Path, plan_location: Path, dataset_name: str) -> DataFrame:

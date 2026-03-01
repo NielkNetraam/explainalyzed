@@ -1,6 +1,7 @@
 import re
 
 from ea.lineage import Lineage
+from ea.node.logical.join import JoinNode
 from ea.node.logical.relation import RelationNode
 from ea.node.physical.file_scan import FileScanNode
 from ea.node.plan_node import GenericNode, PlanNode, PlanNodeType
@@ -158,7 +159,15 @@ class ExplainAnalyzed:
             node_id_str = "1" if node_id == "" else node_id
 
             for idx, child in enumerate(node.children):
-                edge_str += "    " * indent + f"{node.node_type}#{node_id_str} --> {child.node_type}#{node_id_str}{idx + 1}\n"
+                edge_line = (
+                    "-- broadcast --> "
+                    if isinstance(node, JoinNode)
+                    and ((node.broadcast == "left" and idx == 0) or (node.broadcast == "right" and idx == 1))
+                    else "-->"
+                )
+                edge_str += (
+                    "    " * indent + f"{node.node_type}#{node_id_str} {edge_line} {child.node_type}#{node_id_str}{idx + 1}\n"
+                )
                 edge_str += edges(child, node_id=f"{node_id_str}{idx + 1}", indent=indent + 1)
 
             return edge_str

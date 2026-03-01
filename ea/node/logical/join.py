@@ -1,3 +1,5 @@
+from typing import Literal
+
 from ea.column_dependency import ColumnDependency, DerivedColumnDependency
 from ea.node.plan_node import PlanNode
 from ea.util import findall_column_ids
@@ -7,10 +9,14 @@ class JoinNode(PlanNode):
     def __init__(self, node_type: str, level: int, subset_id: str | None, parameters: str) -> None:
         """Initialize a Join instance."""
         super().__init__(node_type, level, subset_id, parameters)
+        self.broadcast: Literal["left", "right"] | None = None
 
         parameter_splitted = parameters.split(",", 1)
         self.join_type = parameter_splitted[0].strip()
         fields = parameter_splitted[1].strip()
+
+        if "broadcast" in fields:
+            self.broadcast = "right" if "rightHint" in fields else "left"
 
         self.join_keys: list[str] = findall_column_ids(fields)
 
