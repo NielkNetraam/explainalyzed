@@ -1,0 +1,23 @@
+== Parsed Logical Plan ==
+'Project ['id, 'name_upper]
++- Project [id#3, name#4, birth_date#5, upper(name#4) AS name_upper#12]
+   +- Filter (id#3 < 10)
+      +- Relation [id#3,name#4,birth_date#5] parquet
+
+== Analyzed Logical Plan ==
+id: int, name_upper: string
+Project [id#3, name_upper#12]
++- Project [id#3, name#4, birth_date#5, upper(name#4) AS name_upper#12]
+   +- Filter (id#3 < 10)
+      +- Relation [id#3,name#4,birth_date#5] parquet
+
+== Optimized Logical Plan ==
+Project [id#3, upper(name#4) AS name_upper#12]
++- Filter (isnotnull(id#3) AND (id#3 < 10))
+   +- Relation [id#3,name#4,birth_date#5] parquet
+
+== Physical Plan ==
+*(1) Project [id#3, upper(name#4) AS name_upper#12]
++- *(1) Filter (isnotnull(id#3) AND (id#3 < 10))
+   +- *(1) ColumnarToRow
+      +- FileScan parquet [id#3,name#4] Batched: true, DataFilters: [isnotnull(id#3), (id#3 < 10)], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table_2], PartitionFilters: [], PushedFilters: [IsNotNull(id), LessThan(id,10)], ReadSchema: struct<id:int,name:string>

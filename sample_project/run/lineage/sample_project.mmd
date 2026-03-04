@@ -1,0 +1,81 @@
+flowchart LR
+    classDef SOURCE stroke:Blue,fill:LightBlue,color:black
+    classDef TARGET stroke:Green,fill:LightGreen,color:black
+    classDef INTERMEDIATE stroke:DarkOrange,fill:Orange,color:black
+    classDef INTERNAL stroke:Purple,fill:Violet,color:black
+    classDef FIELD stroke:Orange,fill:Gold,color:black
+
+    relation_table:::SOURCE
+    sample_table:::SOURCE
+    sample_table_2:::SOURCE
+    relation_table_prepped:::INTERMEDIATE
+    sample_table_2_prepped:::INTERMEDIATE
+    sample_table_prepped:::INTERMEDIATE
+    business_logic_result:::TARGET
+
+    subgraph relation_table
+        relation_table.id1[id1]:::FIELD
+        relation_table.id2[id2]:::FIELD
+        relation_table.rel_type[rel_type]:::FIELD
+    end
+
+    subgraph sample_table
+        sample_table.id[id]:::FIELD
+        sample_table.name[name]:::FIELD
+    end
+
+    subgraph sample_table_2
+        sample_table_2.id[id]:::FIELD
+        sample_table_2.name[name]:::FIELD
+    end
+
+    subgraph relation_table_prepped
+        relation_table_prepped.id1[id1]:::FIELD
+        relation_table_prepped.id2[id2]:::FIELD
+        relation_table_prepped.rel_type[rel_type]:::FIELD
+    end
+
+    subgraph sample_table_2_prepped
+        sample_table_2_prepped.id[id]:::FIELD
+        sample_table_2_prepped.name_upper[name_upper]:::FIELD
+    end
+
+    subgraph sample_table_prepped
+        sample_table_prepped.id[id]:::FIELD
+        sample_table_prepped.name_upper[name_upper]:::FIELD
+    end
+
+    subgraph business_logic_result
+        business_logic_result.name_a[name_a]:::FIELD
+        business_logic_result.name_b[name_b]:::FIELD
+    end
+
+    relation_table.id1 -- COLUMN,FILTER --> relation_table_prepped.id1
+    relation_table.id1 -- FILTER --> relation_table_prepped.id2
+    relation_table.id1 -- FILTER --> relation_table_prepped.rel_type
+    relation_table.id2 -- FILTER --> relation_table_prepped.id1
+    relation_table.id2 -- COLUMN,FILTER --> relation_table_prepped.id2
+    relation_table.id2 -- FILTER --> relation_table_prepped.rel_type
+    relation_table.rel_type -- FILTER --> relation_table_prepped.id1
+    relation_table.rel_type -- FILTER --> relation_table_prepped.id2
+    relation_table.rel_type -- COLUMN,FILTER --> relation_table_prepped.rel_type
+    relation_table_prepped.id1 -- JOIN --> business_logic_result.name_a
+    relation_table_prepped.id1 -- JOIN --> business_logic_result.name_b
+    relation_table_prepped.id2 -- JOIN --> business_logic_result.name_a
+    relation_table_prepped.id2 -- JOIN --> business_logic_result.name_b
+    relation_table_prepped.rel_type -- JOIN --> business_logic_result.name_a
+    relation_table_prepped.rel_type -- JOIN --> business_logic_result.name_b
+    sample_table.id -- COLUMN,FILTER --> sample_table_prepped.id
+    sample_table.id -- FILTER --> sample_table_prepped.name_upper
+    sample_table.name -- COLUMN --> sample_table_prepped.name_upper
+    sample_table_2.id -- COLUMN,FILTER --> sample_table_2_prepped.id
+    sample_table_2.id -- FILTER --> sample_table_2_prepped.name_upper
+    sample_table_2.name -- COLUMN --> sample_table_2_prepped.name_upper
+    sample_table_2_prepped.id -- FILTER,JOIN --> business_logic_result.name_a
+    sample_table_2_prepped.id -- FILTER,JOIN --> business_logic_result.name_b
+    sample_table_2_prepped.name_upper -- COLUMN --> business_logic_result.name_a
+    sample_table_2_prepped.name_upper -- COLUMN --> business_logic_result.name_b
+    sample_table_prepped.id -- FILTER,JOIN --> business_logic_result.name_a
+    sample_table_prepped.id -- FILTER,JOIN --> business_logic_result.name_b
+    sample_table_prepped.name_upper -- COLUMN --> business_logic_result.name_a
+    sample_table_prepped.name_upper -- COLUMN --> business_logic_result.name_b

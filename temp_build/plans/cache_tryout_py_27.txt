@@ -1,0 +1,12 @@
+== Parsed Logical Plan ==
+Range (0, 1, step=1, splits=Some(8))
+
+== Analyzed Logical Plan ==
+id: bigint
+Range (0, 1, step=1, splits=Some(8))
+
+== Optimized Logical Plan ==
+Range (0, 1, step=1, splits=Some(8))
+
+== Physical Plan ==
+*(1) Range (0, 1, step=1, splits=8)

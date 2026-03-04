@@ -4,10 +4,13 @@ from shutil import rmtree
 from pyspark.sql import DataFrame, SparkSession
 
 
-def clean_data_directory(path: Path) -> None:
+def clean_data_directory(path: Path, *, create_if_not_exists: bool = False) -> None:
     if path.exists():
         print(f"Cleaning up existing data at {path}")  # noqa: T201
         rmtree(str(path))
+        path.mkdir(parents=True, exist_ok=True)
+    elif create_if_not_exists:
+        path.mkdir(parents=True, exist_ok=True)
 
 
 def store_dataframe(df: DataFrame, path: Path) -> None:

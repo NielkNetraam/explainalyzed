@@ -6,9 +6,7 @@ flowchart TD
     classDef RELATION stroke:Yellow,fill:Gold,color:black
     classDef AGGREGATE stroke:Brown,fill:Chocolate,color:black
 
-    Aggregate#1["Aggregate: [age#146], [age#146, count(1) AS count#147L, max(name#145) AS max_name#148]"]:::AGGREGATE
-    Project#11["Project: [name#145, age#146]"]:::PROJECT
-    Relation#111["sample_table: [id#144,name#145,age#146] parquet"]:::RELATION
+    Filter#1["Filter: (((isnotnull(id1#6) AND isnotnull(id2#7)) AND isnotnull(rel_type#8)) AND ((id1#6 > 1) AND ((id2#7 < 10) AND (rel_type#8 = friend))))"]:::FILTER
+    Relation#11["relation_table: [id1#6,id2#7,rel_type#8] parquet"]:::RELATION
 
-    Aggregate#1 --> Project#11
-        Project#11 --> Relation#111
+    Filter#1 --> Relation#11

@@ -1,0 +1,13 @@
+== Parsed Logical Plan ==
+UnresolvedDataSource format: parquet, isStreaming: false, paths: 1 provided
+
+== Analyzed Logical Plan ==
+id: bigint
+Relation [id#1L] parquet
+
+== Optimized Logical Plan ==
+Relation [id#1L] parquet
+
+== Physical Plan ==
+*(1) ColumnarToRow
++- FileScan parquet [id#1L] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/temp_build/temp/cache_tryout_py_27], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<id:bigint>

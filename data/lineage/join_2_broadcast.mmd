@@ -1,0 +1,47 @@
+flowchart LR
+    classDef SOURCE stroke:Blue,fill:LightBlue,color:black
+    classDef TARGET stroke:Green,fill:LightGreen,color:black
+    classDef INTERMEDIATE stroke:DarkOrange,fill:Orange,color:black
+    classDef INTERNAL stroke:Purple,fill:Violet,color:black
+    classDef FIELD stroke:Orange,fill:Gold,color:black
+
+    relation_table:::SOURCE
+    sample_table:::SOURCE
+    sample_table_2:::SOURCE
+    target:::TARGET
+
+    subgraph relation_table
+        relation_table.id1[id1]:::FIELD
+        relation_table.id2[id2]:::FIELD
+        relation_table.rel_type[rel_type]:::FIELD
+    end
+
+    subgraph sample_table
+        sample_table.id[id]:::FIELD
+        sample_table.name[name]:::FIELD
+    end
+
+    subgraph sample_table_2
+        sample_table_2.id[id]:::FIELD
+        sample_table_2.name[name]:::FIELD
+    end
+
+    subgraph target
+        target.name_a[name_a]:::FIELD
+        target.name_b[name_b]:::FIELD
+    end
+
+    relation_table.id1 -- JOIN --> target.name_a
+    relation_table.id1 -- JOIN --> target.name_b
+    relation_table.id2 -- JOIN --> target.name_a
+    relation_table.id2 -- JOIN --> target.name_b
+    relation_table.rel_type -- JOIN --> target.name_a
+    relation_table.rel_type -- JOIN --> target.name_b
+    sample_table.id -- FILTER,JOIN --> target.name_a
+    sample_table.id -- FILTER,JOIN --> target.name_b
+    sample_table.name -- COLUMN --> target.name_a
+    sample_table.name -- COLUMN --> target.name_b
+    sample_table_2.id -- FILTER,JOIN --> target.name_a
+    sample_table_2.id -- FILTER,JOIN --> target.name_b
+    sample_table_2.name -- COLUMN --> target.name_a
+    sample_table_2.name -- COLUMN --> target.name_b
