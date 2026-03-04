@@ -8,6 +8,7 @@ from sample_project.util import read_source, write_and_read
 if TYPE_CHECKING:
     from pyspark.sql import DataFrame
 
+
 source_config: dict[str, SourceConfig] = {
     "sample_table": SourceConfig(
         name="sample_table",
