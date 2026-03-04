@@ -1,7 +1,9 @@
 from pathlib import Path
 from shutil import rmtree
 
-from pyspark.sql import DataFrame, SparkSession
+from pyspark.sql import DataFrame
+
+from ea.util import get_active_spark_session, get_query_plan, store_plan
 
 
 def clean_data_directory(path: Path, *, create_if_not_exists: bool = False) -> None:
@@ -15,31 +17,6 @@ def clean_data_directory(path: Path, *, create_if_not_exists: bool = False) -> N
 
 def store_dataframe(df: DataFrame, path: Path) -> None:
     df.write.mode("overwrite").save(str(path))
-
-
-def store_plan(plan: str, path: Path) -> None:
-    with path.open("w") as file:
-        file.write(plan)
-
-
-def get_query_plan(df: DataFrame) -> str:
-    """Get the formatted query plan of a DataFrame as a string.
-
-    Alternative way:
-        df._sc._jvm.org.apache.spark.sql.api.python.PythonSQLUtils.explainString(df._jdf.queryExecution(), "formatted")
-    """
-    return df._jdf.queryExecution().toString()  # noqa: SLF001
-
-
-def get_active_spark_session() -> SparkSession:
-    """Get the active SparkSession or raise an error if none is found."""
-    spark = SparkSession.getActiveSession()
-
-    if spark is None:
-        msg = "No active SparkSession found."
-        raise RuntimeError(msg)
-
-    return spark
 
 
 def write_and_read(df: DataFrame, data_location: Path, plan_location: Path, dataset_name: str) -> DataFrame:

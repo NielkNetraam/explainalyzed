@@ -9,7 +9,7 @@ from typing import Any
 import pyspark.sql.dataframe as df_module
 from pyspark.sql import DataFrame, DataFrameWriter
 
-from data.utils import get_active_spark_session, get_query_plan, store_plan
+from ea.util import get_active_spark_session, get_query_plan, store_plan
 
 classes_to_patch = {"DataFrame": [df_module.DataFrame]}
 

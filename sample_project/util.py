@@ -2,7 +2,7 @@ from pathlib import Path
 
 from pyspark.sql import DataFrame
 
-from data.utils import get_active_spark_session
+from ea.util import get_active_spark_session
 from sample_project.config import SourceConfig
 
 
