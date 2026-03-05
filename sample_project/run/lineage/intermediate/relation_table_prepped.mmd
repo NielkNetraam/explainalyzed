@@ -1,0 +1,31 @@
+flowchart LR
+    classDef SOURCE stroke:Blue,fill:LightBlue,color:black
+    classDef TARGET stroke:Green,fill:LightGreen,color:black
+    classDef INTERMEDIATE stroke:DarkOrange,fill:Orange,color:black
+    classDef INTERNAL stroke:Purple,fill:Violet,color:black
+    classDef FIELD stroke:Orange,fill:Gold,color:black
+
+    relation_table:::SOURCE
+    relation_table_prepped:::TARGET
+
+    subgraph relation_table
+        relation_table.id1[id1]:::FIELD
+        relation_table.id2[id2]:::FIELD
+        relation_table.rel_type[rel_type]:::FIELD
+    end
+
+    subgraph relation_table_prepped
+        relation_table_prepped.id1[id1]:::FIELD
+        relation_table_prepped.id2[id2]:::FIELD
+        relation_table_prepped.rel_type[rel_type]:::FIELD
+    end
+
+    relation_table.id1 -- COLUMN,FILTER --> relation_table_prepped.id1
+    relation_table.id1 -- FILTER --> relation_table_prepped.id2
+    relation_table.id1 -- FILTER --> relation_table_prepped.rel_type
+    relation_table.id2 -- FILTER --> relation_table_prepped.id1
+    relation_table.id2 -- COLUMN,FILTER --> relation_table_prepped.id2
+    relation_table.id2 -- FILTER --> relation_table_prepped.rel_type
+    relation_table.rel_type -- FILTER --> relation_table_prepped.id1
+    relation_table.rel_type -- FILTER --> relation_table_prepped.id2
+    relation_table.rel_type -- COLUMN,FILTER --> relation_table_prepped.rel_type

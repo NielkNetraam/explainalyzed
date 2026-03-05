@@ -1,0 +1,47 @@
+flowchart LR
+    classDef SOURCE stroke:Blue,fill:LightBlue,color:black
+    classDef TARGET stroke:Green,fill:LightGreen,color:black
+    classDef INTERMEDIATE stroke:DarkOrange,fill:Orange,color:black
+    classDef INTERNAL stroke:Purple,fill:Violet,color:black
+    classDef FIELD stroke:Orange,fill:Gold,color:black
+
+    relation_table_prepped:::SOURCE
+    sample_table_2_prepped:::SOURCE
+    sample_table_prepped:::SOURCE
+    business_logic_result:::TARGET
+
+    subgraph relation_table_prepped
+        relation_table_prepped.id1[id1]:::FIELD
+        relation_table_prepped.id2[id2]:::FIELD
+        relation_table_prepped.rel_type[rel_type]:::FIELD
+    end
+
+    subgraph sample_table_2_prepped
+        sample_table_2_prepped.id[id]:::FIELD
+        sample_table_2_prepped.name_upper[name_upper]:::FIELD
+    end
+
+    subgraph sample_table_prepped
+        sample_table_prepped.id[id]:::FIELD
+        sample_table_prepped.name_upper[name_upper]:::FIELD
+    end
+
+    subgraph business_logic_result
+        business_logic_result.name_a[name_a]:::FIELD
+        business_logic_result.name_b[name_b]:::FIELD
+    end
+
+    relation_table_prepped.id1 -- JOIN --> business_logic_result.name_a
+    relation_table_prepped.id1 -- JOIN --> business_logic_result.name_b
+    relation_table_prepped.id2 -- JOIN --> business_logic_result.name_a
+    relation_table_prepped.id2 -- JOIN --> business_logic_result.name_b
+    relation_table_prepped.rel_type -- JOIN --> business_logic_result.name_a
+    relation_table_prepped.rel_type -- JOIN --> business_logic_result.name_b
+    sample_table_2_prepped.id -- FILTER,JOIN --> business_logic_result.name_a
+    sample_table_2_prepped.id -- FILTER,JOIN --> business_logic_result.name_b
+    sample_table_2_prepped.name_upper -- COLUMN --> business_logic_result.name_a
+    sample_table_2_prepped.name_upper -- COLUMN --> business_logic_result.name_b
+    sample_table_prepped.id -- FILTER,JOIN --> business_logic_result.name_a
+    sample_table_prepped.id -- FILTER,JOIN --> business_logic_result.name_b
+    sample_table_prepped.name_upper -- COLUMN --> business_logic_result.name_a
+    sample_table_prepped.name_upper -- COLUMN --> business_logic_result.name_b

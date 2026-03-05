@@ -1,4 +1,5 @@
 import re
+from pathlib import Path
 
 from ea.lineage import Lineage
 from ea.node.logical.join import JoinNode
@@ -188,3 +189,46 @@ class ExplainAnalyzed:
         mermaid_str += nodes(olp, indent=1) + "\n"
         mermaid_str += edges(olp, indent=1)
         return mermaid_str
+
+    @staticmethod
+    def from_path(
+        plan_path: Path,
+        output_path: Path,
+        result_name: str,
+        *,
+        plan_visualisation: bool = False,
+        intermediate_lineage: bool = False,
+    ) -> None:
+        plans = {p.stem: p for p in plan_path.glob("**/*.txt")}
+
+        lineage_path = output_path / "lineage"
+        lineage_path.mkdir(parents=True, exist_ok=True)
+
+        if plan_visualisation:
+            visualisation_path = output_path / "visualization"
+            visualisation_path.mkdir(parents=True, exist_ok=True)
+
+        if intermediate_lineage:
+            intermediate_lineage_path = lineage_path / "intermediate"
+            intermediate_lineage_path.mkdir(parents=True, exist_ok=True)
+
+        eas: dict[str, ExplainAnalyzed] = {}
+        for name, plan in plans.items():
+            with plan.open() as file:
+                plan_data = file.readlines()
+
+            eas[name] = ExplainAnalyzed(name, plan_data)
+
+            if plan_visualisation:
+                path = visualisation_path / f"{name}.mmd"
+                with path.open("w") as file:
+                    file.write(eas[name].mermaid())
+
+            if intermediate_lineage:
+                path = intermediate_lineage_path / f"{name}.mmd"
+                with path.open("w") as file:
+                    file.write(eas[name].get_lineage().mermaid())
+
+        path = lineage_path / f"{result_name}.mmd"
+        with path.open("w") as file:
+            file.write(Lineage.mermaid_from_lineages([ea.get_lineage() for ea in eas.values()]))

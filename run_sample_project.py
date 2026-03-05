@@ -6,7 +6,6 @@ from pyspark.sql import SparkSession
 from data.utils import clean_data_directory
 from ea.explainanalyzed import ExplainAnalyzed
 from ea.extract_execution_plan import ExtractExecutionPlan
-from ea.lineage import Lineage
 from sample_project.builder import builder
 from sample_project.config import SourceConfig
 
@@ -54,24 +53,7 @@ try:
     ):
         builder(build_path, source_config)
 
-    plans = {p.stem: p for p in plan_path.glob("**/*.txt")}
-
-    eas: dict[str, ExplainAnalyzed] = {}
-    for name, plan in plans.items():
-        with plan.open() as file:
-            plan_data = file.readlines()
-
-        eas[name] = ExplainAnalyzed(name, plan_data)
-
-        path = run_path / "visualization" / f"{name}.mmd"
-        path.parent.mkdir(parents=True, exist_ok=True)
-        with path.open("w") as file:
-            file.write(eas[name].mermaid())
-
-    path = run_path / "lineage/sample_project.mmd"
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w") as file:
-        file.write(Lineage.mermaid_from_lineages([ea.get_lineage() for ea in eas.values()]))
+    ExplainAnalyzed.from_path(plan_path, run_path, "sample_project", plan_visualisation=True, intermediate_lineage=True)
 
 finally:
     spark.stop()
