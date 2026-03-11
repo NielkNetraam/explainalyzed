@@ -163,6 +163,24 @@ _get_lineage_scenarios = {
             "sample_table_2.id -- JOIN --> target.birth_date",
         },
     ),
+    "IF join_cross THEN success": (
+        "join_cross",
+        {
+            "sample_table.name -- COLUMN --> target.name",
+            "transaction_table.id -- COLUMN --> target.id",
+            "transaction_table.amount -- COLUMN --> target.amount",
+            "transaction_table.sign -- COLUMN --> target.sign",
+        },
+    ),
+    "IF join_cross_broadcast THEN success": (
+        "join_cross_broadcast",
+        {
+            "sample_table.name -- COLUMN --> target.name",
+            "transaction_table.id -- COLUMN --> target.id",
+            "transaction_table.amount -- COLUMN --> target.amount",
+            "transaction_table.sign -- COLUMN --> target.sign",
+        },
+    ),
     "IF join_2 THEN success": (
         "join_2",
         {

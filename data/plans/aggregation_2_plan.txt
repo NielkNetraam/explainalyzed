@@ -1,22 +1,22 @@
 == Parsed Logical Plan ==
-'Aggregate ['age], ['age, 'count(1) AS count#147, 'max('name) AS max_name#148]
-+- Relation [id#144,name#145,age#146] parquet
+'Aggregate ['age], ['age, 'count(1) AS count#162, 'max('name) AS max_name#163]
++- Relation [id#159,name#160,age#161] parquet
 
 == Analyzed Logical Plan ==
 age: int, count: bigint, max_name: string
-Aggregate [age#146], [age#146, count(1) AS count#147L, max(name#145) AS max_name#148]
-+- Relation [id#144,name#145,age#146] parquet
+Aggregate [age#161], [age#161, count(1) AS count#162L, max(name#160) AS max_name#163]
++- Relation [id#159,name#160,age#161] parquet
 
 == Optimized Logical Plan ==
-Aggregate [age#146], [age#146, count(1) AS count#147L, max(name#145) AS max_name#148]
-+- Project [name#145, age#146]
-   +- Relation [id#144,name#145,age#146] parquet
+Aggregate [age#161], [age#161, count(1) AS count#162L, max(name#160) AS max_name#163]
++- Project [name#160, age#161]
+   +- Relation [id#159,name#160,age#161] parquet
 
 == Physical Plan ==
 AdaptiveSparkPlan isFinalPlan=false
-+- SortAggregate(key=[age#146], functions=[count(1), max(name#145)], output=[age#146, count#147L, max_name#148])
-   +- Sort [age#146 ASC NULLS FIRST], false, 0
-      +- Exchange hashpartitioning(age#146, 200), ENSURE_REQUIREMENTS, [plan_id=359]
-         +- SortAggregate(key=[age#146], functions=[partial_count(1), partial_max(name#145)], output=[age#146, count#157L, max#158])
-            +- Sort [age#146 ASC NULLS FIRST], false, 0
-               +- FileScan parquet [name#145,age#146] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<name:string,age:int>
++- SortAggregate(key=[age#161], functions=[count(1), max(name#160)], output=[age#161, count#162L, max_name#163])
+   +- Sort [age#161 ASC NULLS FIRST], false, 0
+      +- Exchange hashpartitioning(age#161, 200), ENSURE_REQUIREMENTS, [plan_id=387]
+         +- SortAggregate(key=[age#161], functions=[partial_count(1), partial_max(name#160)], output=[age#161, count#172L, max#173])
+            +- Sort [age#161 ASC NULLS FIRST], false, 0
+               +- FileScan parquet [name#160,age#161] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<name:string,age:int>

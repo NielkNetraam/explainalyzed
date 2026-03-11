@@ -158,6 +158,16 @@ def create_join_how_plan(spark: SparkSession, how: str) -> str:
     return get_query_plan(df_joined)
 
 
+def join_cross_query(spark: SparkSession, *, broadcast: bool) -> DataFrame:
+    df1 = spark.read.load(str(TABLE_PATH / "sample_table"))
+    df2 = spark.read.load(str(TABLE_PATH / "transaction_table"))
+
+    if broadcast:
+        df2 = f.broadcast(df2)
+
+    return df1.alias("a").join(df2.alias("b"), how="cross").select("name", "b.*")
+
+
 def join_2_query(spark: SparkSession, *, broadcast: bool = False) -> DataFrame:
     df1 = spark.read.load(str(TABLE_PATH / "sample_table"))
     df2 = spark.read.load(str(TABLE_PATH / "sample_table_2"))
@@ -249,6 +259,8 @@ def create_plans_and_store(spark: SparkSession) -> None:
     store_plan(create_join_how_plan(spark, "inner"), PLAN_PATH / "join_inner_plan.txt")
     store_plan(create_join_how_plan(spark, "left"), PLAN_PATH / "join_left_plan.txt")
     store_plan(create_join_how_plan(spark, "right"), PLAN_PATH / "join_right_plan.txt")
+    store_plan(get_query_plan(join_cross_query(spark, broadcast=False)), PLAN_PATH / "join_cross_plan.txt")
+    store_plan(get_query_plan(join_cross_query(spark, broadcast=True)), PLAN_PATH / "join_cross_broadcast_plan.txt")
     store_plan(get_query_plan(join_2_query(spark)), PLAN_PATH / "join_2_plan.txt")
     store_plan(get_query_plan(join_2_query(spark, broadcast=True)), PLAN_PATH / "join_2_broadcast_plan.txt")
     store_plan(create_aggregation_1_plan(spark), PLAN_PATH / "aggregation_1_plan.txt")

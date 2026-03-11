@@ -1,0 +1,31 @@
+== Parsed Logical Plan ==
+'Project ['name, b.*]
++- Project [id#75, name#76, age#77, id#78, amount#79, sign#80]
+   +- Join Cross
+      :- SubqueryAlias a
+      :  +- Relation [id#75,name#76,age#77] parquet
+      +- SubqueryAlias b
+         +- Relation [id#78,amount#79,sign#80] parquet
+
+== Analyzed Logical Plan ==
+name: string, id: int, amount: decimal(10,2), sign: string
+Project [name#76, id#78, amount#79, sign#80]
++- Project [id#75, name#76, age#77, id#78, amount#79, sign#80]
+   +- Join Cross
+      :- SubqueryAlias a
+      :  +- Relation [id#75,name#76,age#77] parquet
+      +- SubqueryAlias b
+         +- Relation [id#78,amount#79,sign#80] parquet
+
+== Optimized Logical Plan ==
+Join Cross
+:- Project [name#76]
+:  +- Relation [id#75,name#76,age#77] parquet
++- Relation [id#78,amount#79,sign#80] parquet
+
+== Physical Plan ==
+AdaptiveSparkPlan isFinalPlan=false
++- BroadcastNestedLoopJoin BuildLeft, Cross
+   :- BroadcastExchange IdentityBroadcastMode, [plan_id=190]
+   :  +- FileScan parquet [name#76] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<name:string>
+   +- FileScan parquet [id#78,amount#79,sign#80] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/transaction_table], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<id:int,amount:decimal(10,2),sign:string>

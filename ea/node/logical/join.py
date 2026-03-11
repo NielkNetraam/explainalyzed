@@ -13,12 +13,14 @@ class JoinNode(PlanNode):
 
         parameter_splitted = parameters.split(",", 1)
         self.join_type = parameter_splitted[0].strip()
-        fields = parameter_splitted[1].strip()
+
+        fields = parameter_splitted[1].strip() if len(parameter_splitted) > 1 else ""
 
         if "broadcast" in fields:
             self.broadcast = "right" if "rightHint" in fields else "left"
 
-        self.join_keys: list[str] = findall_column_ids(fields)
+        if self.join_type != "CROSS":
+            self.join_keys: list[str] = findall_column_ids(fields)
 
     def get_column_dependencies(self) -> dict[str, ColumnDependency]:
         column_dependency: dict[str, ColumnDependency] = super().get_column_dependencies()
