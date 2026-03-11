@@ -8,7 +8,7 @@ flowchart TD
 
     Project#1["Project: [id#25, name#26 AS original_name#37, age#29, name_upper#30, id_str#31, id_and_name#32, constant_value AS literal#33, null AS none_value#34, conditional_value#35, struct(name, name#26, age, age#29) AS name_age#36]"]:::PROJECT
     Project#11["Project: [id#25, name#26, (age#27 + 1) AS age#29, upper(name#26) AS name_upper#30, cast(id#25 as string) AS id_str#31, concat_ws(~, cast(id#25 as string), name#26) AS id_and_name#32, CASE WHEN (id#25 > 10) THEN name#26 WHEN (id#25 < 0) THEN upper(name#26) ELSE Unknown END AS conditional_value#35]"]:::PROJECT
-    Relation#111["sample_table: [id#25,name#26,age#27] parquet"]:::RELATION
+    Relation#111["sample_table: [id#25, name#26, age#27] parquet"]:::RELATION
 
     Project#1 --> Project#11
         Project#11 --> Relation#111

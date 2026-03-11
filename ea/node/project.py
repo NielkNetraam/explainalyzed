@@ -17,7 +17,7 @@ class ProjectNode(PlanNode):
                 name_part = field.rsplit(" AS ", 1)[1]
                 function_part = field.rsplit(" AS ", 1)[0]
 
-                pattern = r"(\w[\w\d\_\-]*\#\d*)"
+                pattern = r"(\w[\w\d\_\-]*\#\d*[L]?)"
                 src_fields = list(set(re.findall(pattern, function_part)))
                 self.fields[name_part] = (
                     src_fields if len(src_fields) > 0 else ["__none__" if function_part == "null" else "__literal__"]

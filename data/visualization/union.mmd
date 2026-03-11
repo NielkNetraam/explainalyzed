@@ -8,9 +8,9 @@ flowchart TD
 
     Union#1["Union"]:::UNION
     Project#11["Project: [name#39, age#40, null AS birth_date#45]"]:::PROJECT
-    Relation#111["sample_table: [id#38,name#39,age#40] parquet"]:::RELATION
+    Relation#111["sample_table: [id#38, name#39, age#40] parquet"]:::RELATION
     Project#12["Project: [name#42, null AS age#44, birth_date#43]"]:::PROJECT
-    Relation#121["sample_table_2: [id#41,name#42,birth_date#43] parquet"]:::RELATION
+    Relation#121["sample_table_2: [id#41, name#42, birth_date#43] parquet"]:::RELATION
 
     Union#1 --> Project#11
         Project#11 --> Relation#111

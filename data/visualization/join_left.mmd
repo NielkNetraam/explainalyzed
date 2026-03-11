@@ -8,9 +8,9 @@ flowchart TD
 
     Project#1["Project: [id#57, coalesce(name#58, name#61) AS name#65, age#59, birth_date#62]"]:::PROJECT
     Join#11["Join: LeftOuter, (id#57 = id#60)"]:::JOIN
-    Relation#111["sample_table: [id#57,name#58,age#59] parquet"]:::RELATION
+    Relation#111["sample_table: [id#57, name#58, age#59] parquet"]:::RELATION
     Filter#112["Filter: isnotnull(id#60)"]:::FILTER
-    Relation#1121["sample_table_2: [id#60,name#61,birth_date#62] parquet"]:::RELATION
+    Relation#1121["sample_table_2: [id#60, name#61, birth_date#62] parquet"]:::RELATION
 
     Project#1 --> Join#11
         Join#11 --> Relation#111

@@ -6,27 +6,27 @@ flowchart TD
     classDef RELATION stroke:Yellow,fill:Gold,color:black
     classDef AGGREGATE stroke:Brown,fill:Chocolate,color:black
 
-    Project#1["Project: [name#76 AS name_a#99, name#90 AS name_b#100]"]:::PROJECT
-    Join#11["Join: Inner, (id#89 = id2#82)"]:::JOIN
-    Project#111["Project: [name#76, id2#82]"]:::PROJECT
-    Join#1111["Join: Inner, (id#75 = id1#81)"]:::JOIN
+    Project#1["Project: [name#91 AS name_a#114, name#105 AS name_b#115]"]:::PROJECT
+    Join#11["Join: Inner, (id#104 = id2#97)"]:::JOIN
+    Project#111["Project: [name#91, id2#97]"]:::PROJECT
+    Join#1111["Join: Inner, (id#90 = id1#96)"]:::JOIN
     Union#11111["Union"]:::UNION
-    Project#111111["Project: [id#75, name#76]"]:::PROJECT
-    Filter#1111111["Filter: isnotnull(id#75)"]:::FILTER
-    Relation#11111111["sample_table: [id#75,name#76,age#77] parquet"]:::RELATION
-    Project#111112["Project: [id#78, name#79]"]:::PROJECT
-    Filter#1111121["Filter: isnotnull(id#78)"]:::FILTER
-    Relation#11111211["sample_table_2: [id#78,name#79,birth_date#80] parquet"]:::RELATION
-    Project#11112["Project: [id1#81, id2#82]"]:::PROJECT
-    Filter#111121["Filter: ((isnotnull(rel_type#83) AND (rel_type#83 = friend)) AND (isnotnull(id1#81) AND isnotnull(id2#82)))"]:::FILTER
-    Relation#1111211["relation_table: [id1#81,id2#82,rel_type#83] parquet"]:::RELATION
+    Project#111111["Project: [id#90, name#91]"]:::PROJECT
+    Filter#1111111["Filter: isnotnull(id#90)"]:::FILTER
+    Relation#11111111["sample_table: [id#90, name#91, age#92] parquet"]:::RELATION
+    Project#111112["Project: [id#93, name#94]"]:::PROJECT
+    Filter#1111121["Filter: isnotnull(id#93)"]:::FILTER
+    Relation#11111211["sample_table_2: [id#93, name#94, birth_date#95] parquet"]:::RELATION
+    Project#11112["Project: [id1#96, id2#97]"]:::PROJECT
+    Filter#111121["Filter: ((isnotnull(rel_type#98) AND (rel_type#98 = friend)) AND (isnotnull(id1#96) AND isnotnull(id2#97)))"]:::FILTER
+    Relation#1111211["relation_table: [id1#96, id2#97, rel_type#98] parquet"]:::RELATION
     Union#112["Union"]:::UNION
-    Project#1121["Project: [id#89, name#90]"]:::PROJECT
-    Filter#11211["Filter: isnotnull(id#89)"]:::FILTER
-    Relation#112111["sample_table: [id#89,name#90,age#91] parquet"]:::RELATION
-    Project#1122["Project: [id#93, name#94]"]:::PROJECT
-    Filter#11221["Filter: isnotnull(id#93)"]:::FILTER
-    Relation#112211["sample_table_2: [id#93,name#94,birth_date#95] parquet"]:::RELATION
+    Project#1121["Project: [id#104, name#105]"]:::PROJECT
+    Filter#11211["Filter: isnotnull(id#104)"]:::FILTER
+    Relation#112111["sample_table: [id#104, name#105, age#106] parquet"]:::RELATION
+    Project#1122["Project: [id#108, name#109]"]:::PROJECT
+    Filter#11221["Filter: isnotnull(id#108)"]:::FILTER
+    Relation#112211["sample_table_2: [id#108, name#109, birth_date#110] parquet"]:::RELATION
 
     Project#1 --> Join#11
         Join#11 --> Project#111

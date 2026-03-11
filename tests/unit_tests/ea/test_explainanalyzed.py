@@ -318,7 +318,7 @@ _get_lineage_scenarios = {
 @pytest.mark.parametrize(("dataset", "expected"), _get_lineage_scenarios.values(), ids=_get_lineage_scenarios.keys())
 def test_get_lineage(dataset: str, expected: set[str]) -> None:
     path = Path(__file__).parent.parent.parent.parent / f"data/plans/{dataset}_plan.txt"
-    with path.open() as file:
+    with path.open(encoding="utf-8") as file:
         plan_data = file.readlines()
 
     ea = ExplainAnalyzed("target", plan_data)

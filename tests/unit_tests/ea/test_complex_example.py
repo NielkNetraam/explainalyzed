@@ -11,7 +11,7 @@ def test_complex_example() -> None:
 
     eas: dict[str, ExplainAnalyzed] = {}
     for name, plan in plans.items():
-        with plan.open() as file:
+        with plan.open(encoding="utf-8") as file:
             plan_data = file.readlines()
 
         eas[name] = ExplainAnalyzed(name, plan_data)
