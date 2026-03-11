@@ -6,7 +6,7 @@ import pyspark.sql.functions as f
 from pyspark.sql import DataFrame, SparkSession
 from pyspark.sql.types import DateType, DecimalType, IntegerType, StringType, StructField, StructType
 
-from data.utils import clean_data_directory, get_query_plan, store_dataframe, store_plan
+from data.utils import clean_data_directory, get_query_plan, store_dataframe, store_json, store_plan
 
 SAMPLE_SCHEMA = StructType(
     [
@@ -58,12 +58,12 @@ TRX_DATA: list[tuple[int, Decimal, str]] = [
 
 
 TABLE_PATH = Path(__file__).parent / "tables"
+JSON_PATH = Path(__file__).parent / "json"
 PLAN_PATH = Path(__file__).parent / "plans"
 
 
 def create_tables_and_store(spark: SparkSession) -> None:
-    clean_data_directory(TABLE_PATH)
-    TABLE_PATH.mkdir(parents=True, exist_ok=True)
+    clean_data_directory(TABLE_PATH, create_if_not_exists=True)
 
     store_dataframe(spark.createDataFrame(SAMPLE_DATA, SAMPLE_SCHEMA), TABLE_PATH / "sample_table")
     store_dataframe(spark.createDataFrame(SAMPLE_DATA_2, SAMPLE_SCHEMA_2), TABLE_PATH / "sample_table_2")
@@ -71,9 +71,22 @@ def create_tables_and_store(spark: SparkSession) -> None:
     store_dataframe(spark.createDataFrame(TRX_DATA, TRX_SCHEMA), TABLE_PATH / "transaction_table")
 
 
+def create_json_and_store(spark: SparkSession) -> None:
+    clean_data_directory(JSON_PATH, create_if_not_exists=True)
+
+    store_json(spark.createDataFrame(SAMPLE_DATA, SAMPLE_SCHEMA), JSON_PATH / "sample_table")
+    store_json(spark.createDataFrame(SAMPLE_DATA_2, SAMPLE_SCHEMA_2), JSON_PATH / "sample_table_2")
+    store_json(spark.createDataFrame(RELATION_DATA, RELATION_SCHEMA), JSON_PATH / "relation_table")
+    store_json(spark.createDataFrame(TRX_DATA, TRX_SCHEMA), JSON_PATH / "transaction_table")
+
+
 def create_select_1_plan(spark: SparkSession) -> str:
     df = spark.read.load(str(TABLE_PATH / "sample_table"))
     return get_query_plan(df)
+
+
+def select_1_from_json_plan(spark: SparkSession) -> DataFrame:
+    return spark.read.json(str(JSON_PATH / "sample_table"))
 
 
 def create_select_2_plan(spark: SparkSession) -> str:
@@ -244,3 +257,5 @@ def create_plans_and_store(spark: SparkSession) -> None:
     store_plan(create_rdd_plan(spark), PLAN_PATH / "rdd_plan.txt")
     store_plan(get_query_plan(union_forest_query(spark)), PLAN_PATH / "union_forest_plan.txt")
     store_plan(get_query_plan(union_forest_query(spark, cache=True)), PLAN_PATH / "union_forest_cache_plan.txt")
+
+    store_plan(get_query_plan(select_1_from_json_plan(spark)), PLAN_PATH / "select_1_from_json_plan.txt")

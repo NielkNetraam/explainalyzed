@@ -1,3 +1,4 @@
+import re
 from typing import TypeVar
 
 from ea.column_dependency import ColumnDependency
@@ -27,7 +28,7 @@ class PlanNode:
             child.print_node(indent + 1)
 
     def mermaid(self, node_id_str: str) -> str:
-        return f'{self.node_type}#{node_id_str}["{self.node_type}: {self.parameters}"]'
+        return f'{self.node_type}#{node_id_str}["{self.node_type}: {re.sub(r",(?=[^ ])", ", ", self.parameters)}"]'
 
     def get_column_dependencies(self) -> dict[str, ColumnDependency]:
         column_dependency: dict[str, ColumnDependency] = {}

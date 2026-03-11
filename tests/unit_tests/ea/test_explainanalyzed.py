@@ -38,6 +38,14 @@ _get_lineage_scenarios = {
             "sample_table.age -- COLUMN --> target.age",
         },
     ),
+    "IF select_1_from_json THEN success": (
+        "select_1_from_json",
+        {
+            "sample_table.id -- COLUMN --> target.id",
+            "sample_table.name -- COLUMN --> target.name",
+            "sample_table.age -- COLUMN --> target.age",
+        },
+    ),
     "IF select_2 THEN success": (
         "select_2",
         {

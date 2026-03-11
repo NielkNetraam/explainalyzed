@@ -136,6 +136,9 @@ class Lineage:
 
             return mermaid_str
 
+        def replace_tilde(name: str) -> str:
+            return name.replace("~", "/")
+
         mermaid_str = (
             "flowchart LR\n"
             "    classDef SOURCE stroke:Blue,fill:LightBlue,color:black\n"
@@ -147,10 +150,10 @@ class Lineage:
         )
 
         for table in sorted(tables):
-            mermaid_str += f"    {table.name}:::{table.type.name}\n"
+            mermaid_str += f"    {replace_tilde(table.name)}:::{table.type.name}\n"
 
         for table in sorted(tables):
-            mermaid_str += f"\n    subgraph {table.name}\n"
+            mermaid_str += f"\n    subgraph {replace_tilde(table.name)}\n"
             mermaid_str += table_columns(columns)
             mermaid_str += "    end\n"
 
@@ -158,7 +161,9 @@ class Lineage:
 
         for sc, t in sorted(compressed_column_lineage.items(), key=lambda t: str(t[0])):
             for tc, types in sorted(t.items(), key=lambda t: str(t[0])):
-                mermaid_str += f"    {sc} -- {','.join(sorted({t.name for t in types}))} --> {tc}\n"
+                mermaid_str += (
+                    f"    {replace_tilde(str(sc))} -- {','.join(sorted({t.name for t in types}))} --> {replace_tilde(str(tc))}\n"
+                )
 
         return mermaid_str
 

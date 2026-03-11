@@ -8,7 +8,7 @@ flowchart TD
 
     Project#1["Project: [id#0, upper(name#1) AS name_upper#10]"]:::PROJECT
     Filter#11["Filter: (isnotnull(id#0) AND (id#0 > 1))"]:::FILTER
-    Relation#111["sample_table: [id#0,name#1,age#2] parquet"]:::RELATION
+    Relation#111["sample_table: [id#0, name#1, age#2] parquet"]:::RELATION
 
     Project#1 --> Filter#11
         Filter#11 --> Relation#111

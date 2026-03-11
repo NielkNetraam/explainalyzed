@@ -49,7 +49,7 @@ class ExtractExecutionPlan:
 
         self.spark_conf: dict[str, int] = {
             "spark.sql.debug.maxToStringFields": 1000,
-            "spark.sql.maxMetadataStringLength": 10000,
+            "spark.sql.maxMetadataStringLength": 100000,
         }
         self.original_spark_conf: dict[str, int] = {}
         self.original_dataframe_methods: dict[type, dict[str, Callable]] = {}

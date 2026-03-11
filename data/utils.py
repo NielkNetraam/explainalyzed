@@ -19,6 +19,10 @@ def store_dataframe(df: DataFrame, path: Path) -> None:
     df.write.mode("overwrite").save(str(path))
 
 
+def store_json(df: DataFrame, path: Path) -> None:
+    df.coalesce(1).write.mode("overwrite").json(str(path))
+
+
 def write_and_read(df: DataFrame, data_location: Path, plan_location: Path, dataset_name: str) -> DataFrame:
     """Write the DataFrame to a temporary location, store the query plan and read it back."""
     plan = get_query_plan(df)

@@ -51,4 +51,18 @@ def get_query_plan(df: DataFrame) -> str:
     Alternative way:
         df._sc._jvm.org.apache.spark.sql.api.python.PythonSQLUtils.explainString(df._jdf.queryExecution(), "formatted")
     """
-    return df._jdf.queryExecution().toString()  # noqa: SLF001
+    plan = df._jdf.queryExecution().toString()  # noqa: SLF001
+
+    if "..." in plan:
+        raise IncompleteExecutionPlanError
+
+    return plan
+
+
+class IncompleteExecutionPlanError(Exception):
+    def __init__(self) -> None:
+        msg = (
+            "execution plan contains '...', increase 'spark.sql.debug.maxToStringFields' and/or "
+            "'spark.sql.maxMetadataStringLength' when extracting execution plans"
+        )
+        super().__init__(msg)

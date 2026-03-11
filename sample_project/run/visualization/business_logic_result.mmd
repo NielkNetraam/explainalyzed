@@ -12,17 +12,17 @@ flowchart TD
     Join#1111["Join: Inner, (id#14 = id1#18)"]:::JOIN
     Union#11111["Union"]:::UNION
     Filter#111111["Filter: isnotnull(id#14)"]:::FILTER
-    Relation#1111111["sample_table_prepped: [id#14,name_upper#15] parquet"]:::RELATION
+    Relation#1111111["sample_table_prepped: [id#14, name_upper#15] parquet"]:::RELATION
     Filter#111112["Filter: isnotnull(id#16)"]:::FILTER
-    Relation#1111121["sample_table_2_prepped: [id#16,name_upper#17] parquet"]:::RELATION
+    Relation#1111121["sample_table_2_prepped: [id#16, name_upper#17] parquet"]:::RELATION
     Project#11112["Project: [id1#18, id2#19]"]:::PROJECT
     Filter#111121["Filter: ((isnotnull(rel_type#20) AND (rel_type#20 = friend)) AND (isnotnull(id1#18) AND isnotnull(id2#19)))"]:::FILTER
-    Relation#1111211["relation_table_prepped: [id1#18,id2#19,rel_type#20] parquet"]:::RELATION
+    Relation#1111211["relation_table_prepped: [id1#18, id2#19, rel_type#20] parquet"]:::RELATION
     Union#112["Union"]:::UNION
     Filter#1121["Filter: isnotnull(id#23)"]:::FILTER
-    Relation#11211["sample_table_prepped: [id#23,name_upper#24] parquet"]:::RELATION
+    Relation#11211["sample_table_prepped: [id#23, name_upper#24] parquet"]:::RELATION
     Filter#1122["Filter: isnotnull(id#25)"]:::FILTER
-    Relation#11221["sample_table_2_prepped: [id#25,name_upper#26] parquet"]:::RELATION
+    Relation#11221["sample_table_2_prepped: [id#25, name_upper#26] parquet"]:::RELATION
 
     Project#1 --> Join#11
         Join#11 --> Project#111

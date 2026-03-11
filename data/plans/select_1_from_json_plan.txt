@@ -1,0 +1,12 @@
+== Parsed Logical Plan ==
+UnresolvedDataSource format: json, isStreaming: false, paths: 1 provided
+
+== Analyzed Logical Plan ==
+age: bigint, id: bigint, name: string
+Relation [age#570L,id#571L,name#572] json
+
+== Optimized Logical Plan ==
+Relation [age#570L,id#571L,name#572] json
+
+== Physical Plan ==
+FileScan json [age#570L,id#571L,name#572] Batched: false, DataFilters: [], Format: JSON, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/json/sample_table], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<age:bigint,id:bigint,name:string>

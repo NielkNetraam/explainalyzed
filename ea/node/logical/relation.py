@@ -38,4 +38,4 @@ class RelationNode(PlanNode):
         return f"{self.node_type} (Level: {self.level}) (Fields: {self.fields}) (Source Type: {self.source_type})"
 
     def mermaid(self, node_id_str: str) -> str:
-        return f'{self.node_type}#{node_id_str}["{self.table}: {self.parameters}"]'
+        return f'{self.node_type}#{node_id_str}["{self.table}: {re.sub(r",(?=[^ ])", ", ", self.parameters)}"]'

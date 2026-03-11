@@ -7,6 +7,7 @@ from ea.node.logical.relation import RelationNode
 from ea.node.physical.file_scan import FileScanNode
 from ea.node.plan_node import GenericNode, PlanNode, PlanNodeType
 from ea.node.registry import logical_class_registry, physical_class_registry
+from ea.util import IncompleteExecutionPlanError
 
 
 def _split_line(line: str) -> tuple[int, str | None, str, str]:
@@ -31,6 +32,9 @@ def _convert_line(
     class_registry: dict[str, type[PlanNodeType]],
     mapping: dict[str, list[str]] | None = None,
 ) -> PlanNode:
+    if "..." in line:
+        raise IncompleteExecutionPlanError
+
     level, subset_id, node_type, remainder = _split_line(line)
 
     if node_type in class_registry:
@@ -63,9 +67,14 @@ def _convert_lines_to_mapping(lines: list[str]) -> dict[str, list[str]]:
     for line in lines:
         if "FileScan" in line:
             parameters = line.split("FileScan")[1].strip()
+            if "..." in parameters:
+                raise IncompleteExecutionPlanError
             file_scan = FileScanNode("FileScan", 0, "", parameters)
 
-            _mapping = {field.column_id: field.location for field in file_scan.fields.values()}  # ty:ignore[unresolved-attribute]
+            _mapping = {
+                field.column_id: field.location  # ty:ignore[unresolved-attribute]
+                for field in file_scan.fields.values()
+            }
             mapping.update(_mapping)
     return mapping
 
