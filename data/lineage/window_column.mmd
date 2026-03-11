@@ -1,0 +1,29 @@
+flowchart LR
+    classDef SOURCE stroke:Blue,fill:LightBlue,color:black
+    classDef TARGET stroke:Green,fill:LightGreen,color:black
+    classDef INTERMEDIATE stroke:DarkOrange,fill:Orange,color:black
+    classDef INTERNAL stroke:Purple,fill:Violet,color:black
+    classDef FIELD stroke:Orange,fill:Gold,color:black
+
+    transaction_table:::SOURCE
+    target:::TARGET
+
+    subgraph transaction_table
+        transaction_table.amount[amount]:::FIELD
+        transaction_table.id[id]:::FIELD
+        transaction_table.sign[sign]:::FIELD
+    end
+
+    subgraph target
+        target.amount[amount]:::FIELD
+        target.id[id]:::FIELD
+        target.max_amount_por[max_amount_por]:::FIELD
+        target.sign[sign]:::FIELD
+    end
+
+    transaction_table.amount -- COLUMN --> target.amount
+    transaction_table.amount -- COLUMN --> target.max_amount_por
+    transaction_table.id -- COLUMN --> target.id
+    transaction_table.id -- GROUP_BY --> target.max_amount_por
+    transaction_table.sign -- GROUP_BY --> target.max_amount_por
+    transaction_table.sign -- COLUMN --> target.sign

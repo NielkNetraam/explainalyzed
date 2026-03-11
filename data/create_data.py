@@ -3,7 +3,7 @@ from decimal import Decimal
 from pathlib import Path
 
 import pyspark.sql.functions as f
-from pyspark.sql import DataFrame, SparkSession
+from pyspark.sql import DataFrame, SparkSession, Window
 from pyspark.sql.types import DateType, DecimalType, IntegerType, StringType, StructField, StructType
 
 from data.utils import clean_data_directory, get_query_plan, store_dataframe, store_json, store_plan
@@ -241,6 +241,94 @@ def union_forest_query(spark: SparkSession, *, cache: bool = False) -> DataFrame
     return split_and_union(df1, "complex", df2, "complex_id")
 
 
+def window_column_query(spark: SparkSession) -> DataFrame:
+    df = spark.read.load(str(TABLE_PATH / "transaction_table"))
+
+    return df.withColumn(
+        "max_amount_por",
+        f.max("amount").over(
+            Window.partitionBy("id").orderBy("sign").rowsBetween(Window.currentRow + 1, Window.unboundedFollowing),
+        ),
+    )
+
+
+def window_column_2_query(spark: SparkSession) -> DataFrame:
+    df = spark.read.load(str(TABLE_PATH / "transaction_table"))
+
+    return df.withColumn(
+        "max_amount_por",
+        f.max("amount").over(
+            Window.partitionBy("id").orderBy("sign").rowsBetween(Window.currentRow + 1, Window.unboundedFollowing),
+        ),
+    ).withColumn(
+        "max_amount_po",
+        f.max("amount").over(
+            Window.partitionBy("id").orderBy("sign"),
+        ),
+    )
+
+
+def window_column_3_query(spark: SparkSession) -> DataFrame:
+    df = spark.read.load(str(TABLE_PATH / "transaction_table"))
+
+    return (
+        df.withColumn(
+            "max_amount_por",
+            f.max("amount").over(
+                Window.partitionBy("id").orderBy("sign").rowsBetween(Window.currentRow + 1, Window.unboundedFollowing),
+            ),
+        )
+        .withColumn(
+            "max_amount_or",
+            f.max("amount").over(
+                Window.orderBy("sign").rowsBetween(Window.currentRow + 1, Window.unboundedFollowing),
+            ),
+        )
+        .withColumn(
+            "max_amount_po",
+            f.max("amount").over(
+                Window.partitionBy("id").orderBy("sign"),
+            ),
+        )
+        .withColumn(
+            "count_amount_por",
+            f.count("amount").over(
+                Window.partitionBy("id").rowsBetween(Window.currentRow + 1, Window.unboundedFollowing),
+            ),
+        )
+        .withColumn(
+            "count_amount_or",
+            f.count("amount").over(
+                Window.rowsBetween(Window.currentRow + 1, Window.unboundedFollowing),
+            ),
+        )
+        .withColumn(
+            "count_amount_po",
+            f.count("amount").over(
+                Window.partitionBy("id"),
+            ),
+        )
+        .withColumn(
+            "count_por",
+            f.count(f.lit(1)).over(
+                Window.partitionBy("id").rowsBetween(Window.currentRow + 1, Window.unboundedFollowing),
+            ),
+        )
+        .withColumn(
+            "count_or",
+            f.count(f.lit(1)).over(
+                Window.rowsBetween(Window.currentRow + 1, Window.unboundedFollowing),
+            ),
+        )
+        .withColumn(
+            "count_po",
+            f.count(f.lit(1)).over(
+                Window.partitionBy("id"),
+            ),
+        )
+    )
+
+
 # - aggregate
 # - type conversion
 # - from table / create df
@@ -269,5 +357,8 @@ def create_plans_and_store(spark: SparkSession) -> None:
     store_plan(create_rdd_plan(spark), PLAN_PATH / "rdd_plan.txt")
     store_plan(get_query_plan(union_forest_query(spark)), PLAN_PATH / "union_forest_plan.txt")
     store_plan(get_query_plan(union_forest_query(spark, cache=True)), PLAN_PATH / "union_forest_cache_plan.txt")
+    store_plan(get_query_plan(window_column_query(spark)), PLAN_PATH / "window_column_plan.txt")
+    store_plan(get_query_plan(window_column_2_query(spark)), PLAN_PATH / "window_column_2_plan.txt")
+    store_plan(get_query_plan(window_column_3_query(spark)), PLAN_PATH / "window_column_3_plan.txt")
 
     store_plan(get_query_plan(select_1_from_json_plan(spark)), PLAN_PATH / "select_1_from_json_plan.txt")

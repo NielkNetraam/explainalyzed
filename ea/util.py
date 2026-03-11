@@ -3,6 +3,8 @@ from pathlib import Path
 
 from pyspark.sql import DataFrame, SparkSession
 
+ID_PATTERN = r"(\w[\w\d\_\-]*\#\d*[L]?)"
+
 
 def replace_within_parentheses(text: str, delimiter: str = ",", replacement: str = "§") -> str:
     depth = 0
@@ -25,7 +27,7 @@ def strip_outer_parentheses(s: str) -> list[str]:
 
 
 def findall_column_ids(line: str) -> list[str]:
-    pattern = r"([\w\d\_\-]*\#\d*)"
+    pattern = ID_PATTERN  # r"([\w\d\_\-]*\#\d*)"
     return list(set(re.findall(pattern, line)))
 
 
