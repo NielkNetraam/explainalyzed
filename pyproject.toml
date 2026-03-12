@@ -17,11 +17,11 @@ dev = [
 
 
 [tool.ruff]
-select = ["ALL"]
-ignore = ["D100", "D101", "D102", "D103", "D107"]
+lint.select = ["ALL"]
+lint.ignore = ["D100", "D101", "D102", "D103", "D107", "D203", "D213"]
 line-length = 129
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 "tests/**/test_*.py" = ["S101"]
 
 [tool.ruff.lint.flake8-annotations]

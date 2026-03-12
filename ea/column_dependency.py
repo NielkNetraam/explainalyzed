@@ -46,7 +46,7 @@ class SourceColumnDependency(ColumnDependency):
 
 
 class DerivedColumnDependency(ColumnDependency):
-    def __init__(
+    def __init__(  # noqa: PLR0913
         self,
         column_id: str,
         columns: list[ColumnDependency] | None = None,
