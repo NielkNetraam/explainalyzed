@@ -192,6 +192,7 @@ class ExplainAnalyzed:
             "    classDef JOIN stroke:DarkOrange,fill:Orange,color:black\n"
             "    classDef RELATION stroke:Yellow,fill:Gold,color:black\n"
             "    classDef AGGREGATE stroke:Brown,fill:Chocolate,color:black\n"
+            "    classDef WINDOW stroke:Aqua,fill:Cyan,color:black\n"
             "\n"
         )
 

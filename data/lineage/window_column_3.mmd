@@ -35,14 +35,14 @@ flowchart LR
     transaction_table.amount -- COLUMN --> target.max_amount_or
     transaction_table.amount -- COLUMN --> target.max_amount_po
     transaction_table.amount -- COLUMN --> target.max_amount_por
-    transaction_table.id -- GROUP_BY --> target.count_amount_po
-    transaction_table.id -- GROUP_BY --> target.count_amount_por
-    transaction_table.id -- GROUP_BY --> target.count_po
-    transaction_table.id -- GROUP_BY --> target.count_por
+    transaction_table.id -- WINDOW --> target.count_amount_po
+    transaction_table.id -- WINDOW --> target.count_amount_por
+    transaction_table.id -- WINDOW --> target.count_po
+    transaction_table.id -- WINDOW --> target.count_por
     transaction_table.id -- COLUMN --> target.id
-    transaction_table.id -- GROUP_BY --> target.max_amount_po
-    transaction_table.id -- GROUP_BY --> target.max_amount_por
-    transaction_table.sign -- GROUP_BY --> target.max_amount_or
-    transaction_table.sign -- GROUP_BY --> target.max_amount_po
-    transaction_table.sign -- GROUP_BY --> target.max_amount_por
+    transaction_table.id -- WINDOW --> target.max_amount_po
+    transaction_table.id -- WINDOW --> target.max_amount_por
+    transaction_table.sign -- WINDOW --> target.max_amount_or
+    transaction_table.sign -- WINDOW --> target.max_amount_po
+    transaction_table.sign -- WINDOW --> target.max_amount_por
     transaction_table.sign -- COLUMN --> target.sign

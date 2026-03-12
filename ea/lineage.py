@@ -14,6 +14,7 @@ class ColumnLineageType(Enum):
     FILTER = 2
     JOIN = 3
     GROUP_BY = 4
+    WINDOW = 5
 
 
 @dataclass(frozen=True)

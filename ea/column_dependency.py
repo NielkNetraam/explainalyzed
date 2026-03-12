@@ -53,12 +53,14 @@ class DerivedColumnDependency(ColumnDependency):
         filters: list[ColumnDependency] | None = None,
         grouping_keys: list[ColumnDependency] | None = None,
         join_keys: list[ColumnDependency] | None = None,
+        window_columns: list[ColumnDependency] | None = None,
     ) -> None:
         super().__init__(column_id)
         self.columns: list[ColumnDependency] = columns if columns is not None else []
         self.filters: list[ColumnDependency] = filters if filters is not None else []
         self.grouping_keys: list[ColumnDependency] = grouping_keys if grouping_keys is not None else []
         self.join_keys: list[ColumnDependency] = join_keys if join_keys is not None else []
+        self.window_columns: list[ColumnDependency] = window_columns if window_columns is not None else []
 
     def __str__(self) -> str:
         """Return a string representation of the DerivedColumnDependency."""
@@ -66,9 +68,10 @@ class DerivedColumnDependency(ColumnDependency):
         filter_str = ", ".join(str(flt) for flt in self.filters)
         grouping_key_str = ", ".join(str(flt) for flt in self.grouping_keys)
         join_key_str = ", ".join(str(flt) for flt in self.join_keys)
+        window_column_str = ", ".join(str(flt) for flt in self.window_columns)
         return (
             f"{self.column_name} (Fields: [{column_str}]; Filters: [{filter_str}]; "
-            f"Grouping keys: [{grouping_key_str}]; Join keys: [{join_key_str}])"
+            f"Grouping keys: [{grouping_key_str}]; Join keys: [{join_key_str}]; Window columns [{window_column_str}])"
         )
 
     def get_column_lineage(self, dataset_name: str | None = None) -> set[ColumnLineage]:
@@ -104,5 +107,12 @@ class DerivedColumnDependency(ColumnDependency):
             for cl in col.get_column_lineage(dataset_name)
         }
         column_lineage.update(column_lineage_grouping_keys)
+
+        column_lineage_window_columns = {
+            ColumnLineage(source_column=cl.source_column, target_column=target_column, type=ColumnLineageType.WINDOW)
+            for col in self.window_columns
+            for cl in col.get_column_lineage(dataset_name)
+        }
+        column_lineage.update(column_lineage_window_columns)
 
         return column_lineage

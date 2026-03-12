@@ -43,7 +43,7 @@ class WindowNode(PlanNode):
             k: DerivedColumnDependency(
                 k,
                 columns=derived_fields[k] if k in derived_fields else [column_dependency[k]],
-                grouping_keys=window_fields.get(k),
+                window_columns=window_fields.get(k),
             )
             for k in self.fields
         }
