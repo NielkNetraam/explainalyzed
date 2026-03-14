@@ -129,16 +129,16 @@ class Lineage:
         columns: set[Column],
         compressed_column_lineage: dict[Column, dict[Column, set[ColumnLineageType]]],
     ) -> str:
+        def replace_tilde(name: str) -> str:
+            return name.replace("~", "/")
+
         def table_columns(columns: set[Column]) -> str:
             mermaid_str = ""
             for column in sorted(columns, key=lambda t: t.name):
                 if column.table.name == table.name:
-                    mermaid_str += f"        {table.name}.{column.name}[{column.name}]:::FIELD\n"
+                    mermaid_str += f"        {replace_tilde(table.name)}.{column.name}[{column.name}]:::FIELD\n"
 
             return mermaid_str
-
-        def replace_tilde(name: str) -> str:
-            return name.replace("~", "/")
 
         mermaid_str = (
             "flowchart LR\n"

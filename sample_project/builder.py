@@ -36,8 +36,7 @@ def builder(build_location: Path, source_config: dict[str, SourceConfig]) -> Non
 
     sample_df = write_and_read(sample_df, "sample_table_prepped", build_location, temporary=True)
     sample_2_df = write_and_read(sample_2_df, "sample_table_2_prepped", build_location, temporary=True)
-    relation_df = write_and_read(relation_df, "relation_table_prepped", build_location, temporary=True)
-
+    relation_df = relation_df.cache()
     # perform business logic
     business_logic_df = business_logic(sample_df, sample_2_df, relation_df)
 

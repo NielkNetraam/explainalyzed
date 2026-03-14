@@ -8,7 +8,7 @@ flowchart LR
     relation_table:::SOURCE
     sample_table:::SOURCE
     sample_table_2:::SOURCE
-    relation_table_prepped:::INTERMEDIATE
+    cache_sample_project/builder_py_39_1:::INTERMEDIATE
     sample_table_2_prepped:::INTERMEDIATE
     sample_table_prepped:::INTERMEDIATE
     business_logic_result:::TARGET
@@ -29,10 +29,10 @@ flowchart LR
         sample_table_2.name[name]:::FIELD
     end
 
-    subgraph relation_table_prepped
-        relation_table_prepped.id1[id1]:::FIELD
-        relation_table_prepped.id2[id2]:::FIELD
-        relation_table_prepped.rel_type[rel_type]:::FIELD
+    subgraph cache_sample_project/builder_py_39_1
+        cache_sample_project/builder_py_39_1.id1[id1]:::FIELD
+        cache_sample_project/builder_py_39_1.id2[id2]:::FIELD
+        cache_sample_project/builder_py_39_1.rel_type[rel_type]:::FIELD
     end
 
     subgraph sample_table_2_prepped
@@ -50,21 +50,21 @@ flowchart LR
         business_logic_result.name_b[name_b]:::FIELD
     end
 
-    relation_table.id1 -- COLUMN,FILTER --> relation_table_prepped.id1
-    relation_table.id1 -- FILTER --> relation_table_prepped.id2
-    relation_table.id1 -- FILTER --> relation_table_prepped.rel_type
-    relation_table.id2 -- FILTER --> relation_table_prepped.id1
-    relation_table.id2 -- COLUMN,FILTER --> relation_table_prepped.id2
-    relation_table.id2 -- FILTER --> relation_table_prepped.rel_type
-    relation_table.rel_type -- FILTER --> relation_table_prepped.id1
-    relation_table.rel_type -- FILTER --> relation_table_prepped.id2
-    relation_table.rel_type -- COLUMN,FILTER --> relation_table_prepped.rel_type
-    relation_table_prepped.id1 -- JOIN --> business_logic_result.name_a
-    relation_table_prepped.id1 -- JOIN --> business_logic_result.name_b
-    relation_table_prepped.id2 -- JOIN --> business_logic_result.name_a
-    relation_table_prepped.id2 -- JOIN --> business_logic_result.name_b
-    relation_table_prepped.rel_type -- JOIN --> business_logic_result.name_a
-    relation_table_prepped.rel_type -- JOIN --> business_logic_result.name_b
+    cache_sample_project/builder_py_39_1.id1 -- JOIN --> business_logic_result.name_a
+    cache_sample_project/builder_py_39_1.id1 -- JOIN --> business_logic_result.name_b
+    cache_sample_project/builder_py_39_1.id2 -- JOIN --> business_logic_result.name_a
+    cache_sample_project/builder_py_39_1.id2 -- JOIN --> business_logic_result.name_b
+    cache_sample_project/builder_py_39_1.rel_type -- JOIN --> business_logic_result.name_a
+    cache_sample_project/builder_py_39_1.rel_type -- JOIN --> business_logic_result.name_b
+    relation_table.id1 -- COLUMN,FILTER --> cache_sample_project/builder_py_39_1.id1
+    relation_table.id1 -- FILTER --> cache_sample_project/builder_py_39_1.id2
+    relation_table.id1 -- FILTER --> cache_sample_project/builder_py_39_1.rel_type
+    relation_table.id2 -- FILTER --> cache_sample_project/builder_py_39_1.id1
+    relation_table.id2 -- COLUMN,FILTER --> cache_sample_project/builder_py_39_1.id2
+    relation_table.id2 -- FILTER --> cache_sample_project/builder_py_39_1.rel_type
+    relation_table.rel_type -- FILTER --> cache_sample_project/builder_py_39_1.id1
+    relation_table.rel_type -- FILTER --> cache_sample_project/builder_py_39_1.id2
+    relation_table.rel_type -- COLUMN,FILTER --> cache_sample_project/builder_py_39_1.rel_type
     sample_table.id -- COLUMN,FILTER --> sample_table_prepped.id
     sample_table.id -- FILTER --> sample_table_prepped.name_upper
     sample_table.name -- COLUMN --> sample_table_prepped.name_upper

@@ -66,7 +66,7 @@ AdaptiveSparkPlan isFinalPlan=false
       :     +- BroadcastExchange HashedRelationBroadcastMode(List(cast(input[0, int, true] as bigint)),false), [plan_id=197]
       :        +- Project [id1#18, id2#19]
       :           +- Filter (((isnotnull(rel_type#20) AND (rel_type#20 = friend)) AND isnotnull(id1#18)) AND isnotnull(id2#19))
-      :              +- FileScan parquet [id1#18,id2#19,rel_type#20] Batched: true, DataFilters: [isnotnull(rel_type#20), (rel_type#20 = friend), isnotnull(id1#18), isnotnull(id2#19)], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/sample_project/run/build/temp/relation_table_prepped], PartitionFilters: [], PushedFilters: [IsNotNull(rel_type), EqualTo(rel_type,friend), IsNotNull(id1), IsNotNull(id2)], ReadSchema: struct<id1:int,id2:int,rel_type:string>
+      :              +- FileScan parquet [id1#18,id2#19,rel_type#20] Batched: true, DataFilters: [isnotnull(rel_type#20), (rel_type#20 = friend), isnotnull(id1#18), isnotnull(id2#19)], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/sample_project/run/build/temp/cache_sample_project~builder_py_39_1], PartitionFilters: [], PushedFilters: [IsNotNull(rel_type), EqualTo(rel_type,friend), IsNotNull(id1), IsNotNull(id2)], ReadSchema: struct<id1:int,id2:int,rel_type:string>
       +- BroadcastExchange HashedRelationBroadcastMode(List(cast(input[0, int, false] as bigint)),false), [plan_id=201]
          +- Union
             :- Filter isnotnull(id#23)

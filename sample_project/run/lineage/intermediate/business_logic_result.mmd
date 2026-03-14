@@ -5,15 +5,15 @@ flowchart LR
     classDef INTERNAL stroke:Purple,fill:Violet,color:black
     classDef FIELD stroke:Orange,fill:Gold,color:black
 
-    relation_table_prepped:::SOURCE
+    cache_sample_project/builder_py_39_1:::SOURCE
     sample_table_2_prepped:::SOURCE
     sample_table_prepped:::SOURCE
     business_logic_result:::TARGET
 
-    subgraph relation_table_prepped
-        relation_table_prepped.id1[id1]:::FIELD
-        relation_table_prepped.id2[id2]:::FIELD
-        relation_table_prepped.rel_type[rel_type]:::FIELD
+    subgraph cache_sample_project/builder_py_39_1
+        cache_sample_project/builder_py_39_1.id1[id1]:::FIELD
+        cache_sample_project/builder_py_39_1.id2[id2]:::FIELD
+        cache_sample_project/builder_py_39_1.rel_type[rel_type]:::FIELD
     end
 
     subgraph sample_table_2_prepped
@@ -31,12 +31,12 @@ flowchart LR
         business_logic_result.name_b[name_b]:::FIELD
     end
 
-    relation_table_prepped.id1 -- JOIN --> business_logic_result.name_a
-    relation_table_prepped.id1 -- JOIN --> business_logic_result.name_b
-    relation_table_prepped.id2 -- JOIN --> business_logic_result.name_a
-    relation_table_prepped.id2 -- JOIN --> business_logic_result.name_b
-    relation_table_prepped.rel_type -- JOIN --> business_logic_result.name_a
-    relation_table_prepped.rel_type -- JOIN --> business_logic_result.name_b
+    cache_sample_project/builder_py_39_1.id1 -- JOIN --> business_logic_result.name_a
+    cache_sample_project/builder_py_39_1.id1 -- JOIN --> business_logic_result.name_b
+    cache_sample_project/builder_py_39_1.id2 -- JOIN --> business_logic_result.name_a
+    cache_sample_project/builder_py_39_1.id2 -- JOIN --> business_logic_result.name_b
+    cache_sample_project/builder_py_39_1.rel_type -- JOIN --> business_logic_result.name_a
+    cache_sample_project/builder_py_39_1.rel_type -- JOIN --> business_logic_result.name_b
     sample_table_2_prepped.id -- FILTER,JOIN --> business_logic_result.name_a
     sample_table_2_prepped.id -- FILTER,JOIN --> business_logic_result.name_b
     sample_table_2_prepped.name_upper -- COLUMN --> business_logic_result.name_a
