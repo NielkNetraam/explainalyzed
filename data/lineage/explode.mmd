@@ -1,0 +1,42 @@
+flowchart LR
+    classDef SOURCE stroke:Blue,fill:LightBlue,color:black
+    classDef TARGET stroke:Green,fill:LightGreen,color:black
+    classDef INTERMEDIATE stroke:DarkOrange,fill:Orange,color:black
+    classDef INTERNAL stroke:Purple,fill:Violet,color:black
+    classDef FIELD stroke:Orange,fill:Gold,color:black
+
+    sample_table:::SOURCE
+    target:::TARGET
+
+    subgraph sample_table
+        sample_table.age[age]:::FIELD
+        sample_table.name[name]:::FIELD
+    end
+
+    subgraph target
+        target.age[age]:::FIELD
+        target.key[key]:::FIELD
+        target.m[m]:::FIELD
+        target.names[names]:::FIELD
+        target.names_upper[names_upper]:::FIELD
+        target.names_upper2[names_upper2]:::FIELD
+        target.new_name[new_name]:::FIELD
+        target.value[value]:::FIELD
+    end
+
+    sample_table.age -- COLUMN,FILTER,GROUP_BY --> target.age
+    sample_table.age -- COLUMN,FILTER,GROUP_BY --> target.key
+    sample_table.age -- COLUMN,FILTER,GROUP_BY --> target.m
+    sample_table.age -- FILTER,GROUP_BY --> target.names
+    sample_table.age -- FILTER,GROUP_BY --> target.names_upper
+    sample_table.age -- FILTER,GROUP_BY --> target.names_upper2
+    sample_table.age -- FILTER,GROUP_BY --> target.new_name
+    sample_table.age -- COLUMN,FILTER,GROUP_BY --> target.value
+    sample_table.name -- FILTER --> target.age
+    sample_table.name -- COLUMN,FILTER --> target.key
+    sample_table.name -- COLUMN,FILTER --> target.m
+    sample_table.name -- COLUMN,FILTER --> target.names
+    sample_table.name -- COLUMN,FILTER --> target.names_upper
+    sample_table.name -- COLUMN,FILTER --> target.names_upper2
+    sample_table.name -- COLUMN,FILTER --> target.new_name
+    sample_table.name -- COLUMN,FILTER --> target.value

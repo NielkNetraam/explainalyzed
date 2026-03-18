@@ -1,3 +1,4 @@
+from ea.util import ID_PATTERN
 import re
 
 from ea.column_dependency import ColumnDependency, DerivedColumnDependency
@@ -10,8 +11,7 @@ class FilterNode(PlanNode):
         super().__init__(node_type, level, subset_id, parameters)
         self.condition = parameters
 
-        pattern = r"([\w\d\_\-]*\#\d*)"
-        self.filter_fields = list(set(re.findall(pattern, parameters)))
+        self.filter_fields = list(set(re.findall(ID_PATTERN, parameters)))
 
     def get_column_dependencies(self) -> dict[str, ColumnDependency]:
         column_dependency: dict[str, ColumnDependency] = super().get_column_dependencies()

@@ -1,5 +1,6 @@
 from ea.node.filter import FilterNode
-from ea.node.logical.aggegate import AggregateNode
+from ea.node.logical.aggregate import AggregateNode
+from ea.node.logical.generate import GenerateNode
 from ea.node.logical.join import JoinNode
 from ea.node.logical.logical_rdd import LogicalRDDNode
 from ea.node.logical.relation import RelationNode
@@ -28,6 +29,7 @@ logical_class_registry: dict[str, type[PlanNodeType]] = {
     "Relation": RelationNode,
     "Union": UnionNode,
     "Window": WindowNode,
+    "Generate": GenerateNode,
 }
 
 

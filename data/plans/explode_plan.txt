@@ -1,0 +1,43 @@
+== Parsed Logical Plan ==
+'Project [*, unresolvedalias('explode('m))]
++- Project [age#635, names#636, names_upper#642, names_upper2#644, new_name#648, map(new_name#648, age#635) AS m#649]
+   +- Project [age#635, names#636, names_upper#642, names_upper2#644, new_name#648]
+      +- Generate explode(names_upper2#644), false, [new_name#648]
+         +- Project [age#635, names#636, names_upper#642, transform(names#636, lambdafunction(CASE WHEN ((lambda y_6#646 % 2) = 0) THEN lambda x_5#645 ELSE upper(lambda x_5#645) END, lambda x_5#645, lambda y_6#646, false)) AS names_upper2#644]
+            +- Project [age#635, names#636, transform(names#636, lambdafunction(upper(lambda x_4#643), lambda x_4#643, false)) AS names_upper#642]
+               +- Aggregate [age#635], [age#635, collect_set(name#634, 0, 0) AS names#636]
+                  +- Relation [id#633,name#634,age#635] parquet
+
+== Analyzed Logical Plan ==
+age: int, names: array<string>, names_upper: array<string>, names_upper2: array<string>, new_name: string, m: map<string,int>, key: string, value: int
+Project [age#635, names#636, names_upper#642, names_upper2#644, new_name#648, m#649, key#650, value#651]
++- Generate explode(m#649), false, [key#650, value#651]
+   +- Project [age#635, names#636, names_upper#642, names_upper2#644, new_name#648, map(new_name#648, age#635) AS m#649]
+      +- Project [age#635, names#636, names_upper#642, names_upper2#644, new_name#648]
+         +- Generate explode(names_upper2#644), false, [new_name#648]
+            +- Project [age#635, names#636, names_upper#642, transform(names#636, lambdafunction(CASE WHEN ((lambda y_6#646 % 2) = 0) THEN lambda x_5#645 ELSE upper(lambda x_5#645) END, lambda x_5#645, lambda y_6#646, false)) AS names_upper2#644]
+               +- Project [age#635, names#636, transform(names#636, lambdafunction(upper(lambda x_4#643), lambda x_4#643, false)) AS names_upper#642]
+                  +- Aggregate [age#635], [age#635, collect_set(name#634, 0, 0) AS names#636]
+                     +- Relation [id#633,name#634,age#635] parquet
+
+== Optimized Logical Plan ==
+Generate explode(m#649), false, [key#650, value#651]
++- Project [age#635, names#636, names_upper#642, names_upper2#644, new_name#648, map(new_name#648, age#635) AS m#649]
+   +- Generate explode(names_upper2#644), false, [new_name#648]
+      +- Project [age#635, names#636, transform(names#636, lambdafunction(upper(lambda x_4#643), lambda x_4#643, false)) AS names_upper#642, transform(names#636, lambdafunction(CASE WHEN ((lambda y_6#646 % 2) = 0) THEN lambda x_5#645 ELSE upper(lambda x_5#645) END, lambda x_5#645, lambda y_6#646, false)) AS names_upper2#644]
+         +- Filter (size(transform(names#636, lambdafunction(CASE WHEN ((lambda y_6#646 % 2) = 0) THEN lambda x_5#645 ELSE upper(lambda x_5#645) END, lambda x_5#645, lambda y_6#646, false)), false) > 0)
+            +- Aggregate [age#635], [age#635, collect_set(name#634, 0, 0) AS names#636]
+               +- Project [name#634, age#635]
+                  +- Relation [id#633,name#634,age#635] parquet
+
+== Physical Plan ==
+AdaptiveSparkPlan isFinalPlan=false
++- Generate explode(m#649), [age#635, names#636, names_upper#642, names_upper2#644, new_name#648, m#649], false, [key#650, value#651]
+   +- Project [age#635, names#636, names_upper#642, names_upper2#644, new_name#648, map(new_name#648, age#635) AS m#649]
+      +- Generate explode(names_upper2#644), [age#635, names#636, names_upper#642, names_upper2#644], false, [new_name#648]
+         +- Project [age#635, names#636, transform(names#636, lambdafunction(upper(lambda x_4#643), lambda x_4#643, false)) AS names_upper#642, transform(names#636, lambdafunction(CASE WHEN ((lambda y_6#646 % 2) = 0) THEN lambda x_5#645 ELSE upper(lambda x_5#645) END, lambda x_5#645, lambda y_6#646, false)) AS names_upper2#644]
+            +- Filter (size(transform(names#636, lambdafunction(CASE WHEN ((lambda y_6#646 % 2) = 0) THEN lambda x_5#645 ELSE upper(lambda x_5#645) END, lambda x_5#645, lambda y_6#646, false)), false) > 0)
+               +- ObjectHashAggregate(keys=[age#635], functions=[collect_set(name#634, 0, 0)], output=[age#635, names#636])
+                  +- Exchange hashpartitioning(age#635, 200), ENSURE_REQUIREMENTS, [plan_id=1119]
+                     +- ObjectHashAggregate(keys=[age#635], functions=[partial_collect_set(name#634, 0, 0)], output=[age#635, buf#653])
+                        +- FileScan parquet [name#634,age#635] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<name:string,age:int>

@@ -1,8 +1,11 @@
+import logging
 import re
 from typing import TypeVar
 
 from ea.column_dependency import ColumnDependency
 from ea.lineage import Column, Lineage, Table, TableLineage
+
+logger = logging.getLogger(__name__)
 
 
 class PlanNode:
@@ -62,7 +65,9 @@ PlanNodeType = TypeVar("PlanNodeType", bound=PlanNode)
 
 
 class GenericNode(PlanNode):
-    pass
+    def __init__(self, node_type: str, level: int, subset_id: str | None, parameters: str) -> None:
+        logger.warning("Generic Node instantiated for node type: %s", node_type)
+        super().__init__(node_type, level, subset_id, parameters)
 
 
 GenericNodeType = TypeVar("GenericNodeType", bound=GenericNode)
