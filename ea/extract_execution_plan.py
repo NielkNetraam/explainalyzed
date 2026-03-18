@@ -148,6 +148,7 @@ class ExtractExecutionPlan:
             "first": "original",
             "rdd": "original",
             "show": "original",
+            "isEmpty": "original",
             # potential functions to add:
             # - "toJSON"
             # - "registerTempTable"
@@ -155,7 +156,6 @@ class ExtractExecutionPlan:
             # - "createOrReplaceTempView"
             # - "createGlobalTempView"
             # - "createOrReplaceGlobalTempView"
-            # - "isEmpty"
             # - "checkpoint"
             # - "localCheckpoint"
             # - "toLocalIterator"
@@ -196,7 +196,7 @@ class ExtractExecutionPlan:
 
             return get_active_spark_session().read.parquet(str(temp_path / dataset_name))
 
-        def original_wrapper_func(df: DataFrame, *args: Any, **kwargs: Any) -> DataFrame:
+        def original_wrapper_func(df: DataFrame, *args: Any, **kwargs: Any) -> Any:  # noqa: ANN401
             frame = inspect.stack()[1]
 
             file_name = Path(frame.filename)
