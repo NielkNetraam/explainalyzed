@@ -3,7 +3,7 @@ from decimal import Decimal
 from pathlib import Path
 
 import pyspark.sql.functions as f
-from pyspark.sql import DataFrame, SparkSession, Window
+from pyspark.sql import Column, DataFrame, SparkSession, Window
 from pyspark.sql.types import DateType, DecimalType, IntegerType, StringType, StructField, StructType
 
 from data.utils import clean_data_directory, get_query_plan, store_dataframe, store_json, store_plan
@@ -186,6 +186,18 @@ def join_2_query(spark: SparkSession, *, broadcast: bool = False) -> DataFrame:
     )
 
 
+def transform_query(spark: SparkSession) -> DataFrame:
+    def alternate(x: Column, i: Column) -> Column:
+        return f.when(i % 2 == 0, x).otherwise(f.upper(x))
+
+    df = spark.read.load(str(TABLE_PATH / "sample_table"))
+    df = df.groupBy("age").agg(f.collect_set(f.col("name")).alias("names"))
+    return df.withColumn("names_upper", f.transform("names", lambda name: f.upper(name))).withColumn(
+        "names_upper2",
+        f.transform("names", alternate),
+    )
+
+
 def create_aggregation_1_plan(spark: SparkSession) -> str:
     df = spark.read.load(str(TABLE_PATH / "sample_table"))
     df_agg = df.groupBy().agg(f.avg("age").alias("avg_age"), f.max("age").alias("max_age"))
@@ -360,5 +372,6 @@ def create_plans_and_store(spark: SparkSession) -> None:
     store_plan(get_query_plan(window_column_query(spark)), PLAN_PATH / "window_column_plan.txt")
     store_plan(get_query_plan(window_column_2_query(spark)), PLAN_PATH / "window_column_2_plan.txt")
     store_plan(get_query_plan(window_column_3_query(spark)), PLAN_PATH / "window_column_3_plan.txt")
+    store_plan(get_query_plan(transform_query(spark)), PLAN_PATH / "transform_plan.txt")
 
     store_plan(get_query_plan(select_1_from_json_plan(spark)), PLAN_PATH / "select_1_from_json_plan.txt")

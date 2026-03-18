@@ -1,0 +1,29 @@
+flowchart LR
+    classDef SOURCE stroke:Blue,fill:LightBlue,color:black
+    classDef TARGET stroke:Green,fill:LightGreen,color:black
+    classDef INTERMEDIATE stroke:DarkOrange,fill:Orange,color:black
+    classDef INTERNAL stroke:Purple,fill:Violet,color:black
+    classDef FIELD stroke:Orange,fill:Gold,color:black
+
+    sample_table:::SOURCE
+    target:::TARGET
+
+    subgraph sample_table
+        sample_table.age[age]:::FIELD
+        sample_table.name[name]:::FIELD
+    end
+
+    subgraph target
+        target.age[age]:::FIELD
+        target.names[names]:::FIELD
+        target.names_upper[names_upper]:::FIELD
+        target.names_upper2[names_upper2]:::FIELD
+    end
+
+    sample_table.age -- COLUMN,GROUP_BY --> target.age
+    sample_table.age -- GROUP_BY --> target.names
+    sample_table.age -- GROUP_BY --> target.names_upper
+    sample_table.age -- GROUP_BY --> target.names_upper2
+    sample_table.name -- COLUMN --> target.names
+    sample_table.name -- COLUMN --> target.names_upper
+    sample_table.name -- COLUMN --> target.names_upper2

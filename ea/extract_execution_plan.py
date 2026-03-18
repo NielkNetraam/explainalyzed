@@ -212,7 +212,7 @@ class ExtractExecutionPlan:
 
             file_name = str(file_name).replace("\\", "~").replace("/", "~").replace(".", "_")
 
-            dataset_name = f"{method}_{file_name}_{line_number}"
+            dataset_name = self._get_unique_name(f"{method}_{file_name}_{line_number}")
             store_plan(get_query_plan(df), plan_path / f"{dataset_name}.txt")
 
             del kwargs["method"]

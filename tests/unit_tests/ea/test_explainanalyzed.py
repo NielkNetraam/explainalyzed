@@ -360,6 +360,19 @@ _get_lineage_scenarios = {
             "transaction_table.id -- WINDOW --> target.count_po",
         },
     ),
+    "IF transform THEN success": (
+        "transform",
+        {
+            "sample_table.name -- COLUMN --> target.names",
+            "sample_table.name -- COLUMN --> target.names_upper",
+            "sample_table.name -- COLUMN --> target.names_upper2",
+            "sample_table.age -- COLUMN --> target.age",
+            "sample_table.age -- GROUP_BY --> target.age",
+            "sample_table.age -- GROUP_BY --> target.names_upper",
+            "sample_table.age -- GROUP_BY --> target.names",
+            "sample_table.age -- GROUP_BY --> target.names_upper2",
+        },
+    ),
 }
 
 
