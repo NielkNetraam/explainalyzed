@@ -90,8 +90,11 @@ def select_1_from_json_plan(spark: SparkSession) -> DataFrame:
 
 
 def create_select_2_plan(spark: SparkSession) -> str:
+    lit1 = "literal_string"
+    lit2 = {"range": {"start": 1, " end": 2}, "length": 2}
+
     df = spark.read.load(str(TABLE_PATH / "sample_table"))
-    df = df.select("id", "name")
+    df = df.select("id", "name", f.lit(lit1).alias("lit1"), f.lit(lit2.__repr__()).alias("lit2"))
     return get_query_plan(df)
 
 

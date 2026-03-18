@@ -11,9 +11,9 @@ def replace_within_parentheses(text: str, delimiter: str = ",", replacement: str
     text_list = list(text)
 
     for i in range(len(text_list)):
-        if text_list[i] == "(":
+        if text_list[i] in "({[]":
             depth += 1
-        elif text_list[i] == ")":
+        elif text_list[i] in ")}]":
             depth -= 1
 
         if text_list[i] == delimiter and depth > 0:

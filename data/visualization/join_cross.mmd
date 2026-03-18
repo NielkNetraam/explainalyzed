@@ -7,11 +7,11 @@ flowchart TD
     classDef AGGREGATE stroke:Brown,fill:Chocolate,color:black
     classDef WINDOW stroke:Aqua,fill:Cyan,color:black
 
-    Join#1["Join: Cross"]:::JOIN
-    Project#11["Project: [name#76]"]:::PROJECT
-    Relation#111["sample_table: [id#75, name#76, age#77] parquet"]:::RELATION
-    Relation#12["transaction_table: [id#78, amount#79, sign#80] parquet"]:::RELATION
+    Join#00001["Join: Cross"]:::JOIN
+    Project#00002["Project: [name#78]"]:::PROJECT
+    Relation#00003["sample_table: [id#77, name#78, age#79] parquet"]:::RELATION
+    Relation#00004["transaction_table: [id#80, amount#81, sign#82] parquet"]:::RELATION
 
-    Join#1 --> Project#11
-        Project#11 --> Relation#111
-    Join#1 --> Relation#12
+    Join#00001 --> Project#00002
+        Project#00002 --> Relation#00003
+    Join#00001 --> Relation#00004

@@ -1,20 +1,20 @@
 == Parsed Logical Plan ==
-'Aggregate ['avg('age) AS avg_age#145, 'max('age) AS max_age#146]
-+- Relation [id#142,name#143,age#144] parquet
+'Aggregate ['avg('age) AS avg_age#147, 'max('age) AS max_age#148]
++- Relation [id#144,name#145,age#146] parquet
 
 == Analyzed Logical Plan ==
 avg_age: double, max_age: int
-Aggregate [avg(age#144) AS avg_age#145, max(age#144) AS max_age#146]
-+- Relation [id#142,name#143,age#144] parquet
+Aggregate [avg(age#146) AS avg_age#147, max(age#146) AS max_age#148]
++- Relation [id#144,name#145,age#146] parquet
 
 == Optimized Logical Plan ==
-Aggregate [avg(age#144) AS avg_age#145, max(age#144) AS max_age#146]
-+- Project [age#144]
-   +- Relation [id#142,name#143,age#144] parquet
+Aggregate [avg(age#146) AS avg_age#147, max(age#146) AS max_age#148]
++- Project [age#146]
+   +- Relation [id#144,name#145,age#146] parquet
 
 == Physical Plan ==
 AdaptiveSparkPlan isFinalPlan=false
-+- HashAggregate(keys=[], functions=[avg(age#144), max(age#144)], output=[avg_age#145, max_age#146])
-   +- Exchange SinglePartition, ENSURE_REQUIREMENTS, [plan_id=371]
-      +- HashAggregate(keys=[], functions=[partial_avg(age#144), partial_max(age#144)], output=[sum#156, count#157L, max#158])
-         +- FileScan parquet [age#144] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<age:int>
++- HashAggregate(keys=[], functions=[avg(age#146), max(age#146)], output=[avg_age#147, max_age#148])
+   +- Exchange SinglePartition, ENSURE_REQUIREMENTS, [plan_id=375]
+      +- HashAggregate(keys=[], functions=[partial_avg(age#146), partial_max(age#146)], output=[sum#158, count#159L, max#160])
+         +- FileScan parquet [age#146] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<age:int>

@@ -154,19 +154,31 @@ class ExplainAnalyzed:
         return self._lineage
 
     def mermaid(self) -> str:
+        self.last_node_number = 0
+        self.node_id_mapping: dict[str, int] = {}
+
+        def _get_unique_name(node_id: str) -> str:
+            node_id_str = "_" if node_id == "" else node_id
+
+            if node_id_str not in self.node_id_mapping:
+                self.last_node_number += 1
+                self.node_id_mapping[node_id_str] = self.last_node_number
+
+            return f"{self.node_id_mapping[node_id_str]:05d}"
+
         def nodes(node: PlanNode, node_id: str = "", indent: int = 0) -> str:
             node_str = ""
-            node_id_str = "1" if node_id == "" else node_id
+            node_id_str = _get_unique_name(node_id)  # "1" if node_id == "" else node_id
             node_str = "    " * indent + node.mermaid(node_id_str) + f":::{node.node_type.upper()}\n"
 
             for idx, child in enumerate(node.children):
-                node_str += nodes(child, node_id=f"{node_id_str}{idx + 1}", indent=indent)
+                node_str += nodes(child, node_id=f"{node_id}{idx + 1}", indent=indent)
 
             return node_str
 
         def edges(node: PlanNode, node_id: str = "", indent: int = 0) -> str:
             edge_str = ""
-            node_id_str = "1" if node_id == "" else node_id
+            node_id_str = _get_unique_name(node_id)  # "1" if node_id == "" else node_id
 
             for idx, child in enumerate(node.children):
                 edge_line = (
@@ -175,10 +187,9 @@ class ExplainAnalyzed:
                     and ((node.broadcast == "left" and idx == 0) or (node.broadcast == "right" and idx == 1))
                     else "-->"
                 )
-                edge_str += (
-                    "    " * indent + f"{node.node_type}#{node_id_str} {edge_line} {child.node_type}#{node_id_str}{idx + 1}\n"
-                )
-                edge_str += edges(child, node_id=f"{node_id_str}{idx + 1}", indent=indent + 1)
+                child_node_id = _get_unique_name(node_id + str(idx + 1))
+                edge_str += "    " * indent + f"{node.node_type}#{node_id_str} {edge_line} {child.node_type}#{child_node_id}\n"
+                edge_str += edges(child, node_id=f"{node_id}{idx + 1}", indent=indent + 1)
 
             return edge_str
 

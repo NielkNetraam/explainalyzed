@@ -51,6 +51,8 @@ _get_lineage_scenarios = {
         {
             "sample_table.id -- COLUMN --> target.id",
             "sample_table.name -- COLUMN --> target.name",
+            "internal.literal -- COLUMN --> target.lit1",
+            "internal.literal -- COLUMN --> target.lit2",
         },
     ),
     "IF filter THEN success": (

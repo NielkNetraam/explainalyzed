@@ -7,7 +7,7 @@ flowchart TD
     classDef AGGREGATE stroke:Brown,fill:Chocolate,color:black
     classDef WINDOW stroke:Aqua,fill:Cyan,color:black
 
-    Filter#1["Filter: (isnotnull(id#17) AND (id#17 > 1))"]:::FILTER
-    Relation#11["sample_table: [id#17, name#18, age#19] parquet"]:::RELATION
+    Filter#00001["Filter: (isnotnull(id#19) AND (id#19 > 1))"]:::FILTER
+    Relation#00002["sample_table: [id#19, name#20, age#21] parquet"]:::RELATION
 
-    Filter#1 --> Relation#11
+    Filter#00001 --> Relation#00002

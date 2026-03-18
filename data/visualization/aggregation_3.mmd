@@ -7,17 +7,17 @@ flowchart TD
     classDef AGGREGATE stroke:Brown,fill:Chocolate,color:black
     classDef WINDOW stroke:Aqua,fill:Cyan,color:black
 
-    Aggregate#1["Aggregate: [id#174], [id#174, count(1) AS count#182L, sum(CASE WHEN (sign#179 = DEBIT) THEN amount#178 ELSE -amount#178 END) AS total_amount#183]"]:::AGGREGATE
-    Project#11["Project: [id#174, amount#178, sign#179]"]:::PROJECT
-    Join#111["Join: LeftOuter, (id#174 = id#177)"]:::JOIN
-    Project#1111["Project: [id#174]"]:::PROJECT
-    Relation#11111["sample_table: [id#174, name#175, age#176] parquet"]:::RELATION
-    Filter#1112["Filter: isnotnull(id#177)"]:::FILTER
-    Relation#11121["transaction_table: [id#177, amount#178, sign#179] parquet"]:::RELATION
+    Aggregate#00001["Aggregate: [id#176], [id#176, count(1) AS count#184L, sum(CASE WHEN (sign#181 = DEBIT) THEN amount#180 ELSE -amount#180 END) AS total_amount#185]"]:::AGGREGATE
+    Project#00002["Project: [id#176, amount#180, sign#181]"]:::PROJECT
+    Join#00003["Join: LeftOuter, (id#176 = id#179)"]:::JOIN
+    Project#00004["Project: [id#176]"]:::PROJECT
+    Relation#00005["sample_table: [id#176, name#177, age#178] parquet"]:::RELATION
+    Filter#00006["Filter: isnotnull(id#179)"]:::FILTER
+    Relation#00007["transaction_table: [id#179, amount#180, sign#181] parquet"]:::RELATION
 
-    Aggregate#1 --> Project#11
-        Project#11 --> Join#111
-            Join#111 --> Project#1111
-                Project#1111 --> Relation#11111
-            Join#111 --> Filter#1112
-                Filter#1112 --> Relation#11121
+    Aggregate#00001 --> Project#00002
+        Project#00002 --> Join#00003
+            Join#00003 --> Project#00004
+                Project#00004 --> Relation#00005
+            Join#00003 --> Filter#00006
+                Filter#00006 --> Relation#00007
