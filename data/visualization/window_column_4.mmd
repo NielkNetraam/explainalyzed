@@ -1,0 +1,17 @@
+flowchart TD
+    classDef PROJECT stroke:Blue,fill:LightBlue,color:black
+    classDef FILTER stroke:Green,fill:LightGreen,color:black
+    classDef UNION stroke:Purple,fill:Violet,color:black
+    classDef JOIN stroke:DarkOrange,fill:Orange,color:black
+    classDef RELATION stroke:Yellow,fill:Gold,color:black
+    classDef AGGREGATE stroke:Brown,fill:Chocolate,color:black
+    classDef WINDOW stroke:Aqua,fill:Cyan,color:black
+
+    Filter#00001["Filter: (row_number#621 = 1)"]:::FILTER
+    Window#00002["Window: [row_number() windowspecdefinition(id#617, sign#619 ASC NULLS FIRST, specifiedwindowframe(RowFrame, unboundedpreceding$(), currentrow$())) AS row_number#621], [id#617], [sign#619 ASC NULLS FIRST]"]:::WINDOW
+    WindowGroupLimit#00003["WindowGroupLimit: [id#617], [sign#619 ASC NULLS FIRST], row_number(), 1"]:::WINDOWGROUPLIMIT
+    Relation#00004["transaction_table: [id#617, amount#618, sign#619] parquet"]:::RELATION
+
+    Filter#00001 --> Window#00002
+        Window#00002 --> WindowGroupLimit#00003
+            WindowGroupLimit#00003 --> Relation#00004

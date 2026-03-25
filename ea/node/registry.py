@@ -9,6 +9,7 @@ from ea.node.physical.file_scan import FileScanNode
 from ea.node.plan_node import ColumnarToRowNode, GenericNode, PlanNodeType
 from ea.node.project import ProjectNode
 from ea.node.union import UnionNode
+from ea.node.window_group_limit import WindowGroupLimitNode
 
 physical_class_registry: dict[str, type[PlanNodeType]] = {
     "ColumnarToRow": ColumnarToRowNode,
@@ -30,6 +31,7 @@ logical_class_registry: dict[str, type[PlanNodeType]] = {
     "Union": UnionNode,
     "Window": WindowNode,
     "Generate": GenerateNode,
+    "WindowGroupLimitNode": WindowGroupLimitNode,
 }
 
 

@@ -362,6 +362,24 @@ _get_lineage_scenarios = {
             "transaction_table.id -- WINDOW --> target.count_po",
         },
     ),
+    "IF window_column_4 THEN success": (
+        "window_column_4",
+        {
+            "transaction_table.id -- COLUMN --> target.id",
+            "transaction_table.sign -- COLUMN --> target.sign",
+            "transaction_table.amount -- COLUMN --> target.amount",
+            "transaction_table.id -- WINDOW --> target.row_number",
+            "transaction_table.sign -- WINDOW --> target.row_number",
+            "transaction_table.id -- FILTER --> target.amount",
+            "transaction_table.id -- FILTER --> target.id",
+            "transaction_table.id -- FILTER --> target.row_number",
+            "transaction_table.id -- FILTER --> target.sign",
+            "transaction_table.sign -- FILTER --> target.amount",
+            "transaction_table.sign -- FILTER --> target.id",
+            "transaction_table.sign -- FILTER --> target.row_number",
+            "transaction_table.sign -- FILTER --> target.sign",
+        },
+    ),
     "IF transform THEN success": (
         "transform",
         {

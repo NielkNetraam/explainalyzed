@@ -200,12 +200,14 @@ def transform_query(spark: SparkSession) -> DataFrame:
         f.transform("names", alternate),
     )
 
+
 def explode_query(spark: SparkSession) -> DataFrame:
     df = transform_query(spark)
     df = df.withColumn("new_name", f.explode("names_upper2"))
     df = df.withColumn("m", f.create_map("new_name", "age"))
     df = df.select("*", f.explode("m"))
     return df
+
 
 def create_aggregation_1_plan(spark: SparkSession) -> str:
     df = spark.read.load(str(TABLE_PATH / "sample_table"))
@@ -350,6 +352,15 @@ def window_column_3_query(spark: SparkSession) -> DataFrame:
     )
 
 
+def window_column_4_query(spark: SparkSession) -> DataFrame:
+    df = spark.read.load(str(TABLE_PATH / "transaction_table"))
+
+    return df.withColumn(
+        "row_number",
+        f.row_number().over(Window.partitionBy("id").orderBy("sign")),
+    ).filter(f.col("row_number") == f.lit(1))
+
+
 # - aggregate
 # - type conversion
 # - from table / create df
@@ -381,6 +392,7 @@ def create_plans_and_store(spark: SparkSession) -> None:
     store_plan(get_query_plan(window_column_query(spark)), PLAN_PATH / "window_column_plan.txt")
     store_plan(get_query_plan(window_column_2_query(spark)), PLAN_PATH / "window_column_2_plan.txt")
     store_plan(get_query_plan(window_column_3_query(spark)), PLAN_PATH / "window_column_3_plan.txt")
+    store_plan(get_query_plan(window_column_4_query(spark)), PLAN_PATH / "window_column_4_plan.txt")
     store_plan(get_query_plan(transform_query(spark)), PLAN_PATH / "transform_plan.txt")
     store_plan(get_query_plan(explode_query(spark)), PLAN_PATH / "explode_plan.txt")
 
