@@ -7,10 +7,10 @@ flowchart TD
     classDef AGGREGATE stroke:Brown,fill:Chocolate,color:black
     classDef WINDOW stroke:Aqua,fill:Cyan,color:black
 
-    Project#00001["Project: [age#619, names#620, transform(names#620, lambdafunction(upper(lambda x_1#627), lambda x_1#627, false)) AS names_upper#626, transform(names#620, lambdafunction(CASE WHEN ((lambda y_3#630 % 2) = 0) THEN lambda x_2#629 ELSE upper(lambda x_2#629) END, lambda x_2#629, lambda y_3#630, false)) AS names_upper2#628]"]:::PROJECT
-    Aggregate#00002["Aggregate: [age#619], [age#619, collect_set(name#618, 0, 0) AS names#620]"]:::AGGREGATE
-    Project#00003["Project: [name#618, age#619]"]:::PROJECT
-    Relation#00004["sample_table: [id#617, name#618, age#619] parquet"]:::RELATION
+    Project#00001["Project: [age#645, names#646, transform(names#646, lambdafunction(upper(lambda x_1#653), lambda x_1#653, false)) AS names_upper#652, transform(names#646, lambdafunction(CASE WHEN ((lambda y_3#656 % 2) = 0) THEN lambda x_2#655 ELSE upper(lambda x_2#655) END, lambda x_2#655, lambda y_3#656, false)) AS names_upper2#654]"]:::PROJECT
+    Aggregate#00002["Aggregate: [age#645], [age#645, collect_set(name#644, 0, 0) AS names#646]"]:::AGGREGATE
+    Project#00003["Project: [name#644, age#645]"]:::PROJECT
+    Relation#00004["sample_table: [id#643, name#644, age#645] parquet"]:::RELATION
 
     Project#00001 --> Aggregate#00002
         Aggregate#00002 --> Project#00003

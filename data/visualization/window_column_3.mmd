@@ -7,13 +7,13 @@ flowchart TD
     classDef AGGREGATE stroke:Brown,fill:Chocolate,color:black
     classDef WINDOW stroke:Aqua,fill:Cyan,color:black
 
-    Project#00001["Project: [id#595, amount#596, sign#597, max_amount_por#599, max_amount_or#601, max_amount_po#603, count_amount_por#605L, count_amount_or#607L, count_amount_po#609L, count_por#611L, count_or#613L, count_po#615L]"]:::PROJECT
-    Window#00002["Window: [count(amount#596) windowspecdefinition(id#595, specifiedwindowframe(RowFrame, 1, unboundedfollowing$())) AS count_amount_por#605L, count(amount#596) windowspecdefinition(id#595, specifiedwindowframe(RowFrame, unboundedpreceding$(), unboundedfollowing$())) AS count_amount_po#609L, count(1) windowspecdefinition(id#595, specifiedwindowframe(RowFrame, 1, unboundedfollowing$())) AS count_por#611L, count(1) windowspecdefinition(id#595, specifiedwindowframe(RowFrame, unboundedpreceding$(), unboundedfollowing$())) AS count_po#615L], [id#595]"]:::WINDOW
-    Project#00003["Project: [id#595, amount#596, sign#597, max_amount_por#599, max_amount_or#601, max_amount_po#603, count_amount_or#607L, count_or#613L]"]:::PROJECT
-    Window#00004["Window: [max(amount#596) windowspecdefinition(id#595, sign#597 ASC NULLS FIRST, specifiedwindowframe(RowFrame, 1, unboundedfollowing$())) AS max_amount_por#599, max(amount#596) windowspecdefinition(id#595, sign#597 ASC NULLS FIRST, specifiedwindowframe(RangeFrame, unboundedpreceding$(), currentrow$())) AS max_amount_po#603], [id#595], [sign#597 ASC NULLS FIRST]"]:::WINDOW
-    Window#00005["Window: [count(amount#596) windowspecdefinition(specifiedwindowframe(RowFrame, 1, unboundedfollowing$())) AS count_amount_or#607L, count(1) windowspecdefinition(specifiedwindowframe(RowFrame, 1, unboundedfollowing$())) AS count_or#613L]"]:::WINDOW
-    Window#00006["Window: [max(amount#596) windowspecdefinition(sign#597 ASC NULLS FIRST, specifiedwindowframe(RowFrame, 1, unboundedfollowing$())) AS max_amount_or#601], [sign#597 ASC NULLS FIRST]"]:::WINDOW
-    Relation#00007["transaction_table: [id#595, amount#596, sign#597] parquet"]:::RELATION
+    Project#00001["Project: [id#615, amount#616, sign#617, max_amount_por#619, max_amount_or#621, max_amount_po#623, count_amount_por#625L, count_amount_or#627L, count_amount_po#629L, count_por#631L, count_or#633L, count_po#635L]"]:::PROJECT
+    Window#00002["Window: [count(amount#616) windowspecdefinition(id#615, specifiedwindowframe(RowFrame, 1, unboundedfollowing$())) AS count_amount_por#625L, count(amount#616) windowspecdefinition(id#615, specifiedwindowframe(RowFrame, unboundedpreceding$(), unboundedfollowing$())) AS count_amount_po#629L, count(1) windowspecdefinition(id#615, specifiedwindowframe(RowFrame, 1, unboundedfollowing$())) AS count_por#631L, count(1) windowspecdefinition(id#615, specifiedwindowframe(RowFrame, unboundedpreceding$(), unboundedfollowing$())) AS count_po#635L], [id#615]"]:::WINDOW
+    Project#00003["Project: [id#615, amount#616, sign#617, max_amount_por#619, max_amount_or#621, max_amount_po#623, count_amount_or#627L, count_or#633L]"]:::PROJECT
+    Window#00004["Window: [max(amount#616) windowspecdefinition(id#615, sign#617 ASC NULLS FIRST, specifiedwindowframe(RowFrame, 1, unboundedfollowing$())) AS max_amount_por#619, max(amount#616) windowspecdefinition(id#615, sign#617 ASC NULLS FIRST, specifiedwindowframe(RangeFrame, unboundedpreceding$(), currentrow$())) AS max_amount_po#623], [id#615], [sign#617 ASC NULLS FIRST]"]:::WINDOW
+    Window#00005["Window: [count(amount#616) windowspecdefinition(specifiedwindowframe(RowFrame, 1, unboundedfollowing$())) AS count_amount_or#627L, count(1) windowspecdefinition(specifiedwindowframe(RowFrame, 1, unboundedfollowing$())) AS count_or#633L]"]:::WINDOW
+    Window#00006["Window: [max(amount#616) windowspecdefinition(sign#617 ASC NULLS FIRST, specifiedwindowframe(RowFrame, 1, unboundedfollowing$())) AS max_amount_or#621], [sign#617 ASC NULLS FIRST]"]:::WINDOW
+    Relation#00007["transaction_table: [id#615, amount#616, sign#617] parquet"]:::RELATION
 
     Project#00001 --> Window#00002
         Window#00002 --> Project#00003

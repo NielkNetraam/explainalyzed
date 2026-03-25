@@ -31,7 +31,7 @@ logical_class_registry: dict[str, type[PlanNodeType]] = {
     "Union": UnionNode,
     "Window": WindowNode,
     "Generate": GenerateNode,
-    "WindowGroupLimitNode": WindowGroupLimitNode,
+    "WindowGroupLimit": WindowGroupLimitNode,
 }
 
 

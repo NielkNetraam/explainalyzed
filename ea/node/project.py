@@ -1,8 +1,6 @@
-import re
-
 from ea.column_dependency import ColumnDependency, DerivedColumnDependency, SourceColumnDependency
 from ea.node.plan_node import PlanNode
-from ea.util import ID_PATTERN, strip_outer_parentheses
+from ea.util import split_field, strip_outer_parentheses
 
 
 class ProjectNode(PlanNode):
@@ -11,19 +9,7 @@ class ProjectNode(PlanNode):
 
         fields = strip_outer_parentheses(parameters[1:-1])
 
-        self.fields: dict[str, list[str]] = {}
-        for field in fields:
-            if " AS " in field:
-                name_part = field.rsplit(" AS ", 1)[1]
-                function_part = field.rsplit(" AS ", 1)[0]
-
-                pattern = ID_PATTERN
-                src_fields = list(set(re.findall(pattern, function_part)))
-                self.fields[name_part] = (
-                    src_fields if len(src_fields) > 0 else ["__none__" if function_part == "null" else "__literal__"]
-                )
-            else:
-                self.fields[field] = [field]
+        self.fields = split_field(fields)
 
     def get_column_dependencies(self) -> dict[str, ColumnDependency]:
         column_dependency: dict[str, ColumnDependency] = super().get_column_dependencies()

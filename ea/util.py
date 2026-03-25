@@ -6,12 +6,31 @@ from pyspark.sql import DataFrame, SparkSession
 ID_PATTERN = r"(?<!lambda )\b(\w[\w\d\_\-]*\#\d*[L]?)"
 
 
+def split_field(fields: list[str]) -> dict[str, list[str]]:
+    split_fields: dict[str, list[str]] = {}
+
+    for field in fields:
+        if " AS " in field:
+            name_part = field.rsplit(" AS ", 1)[1]
+            function_part = field.rsplit(" AS ", 1)[0]
+
+            pattern = ID_PATTERN
+            src_fields = list(set(re.findall(pattern, function_part)))
+            split_fields[name_part] = (
+                src_fields if len(src_fields) > 0 else ["__none__" if function_part == "null" else "__literal__"]
+            )
+        else:
+            split_fields[field] = [field]
+
+    return split_fields
+
+
 def replace_within_parentheses(text: str, delimiter: str = ",", replacement: str = "§") -> str:
     depth = 0
     text_list = list(text)
 
     for i in range(len(text_list)):
-        if text_list[i] in "({[]":
+        if text_list[i] in "({[":
             depth += 1
         elif text_list[i] in ")}]":
             depth -= 1

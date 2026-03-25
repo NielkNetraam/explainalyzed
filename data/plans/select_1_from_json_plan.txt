@@ -3,10 +3,10 @@ UnresolvedDataSource format: json, isStreaming: false, paths: 1 provided
 
 == Analyzed Logical Plan ==
 age: bigint, id: bigint, name: string
-Relation [age#666L,id#667L,name#668] json
+Relation [age#686L,id#687L,name#688] json
 
 == Optimized Logical Plan ==
-Relation [age#666L,id#667L,name#668] json
+Relation [age#686L,id#687L,name#688] json
 
 == Physical Plan ==
-FileScan json [age#666L,id#667L,name#668] Batched: false, DataFilters: [], Format: JSON, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/json/sample_table], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<age:bigint,id:bigint,name:string>
+FileScan json [age#686L,id#687L,name#688] Batched: false, DataFilters: [], Format: JSON, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/json/sample_table], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<age:bigint,id:bigint,name:string>

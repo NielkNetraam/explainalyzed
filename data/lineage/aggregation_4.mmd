@@ -11,21 +11,18 @@ flowchart LR
 
     subgraph sample_table
         sample_table.age[age]:::FIELD
-        sample_table.name[name]:::FIELD
     end
 
     subgraph target
-        target.age[age]:::FIELD
-        target.count[count]:::FIELD
-        target.max_name[max_name]:::FIELD
+        target.avg_age[avg_age]:::FIELD
+        target.max_age[max_age]:::FIELD
+        target.year[year]:::FIELD
     end
 
     subgraph internal
         internal.literal[literal]:::FIELD
     end
 
-    internal.literal -- COLUMN --> target.count
-    sample_table.age -- COLUMN,GROUP_BY --> target.age
-    sample_table.age -- GROUP_BY --> target.count
-    sample_table.age -- GROUP_BY --> target.max_name
-    sample_table.name -- COLUMN --> target.max_name
+    internal.literal -- COLUMN --> target.year
+    sample_table.age -- COLUMN --> target.avg_age
+    sample_table.age -- COLUMN --> target.max_age

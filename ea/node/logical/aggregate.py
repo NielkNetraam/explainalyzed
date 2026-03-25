@@ -1,8 +1,8 @@
 import re
 
-from ea.column_dependency import ColumnDependency, DerivedColumnDependency
+from ea.column_dependency import ColumnDependency, DerivedColumnDependency, SourceColumnDependency
 from ea.node.plan_node import PlanNode
-from ea.util import ID_PATTERN, strip_outer_parentheses
+from ea.util import ID_PATTERN, split_field, strip_outer_parentheses
 
 
 class AggregateNode(PlanNode):
@@ -11,21 +11,26 @@ class AggregateNode(PlanNode):
         super().__init__(node_type, level, subset_id, parameters)
         sections = re.findall(r"\[([^\[]*)\]", parameters)
 
-        self.grouping_keys: list[str] = [] if len(sections) == 1 else sections[0].split(", ")
+        self.grouping_keys: list[str] = [] if len(sections) == 1 else list(set(re.findall(ID_PATTERN, sections[0])))
 
         fields: list[str] = strip_outer_parentheses(sections[len(sections) - 1])
+
+        sf = split_field(fields)
 
         derived_fields: dict[str, str] = {
             name_part: function_part
             for function_part, name_part in (field.rsplit(" AS ", 1) for field in fields if " AS " in field)
         }
-        pattern = ID_PATTERN
-        self.derived_fields: dict[str, list[str]] = {key: list(set(re.findall(pattern, d))) for key, d in derived_fields.items()}
+        self.derived_fields: dict[str, list[str]] = {
+            key: sf[key] for key, value in derived_fields.items() if not ("__literal__" in value or "__none__" in value)
+        }
 
-        self.fields: list[str] = [field if " AS " not in field else field.rsplit(" AS ", 1)[1] for field in fields]
+        self.fields = sf
 
     def get_column_dependencies(self) -> dict[str, ColumnDependency]:
         column_dependency: dict[str, ColumnDependency] = super().get_column_dependencies()
+        column_dependency["__literal__"] = SourceColumnDependency("literal", ["literal"])
+        column_dependency["__none__"] = SourceColumnDependency("None", ["literal"])
 
         grouping_keys: list[ColumnDependency] = [column_dependency[field_id] for field_id in self.grouping_keys]
         derived_fields: dict[str, list[ColumnDependency]] = {

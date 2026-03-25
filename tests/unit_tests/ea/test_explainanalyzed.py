@@ -244,6 +244,7 @@ _get_lineage_scenarios = {
             "sample_table.age -- GROUP_BY --> target.count",
             "sample_table.name -- COLUMN --> target.max_name",
             "sample_table.age -- GROUP_BY --> target.max_name",
+            "internal.literal -- COLUMN --> target.count",
         },
     ),
     "IF aggregation_3 THEN success": (
@@ -263,6 +264,15 @@ _get_lineage_scenarios = {
             "transaction_table.id -- GROUP_BY --> target.total_amount",
             "transaction_table.id -- FILTER --> target.total_amount",
             "transaction_table.id -- JOIN --> target.total_amount",
+            "internal.literal -- COLUMN --> target.count",
+        },
+    ),
+    "IF aggregation_4 THEN success": (
+        "aggregation_4",
+        {
+            "sample_table.age -- COLUMN --> target.avg_age",
+            "sample_table.age -- COLUMN --> target.max_age",
+            "internal.literal -- COLUMN --> target.year",
         },
     ),
     "IF union_forest THEN success": (
