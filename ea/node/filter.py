@@ -1,8 +1,8 @@
-from ea.util import ID_PATTERN
 import re
 
 from ea.column_dependency import ColumnDependency, DerivedColumnDependency
 from ea.node.plan_node import PlanNode
+from ea.util import ID_PATTERN
 
 
 class FilterNode(PlanNode):

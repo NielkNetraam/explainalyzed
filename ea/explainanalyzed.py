@@ -1,3 +1,4 @@
+import logging
 import re
 from pathlib import Path
 
@@ -8,6 +9,8 @@ from ea.node.physical.file_scan import FileScanNode
 from ea.node.plan_node import GenericNode, PlanNode, PlanNodeType
 from ea.node.registry import logical_class_registry, physical_class_registry
 from ea.util import IncompleteExecutionPlanError
+
+logger = logging.getLogger(__name__)
 
 
 def _split_line(line: str) -> tuple[int, str | None, str, str]:
@@ -212,13 +215,14 @@ class ExplainAnalyzed:
         return mermaid_str
 
     @staticmethod
-    def from_path(
+    def from_path(  # noqa: PLR0913
         plan_path: Path,
         output_path: Path,
         result_name: str,
         *,
         plan_visualisation: bool = False,
         intermediate_lineage: bool = False,
+        ignore_key_errors: bool = False,
     ) -> None:
         plans = {p.stem: p for p in plan_path.glob("**/*.txt")}
 
@@ -235,20 +239,28 @@ class ExplainAnalyzed:
 
         eas: dict[str, ExplainAnalyzed] = {}
         for name, plan in plans.items():
+            logger.info("analizing: %s", name)
+
             with plan.open(encoding="utf-8") as file:
                 plan_data = file.readlines()
 
-            eas[name] = ExplainAnalyzed(name, plan_data)
+            try:
+                eas[name] = ExplainAnalyzed(name, plan_data)
 
-            if plan_visualisation:
-                path = visualisation_path / f"{name}.mmd"
-                with path.open("w") as file:
-                    file.write(eas[name].mermaid())
+                if plan_visualisation:
+                    path = visualisation_path / f"{name}.mmd"
+                    with path.open("w") as file:
+                        file.write(eas[name].mermaid())
 
-            if intermediate_lineage:
-                path = intermediate_lineage_path / f"{name}.mmd"
-                with path.open("w") as file:
-                    file.write(eas[name].get_lineage().mermaid())
+                if intermediate_lineage:
+                    path = intermediate_lineage_path / f"{name}.mmd"
+                    with path.open("w") as file:
+                        file.write(eas[name].get_lineage().mermaid())
+            except KeyError as e:
+                logger.exception("%s: field is not parsed properly", name, exc_info=e)
+
+                if not ignore_key_errors:
+                    raise e from None
 
         path = lineage_path / f"{result_name}.mmd"
         with path.open("w") as file:
