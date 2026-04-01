@@ -7,14 +7,14 @@ flowchart TD
     classDef AGGREGATE stroke:Brown,fill:Chocolate,color:black
     classDef WINDOW stroke:Aqua,fill:Cyan,color:black
 
-    Generate#00001["Generate: explode(m#675), false, [key#676, value#677]"]:::GENERATE
-    Project#00002["Project: [age#661, names#662, names_upper#668, names_upper2#670, new_name#674, map(new_name#674, age#661) AS m#675]"]:::PROJECT
-    Generate#00003["Generate: explode(names_upper2#670), false, [new_name#674]"]:::GENERATE
-    Project#00004["Project: [age#661, names#662, transform(names#662, lambdafunction(upper(lambda x_4#669), lambda x_4#669, false)) AS names_upper#668, transform(names#662, lambdafunction(CASE WHEN ((lambda y_6#672 % 2) = 0) THEN lambda x_5#671 ELSE upper(lambda x_5#671) END, lambda x_5#671, lambda y_6#672, false)) AS names_upper2#670]"]:::PROJECT
-    Filter#00005["Filter: (size(transform(names#662, lambdafunction(CASE WHEN ((lambda y_6#672 % 2) = 0) THEN lambda x_5#671 ELSE upper(lambda x_5#671) END, lambda x_5#671, lambda y_6#672, false)), false) > 0)"]:::FILTER
-    Aggregate#00006["Aggregate: [age#661], [age#661, collect_set(name#660, 0, 0) AS names#662]"]:::AGGREGATE
-    Project#00007["Project: [name#660, age#661]"]:::PROJECT
-    Relation#00008["sample_table: [id#659, name#660, age#661] parquet"]:::RELATION
+    Generate#00001["Generate: explode(m#709), false, [key#710, value#711]"]:::GENERATE
+    Project#00002["Project: [age#695, names#696, names_upper#702, names_upper2#704, new_name#708, map(new_name#708, age#695) AS m#709]"]:::PROJECT
+    Generate#00003["Generate: explode(names_upper2#704), false, [new_name#708]"]:::GENERATE
+    Project#00004["Project: [age#695, names#696, transform(names#696, lambdafunction(upper(lambda x_4#703), lambda x_4#703, false)) AS names_upper#702, transform(names#696, lambdafunction(CASE WHEN ((lambda y_6#706 % 2) = 0) THEN lambda x_5#705 ELSE upper(lambda x_5#705) END, lambda x_5#705, lambda y_6#706, false)) AS names_upper2#704]"]:::PROJECT
+    Filter#00005["Filter: (size(transform(names#696, lambdafunction(CASE WHEN ((lambda y_6#706 % 2) = 0) THEN lambda x_5#705 ELSE upper(lambda x_5#705) END, lambda x_5#705, lambda y_6#706, false)), false) > 0)"]:::FILTER
+    Aggregate#00006["Aggregate: [age#695], [age#695, collect_set(name#694, 0, 0) AS names#696]"]:::AGGREGATE
+    Project#00007["Project: [name#694, age#695]"]:::PROJECT
+    Relation#00008["sample_table: [id#693, name#694, age#695] parquet"]:::RELATION
 
     Generate#00001 --> Project#00002
         Project#00002 --> Generate#00003

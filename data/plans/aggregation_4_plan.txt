@@ -1,22 +1,22 @@
 == Parsed Logical Plan ==
-'Aggregate ['year], ['year, 'avg('age) AS avg_age#204, 'max('age) AS max_age#205]
-+- Project [id#199, name#200, age#201, 2025 AS year#203]
-   +- Relation [id#199,name#200,age#201] parquet
+'Aggregate ['year], ['year, 'avg('age) AS avg_age#205, 'max('age) AS max_age#206]
++- Project [id#200, name#201, age#202, 2025 AS year#204]
+   +- Relation [id#200,name#201,age#202] parquet
 
 == Analyzed Logical Plan ==
 year: int, avg_age: double, max_age: int
-Aggregate [year#203], [year#203, avg(age#201) AS avg_age#204, max(age#201) AS max_age#205]
-+- Project [id#199, name#200, age#201, 2025 AS year#203]
-   +- Relation [id#199,name#200,age#201] parquet
+Aggregate [year#204], [year#204, avg(age#202) AS avg_age#205, max(age#202) AS max_age#206]
++- Project [id#200, name#201, age#202, 2025 AS year#204]
+   +- Relation [id#200,name#201,age#202] parquet
 
 == Optimized Logical Plan ==
-Aggregate [2025], [2025 AS year#203, avg(age#201) AS avg_age#204, max(age#201) AS max_age#205]
-+- Project [age#201]
-   +- Relation [id#199,name#200,age#201] parquet
+Aggregate [2025], [2025 AS year#204, avg(age#202) AS avg_age#205, max(age#202) AS max_age#206]
++- Project [age#202]
+   +- Relation [id#200,name#201,age#202] parquet
 
 == Physical Plan ==
 AdaptiveSparkPlan isFinalPlan=false
-+- HashAggregate(keys=[2025#212], functions=[avg(age#201), max(age#201)], output=[year#203, avg_age#204, max_age#205])
-   +- Exchange hashpartitioning(2025#212, 200), ENSURE_REQUIREMENTS, [plan_id=443]
-      +- HashAggregate(keys=[2025 AS 2025#212], functions=[partial_avg(age#201), partial_max(age#201)], output=[2025#212, sum#216, count#217L, max#218])
-         +- FileScan parquet [age#201] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<age:int>
++- HashAggregate(keys=[2025#213], functions=[avg(age#202), max(age#202)], output=[year#204, avg_age#205, max_age#206])
+   +- Exchange hashpartitioning(2025#213, 200), ENSURE_REQUIREMENTS, [plan_id=443]
+      +- HashAggregate(keys=[2025 AS 2025#213], functions=[partial_avg(age#202), partial_max(age#202)], output=[2025#213, sum#217, count#218L, max#219])
+         +- FileScan parquet [age#202] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<age:int>

@@ -7,9 +7,9 @@ flowchart TD
     classDef AGGREGATE stroke:Brown,fill:Chocolate,color:black
     classDef WINDOW stroke:Aqua,fill:Cyan,color:black
 
-    Aggregate#00001["Aggregate: [age#163], [age#163, count(1) AS count#164L, max(name#162) AS max_name#165]"]:::AGGREGATE
-    Project#00002["Project: [name#162, age#163]"]:::PROJECT
-    Relation#00003["sample_table: [id#161, name#162, age#163] parquet"]:::RELATION
+    Aggregate#00001["Aggregate: [age#164], [age#164, count(1) AS count#165L, max(name#163) AS max_name#166]"]:::AGGREGATE
+    Project#00002["Project: [name#163, age#164]"]:::PROJECT
+    Relation#00003["sample_table: [id#162, name#163, age#164] parquet"]:::RELATION
 
     Aggregate#00001 --> Project#00002
         Project#00002 --> Relation#00003

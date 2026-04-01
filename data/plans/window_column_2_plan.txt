@@ -1,30 +1,30 @@
 == Parsed Logical Plan ==
 'Project [unresolvedstarwithcolumns(max_amount_po, 'max('amount) windowspecdefinition('id, 'sign ASC NULLS FIRST, unspecifiedframe$()), None)]
-+- Project [id#607, amount#608, sign#609, max_amount_por#611]
-   +- Project [id#607, amount#608, sign#609, max_amount_por#611, max_amount_por#611]
-      +- Window [max(amount#608) windowspecdefinition(id#607, sign#609 ASC NULLS FIRST, specifiedwindowframe(RowFrame, 1, unboundedfollowing$())) AS max_amount_por#611], [id#607], [sign#609 ASC NULLS FIRST]
-         +- Project [id#607, amount#608, sign#609]
-            +- Relation [id#607,amount#608,sign#609] parquet
++- Project [id#641, amount#642, sign#643, max_amount_por#645]
+   +- Project [id#641, amount#642, sign#643, max_amount_por#645, max_amount_por#645]
+      +- Window [max(amount#642) windowspecdefinition(id#641, sign#643 ASC NULLS FIRST, specifiedwindowframe(RowFrame, 1, unboundedfollowing$())) AS max_amount_por#645], [id#641], [sign#643 ASC NULLS FIRST]
+         +- Project [id#641, amount#642, sign#643]
+            +- Relation [id#641,amount#642,sign#643] parquet
 
 == Analyzed Logical Plan ==
 id: int, amount: decimal(10,2), sign: string, max_amount_por: decimal(10,2), max_amount_po: decimal(10,2)
-Project [id#607, amount#608, sign#609, max_amount_por#611, max_amount_po#613]
-+- Project [id#607, amount#608, sign#609, max_amount_por#611, max_amount_po#613, max_amount_po#613]
-   +- Window [max(amount#608) windowspecdefinition(id#607, sign#609 ASC NULLS FIRST, specifiedwindowframe(RangeFrame, unboundedpreceding$(), currentrow$())) AS max_amount_po#613], [id#607], [sign#609 ASC NULLS FIRST]
-      +- Project [id#607, amount#608, sign#609, max_amount_por#611]
-         +- Project [id#607, amount#608, sign#609, max_amount_por#611]
-            +- Project [id#607, amount#608, sign#609, max_amount_por#611, max_amount_por#611]
-               +- Window [max(amount#608) windowspecdefinition(id#607, sign#609 ASC NULLS FIRST, specifiedwindowframe(RowFrame, 1, unboundedfollowing$())) AS max_amount_por#611], [id#607], [sign#609 ASC NULLS FIRST]
-                  +- Project [id#607, amount#608, sign#609]
-                     +- Relation [id#607,amount#608,sign#609] parquet
+Project [id#641, amount#642, sign#643, max_amount_por#645, max_amount_po#647]
++- Project [id#641, amount#642, sign#643, max_amount_por#645, max_amount_po#647, max_amount_po#647]
+   +- Window [max(amount#642) windowspecdefinition(id#641, sign#643 ASC NULLS FIRST, specifiedwindowframe(RangeFrame, unboundedpreceding$(), currentrow$())) AS max_amount_po#647], [id#641], [sign#643 ASC NULLS FIRST]
+      +- Project [id#641, amount#642, sign#643, max_amount_por#645]
+         +- Project [id#641, amount#642, sign#643, max_amount_por#645]
+            +- Project [id#641, amount#642, sign#643, max_amount_por#645, max_amount_por#645]
+               +- Window [max(amount#642) windowspecdefinition(id#641, sign#643 ASC NULLS FIRST, specifiedwindowframe(RowFrame, 1, unboundedfollowing$())) AS max_amount_por#645], [id#641], [sign#643 ASC NULLS FIRST]
+                  +- Project [id#641, amount#642, sign#643]
+                     +- Relation [id#641,amount#642,sign#643] parquet
 
 == Optimized Logical Plan ==
-Window [max(amount#608) windowspecdefinition(id#607, sign#609 ASC NULLS FIRST, specifiedwindowframe(RowFrame, 1, unboundedfollowing$())) AS max_amount_por#611, max(amount#608) windowspecdefinition(id#607, sign#609 ASC NULLS FIRST, specifiedwindowframe(RangeFrame, unboundedpreceding$(), currentrow$())) AS max_amount_po#613], [id#607], [sign#609 ASC NULLS FIRST]
-+- Relation [id#607,amount#608,sign#609] parquet
+Window [max(amount#642) windowspecdefinition(id#641, sign#643 ASC NULLS FIRST, specifiedwindowframe(RowFrame, 1, unboundedfollowing$())) AS max_amount_por#645, max(amount#642) windowspecdefinition(id#641, sign#643 ASC NULLS FIRST, specifiedwindowframe(RangeFrame, unboundedpreceding$(), currentrow$())) AS max_amount_po#647], [id#641], [sign#643 ASC NULLS FIRST]
++- Relation [id#641,amount#642,sign#643] parquet
 
 == Physical Plan ==
 AdaptiveSparkPlan isFinalPlan=false
-+- Window [max(amount#608) windowspecdefinition(id#607, sign#609 ASC NULLS FIRST, specifiedwindowframe(RowFrame, 1, unboundedfollowing$())) AS max_amount_por#611, max(amount#608) windowspecdefinition(id#607, sign#609 ASC NULLS FIRST, specifiedwindowframe(RangeFrame, unboundedpreceding$(), currentrow$())) AS max_amount_po#613], [id#607], [sign#609 ASC NULLS FIRST]
-   +- Sort [id#607 ASC NULLS FIRST, sign#609 ASC NULLS FIRST], false, 0
-      +- Exchange hashpartitioning(id#607, 200), ENSURE_REQUIREMENTS, [plan_id=1042]
-         +- FileScan parquet [id#607,amount#608,sign#609] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/transaction_table], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<id:int,amount:decimal(10,2),sign:string>
++- Window [max(amount#642) windowspecdefinition(id#641, sign#643 ASC NULLS FIRST, specifiedwindowframe(RowFrame, 1, unboundedfollowing$())) AS max_amount_por#645, max(amount#642) windowspecdefinition(id#641, sign#643 ASC NULLS FIRST, specifiedwindowframe(RangeFrame, unboundedpreceding$(), currentrow$())) AS max_amount_po#647], [id#641], [sign#643 ASC NULLS FIRST]
+   +- Sort [id#641 ASC NULLS FIRST, sign#643 ASC NULLS FIRST], false, 0
+      +- Exchange hashpartitioning(id#641, 200), ENSURE_REQUIREMENTS, [plan_id=1167]
+         +- FileScan parquet [id#641,amount#642,sign#643] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/transaction_table], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<id:int,amount:decimal(10,2),sign:string>

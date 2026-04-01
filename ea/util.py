@@ -3,26 +3,39 @@ from pathlib import Path
 
 from pyspark.sql import DataFrame, SparkSession
 
-ID_PATTERN = r"(?<!lambda )\b(\w[\w\d\_\-]*\#\d*[L]?)"
+ID_PATTERN = r"(?<!lambda )\b(\w[\w\-]*\#\d*[L]?)"
+ID_PATTERN_2 = r"(?:\blambda\s+[\w#]+)|(`[^`]+`#\d+|[\w]+(?:\([^()]*\))?#\d+)"
 
 
-def split_field(fields: list[str]) -> dict[str, list[str]]:
-    split_fields: dict[str, list[str]] = {}
+def get_dependencies(function_part: str) -> set[str]:
+    src_fields = set(re.findall(ID_PATTERN_2, function_part))
+
+    return {m for m in src_fields if m}
+
+
+def split_field(field: str) -> tuple[str, set[str]]:
+    if " AS " not in field:
+        return field, {field}
+
+    name_part = field.rsplit(" AS ", 1)[1]
+    function_part = field.rsplit(" AS ", 1)[0]
+
+    if function_part in ("null", "NULL"):
+        return name_part, {"__none__"}
+
+    dependencies = list(get_dependencies(function_part))
+
+    return name_part, set(dependencies) if len(dependencies) > 0 else {"__literal__"}
+
+
+def split_fields(fields: list[str]) -> dict[str, list[str]]:
+    splitted_fields: dict[str, list[str]] = {}
 
     for field in fields:
-        if " AS " in field:
-            name_part = field.rsplit(" AS ", 1)[1]
-            function_part = field.rsplit(" AS ", 1)[0]
+        name_part, dependencies = split_field(field)
+        splitted_fields[name_part] = list(dependencies)
 
-            pattern = ID_PATTERN
-            src_fields = list(set(re.findall(pattern, function_part)))
-            split_fields[name_part] = (
-                src_fields if len(src_fields) > 0 else ["__none__" if function_part == "null" else "__literal__"]
-            )
-        else:
-            split_fields[field] = [field]
-
-    return split_fields
+    return splitted_fields
 
 
 def replace_within_parentheses(text: str, delimiter: str = ",", replacement: str = "§") -> str:
@@ -46,7 +59,7 @@ def strip_outer_parentheses(s: str) -> list[str]:
 
 
 def findall_column_ids(line: str) -> list[str]:
-    return list(set(re.findall(ID_PATTERN, line)))
+    return list(set(re.findall(ID_PATTERN_2, line)))
 
 
 def get_active_spark_session() -> SparkSession:

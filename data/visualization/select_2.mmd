@@ -7,7 +7,7 @@ flowchart TD
     classDef AGGREGATE stroke:Brown,fill:Chocolate,color:black
     classDef WINDOW stroke:Aqua,fill:Cyan,color:black
 
-    Project#00001["Project: [id#3, name#4, literal_string AS lit1#6, {'range': {'start': 1, ' end': 2}, 'length': 2} AS lit2#7]"]:::PROJECT
+    Project#00001["Project: [id#3, name#4, literal_string AS lit1#6, {'range': {'start': 1, ' end': 2}, 'length': 2} AS lit2#7, upper(name#4) AS upper(name)#8]"]:::PROJECT
     Relation#00002["sample_table: [id#3, name#4, age#5] parquet"]:::RELATION
 
     Project#00001 --> Relation#00002

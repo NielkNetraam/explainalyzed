@@ -1,17 +1,17 @@
 == Parsed Logical Plan ==
-'Project ['id, 'name, literal_string AS lit1#6, {'range': {'start': 1, ' end': 2}, 'length': 2} AS lit2#7]
+'Project ['id, 'name, literal_string AS lit1#6, {'range': {'start': 1, ' end': 2}, 'length': 2} AS lit2#7, unresolvedalias('upper('name))]
 +- Relation [id#3,name#4,age#5] parquet
 
 == Analyzed Logical Plan ==
-id: int, name: string, lit1: string, lit2: string
-Project [id#3, name#4, literal_string AS lit1#6, {'range': {'start': 1, ' end': 2}, 'length': 2} AS lit2#7]
+id: int, name: string, lit1: string, lit2: string, upper(name): string
+Project [id#3, name#4, literal_string AS lit1#6, {'range': {'start': 1, ' end': 2}, 'length': 2} AS lit2#7, upper(name#4) AS upper(name)#8]
 +- Relation [id#3,name#4,age#5] parquet
 
 == Optimized Logical Plan ==
-Project [id#3, name#4, literal_string AS lit1#6, {'range': {'start': 1, ' end': 2}, 'length': 2} AS lit2#7]
+Project [id#3, name#4, literal_string AS lit1#6, {'range': {'start': 1, ' end': 2}, 'length': 2} AS lit2#7, upper(name#4) AS upper(name)#8]
 +- Relation [id#3,name#4,age#5] parquet
 
 == Physical Plan ==
-*(1) Project [id#3, name#4, literal_string AS lit1#6, {'range': {'start': 1, ' end': 2}, 'length': 2} AS lit2#7]
+*(1) Project [id#3, name#4, literal_string AS lit1#6, {'range': {'start': 1, ' end': 2}, 'length': 2} AS lit2#7, upper(name#4) AS upper(name)#8]
 +- *(1) ColumnarToRow
    +- FileScan parquet [id#3,name#4] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<id:int,name:string>

@@ -1,21 +1,21 @@
 == Parsed Logical Plan ==
 'Project ['name]
-+- Filter (id#23 > 1)
-   +- Relation [id#23,name#24,age#25] parquet
++- Filter (id#24 > 1)
+   +- Relation [id#24,name#25,age#26] parquet
 
 == Analyzed Logical Plan ==
 name: string
-Project [name#24]
-+- Filter (id#23 > 1)
-   +- Relation [id#23,name#24,age#25] parquet
+Project [name#25]
++- Filter (id#24 > 1)
+   +- Relation [id#24,name#25,age#26] parquet
 
 == Optimized Logical Plan ==
-Project [name#24]
-+- Filter (isnotnull(id#23) AND (id#23 > 1))
-   +- Relation [id#23,name#24,age#25] parquet
+Project [name#25]
++- Filter (isnotnull(id#24) AND (id#24 > 1))
+   +- Relation [id#24,name#25,age#26] parquet
 
 == Physical Plan ==
-*(1) Project [name#24]
-+- *(1) Filter (isnotnull(id#23) AND (id#23 > 1))
+*(1) Project [name#25]
++- *(1) Filter (isnotnull(id#24) AND (id#24 > 1))
    +- *(1) ColumnarToRow
-      +- FileScan parquet [id#23,name#24] Batched: true, DataFilters: [isnotnull(id#23), (id#23 > 1)], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table], PartitionFilters: [], PushedFilters: [IsNotNull(id), GreaterThan(id,1)], ReadSchema: struct<id:int,name:string>
+      +- FileScan parquet [id#24,name#25] Batched: true, DataFilters: [isnotnull(id#24), (id#24 > 1)], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table], PartitionFilters: [], PushedFilters: [IsNotNull(id), GreaterThan(id,1)], ReadSchema: struct<id:int,name:string>

@@ -1,35 +1,35 @@
 == Parsed Logical Plan ==
-'Aggregate ['id], ['id, 'count(1) AS count#184, 'sum(CASE WHEN '`=`('sign, DEBIT) THEN 'amount ELSE 'negative('amount) END) AS total_amount#185]
-+- Project [id#176, name#177, age#178, amount#180, sign#181]
-   +- Join LeftOuter, (id#176 = id#179)
-      :- Relation [id#176,name#177,age#178] parquet
-      +- Relation [id#179,amount#180,sign#181] parquet
+'Aggregate ['id], ['id, 'count(1) AS count#185, 'sum(CASE WHEN '`=`('sign, DEBIT) THEN 'amount ELSE 'negative('amount) END) AS total_amount#186]
++- Project [id#177, name#178, age#179, amount#181, sign#182]
+   +- Join LeftOuter, (id#177 = id#180)
+      :- Relation [id#177,name#178,age#179] parquet
+      +- Relation [id#180,amount#181,sign#182] parquet
 
 == Analyzed Logical Plan ==
 id: int, count: bigint, total_amount: decimal(20,2)
-Aggregate [id#176], [id#176, count(1) AS count#184L, sum(CASE WHEN (sign#181 = DEBIT) THEN amount#180 ELSE -amount#180 END) AS total_amount#185]
-+- Project [id#176, name#177, age#178, amount#180, sign#181]
-   +- Join LeftOuter, (id#176 = id#179)
-      :- Relation [id#176,name#177,age#178] parquet
-      +- Relation [id#179,amount#180,sign#181] parquet
+Aggregate [id#177], [id#177, count(1) AS count#185L, sum(CASE WHEN (sign#182 = DEBIT) THEN amount#181 ELSE -amount#181 END) AS total_amount#186]
++- Project [id#177, name#178, age#179, amount#181, sign#182]
+   +- Join LeftOuter, (id#177 = id#180)
+      :- Relation [id#177,name#178,age#179] parquet
+      +- Relation [id#180,amount#181,sign#182] parquet
 
 == Optimized Logical Plan ==
-Aggregate [id#176], [id#176, count(1) AS count#184L, sum(CASE WHEN (sign#181 = DEBIT) THEN amount#180 ELSE -amount#180 END) AS total_amount#185]
-+- Project [id#176, amount#180, sign#181]
-   +- Join LeftOuter, (id#176 = id#179)
-      :- Project [id#176]
-      :  +- Relation [id#176,name#177,age#178] parquet
-      +- Filter isnotnull(id#179)
-         +- Relation [id#179,amount#180,sign#181] parquet
+Aggregate [id#177], [id#177, count(1) AS count#185L, sum(CASE WHEN (sign#182 = DEBIT) THEN amount#181 ELSE -amount#181 END) AS total_amount#186]
++- Project [id#177, amount#181, sign#182]
+   +- Join LeftOuter, (id#177 = id#180)
+      :- Project [id#177]
+      :  +- Relation [id#177,name#178,age#179] parquet
+      +- Filter isnotnull(id#180)
+         +- Relation [id#180,amount#181,sign#182] parquet
 
 == Physical Plan ==
 AdaptiveSparkPlan isFinalPlan=false
-+- HashAggregate(keys=[id#176], functions=[count(1), sum(CASE WHEN (sign#181 = DEBIT) THEN amount#180 ELSE -amount#180 END)], output=[id#176, count#184L, total_amount#185])
-   +- Exchange hashpartitioning(id#176, 200), ENSURE_REQUIREMENTS, [plan_id=430]
-      +- HashAggregate(keys=[id#176], functions=[partial_count(1), partial_sum(CASE WHEN (sign#181 = DEBIT) THEN amount#180 ELSE -amount#180 END)], output=[id#176, count#196L, sum#197, isEmpty#198])
-         +- Project [id#176, amount#180, sign#181]
-            +- BroadcastHashJoin [id#176], [id#179], LeftOuter, BuildRight, false
-               :- FileScan parquet [id#176] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<id:int>
++- HashAggregate(keys=[id#177], functions=[count(1), sum(CASE WHEN (sign#182 = DEBIT) THEN amount#181 ELSE -amount#181 END)], output=[id#177, count#185L, total_amount#186])
+   +- Exchange hashpartitioning(id#177, 200), ENSURE_REQUIREMENTS, [plan_id=430]
+      +- HashAggregate(keys=[id#177], functions=[partial_count(1), partial_sum(CASE WHEN (sign#182 = DEBIT) THEN amount#181 ELSE -amount#181 END)], output=[id#177, count#197L, sum#198, isEmpty#199])
+         +- Project [id#177, amount#181, sign#182]
+            +- BroadcastHashJoin [id#177], [id#180], LeftOuter, BuildRight, false
+               :- FileScan parquet [id#177] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<id:int>
                +- BroadcastExchange HashedRelationBroadcastMode(List(cast(input[0, int, false] as bigint)),false), [plan_id=425]
-                  +- Filter isnotnull(id#179)
-                     +- FileScan parquet [id#179,amount#180,sign#181] Batched: true, DataFilters: [isnotnull(id#179)], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/transaction_table], PartitionFilters: [], PushedFilters: [IsNotNull(id)], ReadSchema: struct<id:int,amount:decimal(10,2),sign:string>
+                  +- Filter isnotnull(id#180)
+                     +- FileScan parquet [id#180,amount#181,sign#182] Batched: true, DataFilters: [isnotnull(id#180)], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/transaction_table], PartitionFilters: [], PushedFilters: [IsNotNull(id)], ReadSchema: struct<id:int,amount:decimal(10,2),sign:string>

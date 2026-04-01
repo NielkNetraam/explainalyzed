@@ -18,13 +18,11 @@ class WindowNode(PlanNode):
             for function_part, name_part in (field.rsplit(" AS ", 1) for field in fields if " AS " in field)
         }
 
-        pattern = ID_PATTERN
-
         self.derived_fields: dict[str, list[str]] = {
-            key: list(set(re.findall(pattern, d.rsplit("windowspecdefinition")[0]))) for key, d in derived_fields.items()
+            key: list(set(re.findall(ID_PATTERN, d.rsplit("windowspecdefinition")[0]))) for key, d in derived_fields.items()
         }
         self.window_fields: dict[str, list[str]] = {
-            key: list(set(re.findall(pattern, d.rsplit("windowspecdefinition")[1]))) for key, d in derived_fields.items()
+            key: list(set(re.findall(ID_PATTERN, d.rsplit("windowspecdefinition")[1]))) for key, d in derived_fields.items()
         }
 
         self.fields: list[str] = [field if " AS " not in field else field.rsplit(" AS ", 1)[1] for field in fields]

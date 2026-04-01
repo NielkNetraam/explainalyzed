@@ -2,7 +2,7 @@ import re
 
 from ea.column_dependency import ColumnDependency, DerivedColumnDependency, SourceColumnDependency
 from ea.node.plan_node import PlanNode
-from ea.util import ID_PATTERN, split_field, strip_outer_parentheses
+from ea.util import ID_PATTERN, split_fields, strip_outer_parentheses
 
 
 class AggregateNode(PlanNode):
@@ -15,7 +15,7 @@ class AggregateNode(PlanNode):
 
         fields: list[str] = strip_outer_parentheses(sections[len(sections) - 1])
 
-        sf = split_field(fields)
+        sf = split_fields(fields)
 
         derived_fields: dict[str, str] = {
             name_part: function_part

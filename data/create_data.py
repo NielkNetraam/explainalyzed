@@ -94,7 +94,7 @@ def create_select_2_plan(spark: SparkSession) -> str:
     lit2 = {"range": {"start": 1, " end": 2}, "length": 2}
 
     df = spark.read.load(str(TABLE_PATH / "sample_table"))
-    df = df.select("id", "name", f.lit(lit1).alias("lit1"), f.lit(lit2.__repr__()).alias("lit2"))
+    df = df.select("id", "name", f.lit(lit1).alias("lit1"), f.lit(lit2.__repr__()).alias("lit2"), f.upper("name"))
     return get_query_plan(df)
 
 
@@ -239,6 +239,12 @@ def aggregation_4_query(spark: SparkSession) -> DataFrame:
     df = spark.read.load(str(TABLE_PATH / "sample_table"))
     df = df.withColumn("year", f.lit(2025))
     return df.groupBy("year").agg(f.avg("age").alias("avg_age"), f.max("age").alias("max_age"))
+
+
+def aggregation_5_query(spark: SparkSession) -> DataFrame:
+    df = spark.read.load(str(TABLE_PATH / "sample_table"))
+
+    return df.groupBy("name").pivot("id").agg(f.avg("age"))
 
 
 def create_rdd_plan(spark: SparkSession) -> str:
@@ -393,6 +399,7 @@ def create_plans_and_store(spark: SparkSession) -> None:
     store_plan(create_aggregation_2_plan(spark), PLAN_PATH / "aggregation_2_plan.txt")
     store_plan(create_aggregation_3_plan(spark), PLAN_PATH / "aggregation_3_plan.txt")
     store_plan(get_query_plan(aggregation_4_query(spark)), PLAN_PATH / "aggregation_4_plan.txt")
+    store_plan(get_query_plan(aggregation_5_query(spark)), PLAN_PATH / "aggregation_5_plan.txt")
     store_plan(create_rdd_plan(spark), PLAN_PATH / "rdd_plan.txt")
     store_plan(get_query_plan(union_forest_query(spark)), PLAN_PATH / "union_forest_plan.txt")
     store_plan(get_query_plan(union_forest_query(spark, cache=True)), PLAN_PATH / "union_forest_cache_plan.txt")

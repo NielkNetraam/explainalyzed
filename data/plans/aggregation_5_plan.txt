@@ -1,0 +1,27 @@
+== Parsed Logical Plan ==
+'Pivot List('name), id#220: int, [1, 2, 3], ['avg('age)]
++- Relation [id#220,name#221,age#222] parquet
+
+== Analyzed Logical Plan ==
+name: string, 1: double, 2: double, 3: double
+Project [name#221, __pivot_avg(age) AS `avg(age)`#239[0] AS 1#240, __pivot_avg(age) AS `avg(age)`#239[1] AS 2#241, __pivot_avg(age) AS `avg(age)`#239[2] AS 3#242]
++- Aggregate [name#221], [name#221, pivotfirst(id#220, avg(age)#231, 1, 2, 3, 0, 0) AS __pivot_avg(age) AS `avg(age)`#239]
+   +- Aggregate [name#221, id#220], [name#221, id#220, avg(age#222) AS avg(age)#231]
+      +- Relation [id#220,name#221,age#222] parquet
+
+== Optimized Logical Plan ==
+Project [name#221, __pivot_avg(age) AS `avg(age)`#239[0] AS 1#240, __pivot_avg(age) AS `avg(age)`#239[1] AS 2#241, __pivot_avg(age) AS `avg(age)`#239[2] AS 3#242]
++- Aggregate [name#221], [name#221, pivotfirst(id#220, avg(age)#231, 1, 2, 3, 0, 0) AS __pivot_avg(age) AS `avg(age)`#239]
+   +- Aggregate [name#221, id#220], [name#221, id#220, avg(age#222) AS avg(age)#231]
+      +- Relation [id#220,name#221,age#222] parquet
+
+== Physical Plan ==
+AdaptiveSparkPlan isFinalPlan=false
++- Project [name#221, __pivot_avg(age) AS `avg(age)`#239[0] AS 1#240, __pivot_avg(age) AS `avg(age)`#239[1] AS 2#241, __pivot_avg(age) AS `avg(age)`#239[2] AS 3#242]
+   +- HashAggregate(keys=[name#221], functions=[pivotfirst(id#220, avg(age)#231, 1, 2, 3, 0, 0)], output=[name#221, __pivot_avg(age) AS `avg(age)`#239])
+      +- Exchange hashpartitioning(name#221, 200), ENSURE_REQUIREMENTS, [plan_id=567]
+         +- HashAggregate(keys=[name#221], functions=[partial_pivotfirst(id#220, avg(age)#231, 1, 2, 3, 0, 0)], output=[name#221, 1#235, 2#236, 3#237])
+            +- HashAggregate(keys=[name#221, id#220], functions=[avg(age#222)], output=[name#221, id#220, avg(age)#231])
+               +- Exchange hashpartitioning(name#221, id#220, 200), ENSURE_REQUIREMENTS, [plan_id=563]
+                  +- HashAggregate(keys=[name#221, id#220], functions=[partial_avg(age#222)], output=[name#221, id#220, sum#251, count#252L])
+                     +- FileScan parquet [id#220,name#221,age#222] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<id:int,name:string,age:int>
