@@ -247,6 +247,12 @@ def aggregation_5_query(spark: SparkSession) -> DataFrame:
     return df.groupBy("name").pivot("id").agg(f.avg("age"))
 
 
+def aggregation_6_query(spark: SparkSession) -> DataFrame:
+    df = spark.read.load(str(TABLE_PATH / "sample_table"))
+
+    return df.groupBy("name").pivot("id").agg(f.sum("age"))
+
+
 def create_rdd_plan(spark: SparkSession) -> str:
     df = spark.read.load(str(TABLE_PATH / "sample_table"))
     rdd = df.rdd
@@ -400,6 +406,7 @@ def create_plans_and_store(spark: SparkSession) -> None:
     store_plan(create_aggregation_3_plan(spark), PLAN_PATH / "aggregation_3_plan.txt")
     store_plan(get_query_plan(aggregation_4_query(spark)), PLAN_PATH / "aggregation_4_plan.txt")
     store_plan(get_query_plan(aggregation_5_query(spark)), PLAN_PATH / "aggregation_5_plan.txt")
+    store_plan(get_query_plan(aggregation_6_query(spark)), PLAN_PATH / "aggregation_6_plan.txt")
     store_plan(create_rdd_plan(spark), PLAN_PATH / "rdd_plan.txt")
     store_plan(get_query_plan(union_forest_query(spark)), PLAN_PATH / "union_forest_plan.txt")
     store_plan(get_query_plan(union_forest_query(spark, cache=True)), PLAN_PATH / "union_forest_cache_plan.txt")

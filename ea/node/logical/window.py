@@ -2,7 +2,7 @@ import re
 
 from ea.column_dependency import ColumnDependency, DerivedColumnDependency
 from ea.node.plan_node import PlanNode
-from ea.util import ID_PATTERN, strip_outer_parentheses
+from ea.util import extract_derived_fields, findall_column_ids, strip_outer_parentheses
 
 
 class WindowNode(PlanNode):
@@ -13,21 +13,18 @@ class WindowNode(PlanNode):
 
         fields: list[str] = strip_outer_parentheses(sections[0])
 
-        derived_fields: dict[str, str] = {
-            name_part: function_part
-            for function_part, name_part in (field.rsplit(" AS ", 1) for field in fields if " AS " in field)
-        }
+        derived_fields = extract_derived_fields(fields)
 
         self.derived_fields: dict[str, list[str]] = {
-            key: [f.lower() for f in set(re.findall(ID_PATTERN, d.rsplit("windowspecdefinition")[0]))]
-            for key, d in derived_fields.items()
+            key: findall_column_ids(d.rsplit("windowspecdefinition")[0]) for key, d in derived_fields.items()
         }
         self.window_fields: dict[str, list[str]] = {
-            key: [f.lower() for f in set(re.findall(ID_PATTERN, d.rsplit("windowspecdefinition")[1]))]
-            for key, d in derived_fields.items()
+            key: findall_column_ids(d.rsplit("windowspecdefinition")[1]) for key, d in derived_fields.items()
         }
 
-        self.fields: list[str] = [field if " AS " not in field else field.rsplit(" AS ", 1)[1] for field in fields]
+        self.fields: list[str] = [
+            field.lower() if " AS " not in field else field.rsplit(" AS ", 1)[1].lower() for field in fields
+        ]
 
     def get_column_dependencies(self) -> dict[str, ColumnDependency]:
         column_dependency: dict[str, ColumnDependency] = super().get_column_dependencies()

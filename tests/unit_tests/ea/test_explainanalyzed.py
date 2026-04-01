@@ -296,6 +296,26 @@ _get_lineage_scenarios = {
             "sample_table.id -- GROUP_BY --> target.3",
         },
     ),
+    "IF aggregation_6 THEN success": (
+        "aggregation_6",
+        {
+            "sample_table.name -- COLUMN --> target.name",
+            "sample_table.age -- COLUMN --> target.1",
+            "sample_table.age -- COLUMN --> target.2",
+            "sample_table.age -- COLUMN --> target.3",
+            "sample_table.id -- COLUMN --> target.1",
+            "sample_table.id -- COLUMN --> target.2",
+            "sample_table.id -- COLUMN --> target.3",
+            "sample_table.id -- GROUP_BY --> target.name",
+            "sample_table.name -- GROUP_BY --> target.name",
+            "sample_table.name -- GROUP_BY --> target.1",
+            "sample_table.name -- GROUP_BY --> target.2",
+            "sample_table.name -- GROUP_BY --> target.3",
+            "sample_table.id -- GROUP_BY --> target.1",
+            "sample_table.id -- GROUP_BY --> target.2",
+            "sample_table.id -- GROUP_BY --> target.3",
+        },
+    ),
     "IF union_forest THEN success": (
         "union_forest",
         {

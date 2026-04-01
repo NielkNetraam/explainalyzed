@@ -1,43 +1,43 @@
 == Parsed Logical Plan ==
 'Project [*, unresolvedalias('explode('m))]
-+- Project [age#695, names#696, names_upper#702, names_upper2#704, new_name#708, map(new_name#708, age#695) AS m#709]
-   +- Project [age#695, names#696, names_upper#702, names_upper2#704, new_name#708]
-      +- Generate explode(names_upper2#704), false, [new_name#708]
-         +- Project [age#695, names#696, names_upper#702, transform(names#696, lambdafunction(CASE WHEN ((lambda y_6#706 % 2) = 0) THEN lambda x_5#705 ELSE upper(lambda x_5#705) END, lambda x_5#705, lambda y_6#706, false)) AS names_upper2#704]
-            +- Project [age#695, names#696, transform(names#696, lambdafunction(upper(lambda x_4#703), lambda x_4#703, false)) AS names_upper#702]
-               +- Aggregate [age#695], [age#695, collect_set(name#694, 0, 0) AS names#696]
-                  +- Relation [id#693,name#694,age#695] parquet
++- Project [age#726, names#727, names_upper#733, names_upper2#735, new_name#739, map(new_name#739, age#726) AS m#740]
+   +- Project [age#726, names#727, names_upper#733, names_upper2#735, new_name#739]
+      +- Generate explode(names_upper2#735), false, [new_name#739]
+         +- Project [age#726, names#727, names_upper#733, transform(names#727, lambdafunction(CASE WHEN ((lambda y_6#737 % 2) = 0) THEN lambda x_5#736 ELSE upper(lambda x_5#736) END, lambda x_5#736, lambda y_6#737, false)) AS names_upper2#735]
+            +- Project [age#726, names#727, transform(names#727, lambdafunction(upper(lambda x_4#734), lambda x_4#734, false)) AS names_upper#733]
+               +- Aggregate [age#726], [age#726, collect_set(name#725, 0, 0) AS names#727]
+                  +- Relation [id#724,name#725,age#726] parquet
 
 == Analyzed Logical Plan ==
 age: int, names: array<string>, names_upper: array<string>, names_upper2: array<string>, new_name: string, m: map<string,int>, key: string, value: int
-Project [age#695, names#696, names_upper#702, names_upper2#704, new_name#708, m#709, key#710, value#711]
-+- Generate explode(m#709), false, [key#710, value#711]
-   +- Project [age#695, names#696, names_upper#702, names_upper2#704, new_name#708, map(new_name#708, age#695) AS m#709]
-      +- Project [age#695, names#696, names_upper#702, names_upper2#704, new_name#708]
-         +- Generate explode(names_upper2#704), false, [new_name#708]
-            +- Project [age#695, names#696, names_upper#702, transform(names#696, lambdafunction(CASE WHEN ((lambda y_6#706 % 2) = 0) THEN lambda x_5#705 ELSE upper(lambda x_5#705) END, lambda x_5#705, lambda y_6#706, false)) AS names_upper2#704]
-               +- Project [age#695, names#696, transform(names#696, lambdafunction(upper(lambda x_4#703), lambda x_4#703, false)) AS names_upper#702]
-                  +- Aggregate [age#695], [age#695, collect_set(name#694, 0, 0) AS names#696]
-                     +- Relation [id#693,name#694,age#695] parquet
+Project [age#726, names#727, names_upper#733, names_upper2#735, new_name#739, m#740, key#741, value#742]
++- Generate explode(m#740), false, [key#741, value#742]
+   +- Project [age#726, names#727, names_upper#733, names_upper2#735, new_name#739, map(new_name#739, age#726) AS m#740]
+      +- Project [age#726, names#727, names_upper#733, names_upper2#735, new_name#739]
+         +- Generate explode(names_upper2#735), false, [new_name#739]
+            +- Project [age#726, names#727, names_upper#733, transform(names#727, lambdafunction(CASE WHEN ((lambda y_6#737 % 2) = 0) THEN lambda x_5#736 ELSE upper(lambda x_5#736) END, lambda x_5#736, lambda y_6#737, false)) AS names_upper2#735]
+               +- Project [age#726, names#727, transform(names#727, lambdafunction(upper(lambda x_4#734), lambda x_4#734, false)) AS names_upper#733]
+                  +- Aggregate [age#726], [age#726, collect_set(name#725, 0, 0) AS names#727]
+                     +- Relation [id#724,name#725,age#726] parquet
 
 == Optimized Logical Plan ==
-Generate explode(m#709), false, [key#710, value#711]
-+- Project [age#695, names#696, names_upper#702, names_upper2#704, new_name#708, map(new_name#708, age#695) AS m#709]
-   +- Generate explode(names_upper2#704), false, [new_name#708]
-      +- Project [age#695, names#696, transform(names#696, lambdafunction(upper(lambda x_4#703), lambda x_4#703, false)) AS names_upper#702, transform(names#696, lambdafunction(CASE WHEN ((lambda y_6#706 % 2) = 0) THEN lambda x_5#705 ELSE upper(lambda x_5#705) END, lambda x_5#705, lambda y_6#706, false)) AS names_upper2#704]
-         +- Filter (size(transform(names#696, lambdafunction(CASE WHEN ((lambda y_6#706 % 2) = 0) THEN lambda x_5#705 ELSE upper(lambda x_5#705) END, lambda x_5#705, lambda y_6#706, false)), false) > 0)
-            +- Aggregate [age#695], [age#695, collect_set(name#694, 0, 0) AS names#696]
-               +- Project [name#694, age#695]
-                  +- Relation [id#693,name#694,age#695] parquet
+Generate explode(m#740), false, [key#741, value#742]
++- Project [age#726, names#727, names_upper#733, names_upper2#735, new_name#739, map(new_name#739, age#726) AS m#740]
+   +- Generate explode(names_upper2#735), false, [new_name#739]
+      +- Project [age#726, names#727, transform(names#727, lambdafunction(upper(lambda x_4#734), lambda x_4#734, false)) AS names_upper#733, transform(names#727, lambdafunction(CASE WHEN ((lambda y_6#737 % 2) = 0) THEN lambda x_5#736 ELSE upper(lambda x_5#736) END, lambda x_5#736, lambda y_6#737, false)) AS names_upper2#735]
+         +- Filter (size(transform(names#727, lambdafunction(CASE WHEN ((lambda y_6#737 % 2) = 0) THEN lambda x_5#736 ELSE upper(lambda x_5#736) END, lambda x_5#736, lambda y_6#737, false)), false) > 0)
+            +- Aggregate [age#726], [age#726, collect_set(name#725, 0, 0) AS names#727]
+               +- Project [name#725, age#726]
+                  +- Relation [id#724,name#725,age#726] parquet
 
 == Physical Plan ==
 AdaptiveSparkPlan isFinalPlan=false
-+- Generate explode(m#709), [age#695, names#696, names_upper#702, names_upper2#704, new_name#708, m#709], false, [key#710, value#711]
-   +- Project [age#695, names#696, names_upper#702, names_upper2#704, new_name#708, map(new_name#708, age#695) AS m#709]
-      +- Generate explode(names_upper2#704), [age#695, names#696, names_upper#702, names_upper2#704], false, [new_name#708]
-         +- Project [age#695, names#696, transform(names#696, lambdafunction(upper(lambda x_4#703), lambda x_4#703, false)) AS names_upper#702, transform(names#696, lambdafunction(CASE WHEN ((lambda y_6#706 % 2) = 0) THEN lambda x_5#705 ELSE upper(lambda x_5#705) END, lambda x_5#705, lambda y_6#706, false)) AS names_upper2#704]
-            +- Filter (size(transform(names#696, lambdafunction(CASE WHEN ((lambda y_6#706 % 2) = 0) THEN lambda x_5#705 ELSE upper(lambda x_5#705) END, lambda x_5#705, lambda y_6#706, false)), false) > 0)
-               +- ObjectHashAggregate(keys=[age#695], functions=[collect_set(name#694, 0, 0)], output=[age#695, names#696])
-                  +- Exchange hashpartitioning(age#695, 200), ENSURE_REQUIREMENTS, [plan_id=1284]
-                     +- ObjectHashAggregate(keys=[age#695], functions=[partial_collect_set(name#694, 0, 0)], output=[age#695, buf#713])
-                        +- FileScan parquet [name#694,age#695] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<name:string,age:int>
++- Generate explode(m#740), [age#726, names#727, names_upper#733, names_upper2#735, new_name#739, m#740], false, [key#741, value#742]
+   +- Project [age#726, names#727, names_upper#733, names_upper2#735, new_name#739, map(new_name#739, age#726) AS m#740]
+      +- Generate explode(names_upper2#735), [age#726, names#727, names_upper#733, names_upper2#735], false, [new_name#739]
+         +- Project [age#726, names#727, transform(names#727, lambdafunction(upper(lambda x_4#734), lambda x_4#734, false)) AS names_upper#733, transform(names#727, lambdafunction(CASE WHEN ((lambda y_6#737 % 2) = 0) THEN lambda x_5#736 ELSE upper(lambda x_5#736) END, lambda x_5#736, lambda y_6#737, false)) AS names_upper2#735]
+            +- Filter (size(transform(names#727, lambdafunction(CASE WHEN ((lambda y_6#737 % 2) = 0) THEN lambda x_5#736 ELSE upper(lambda x_5#736) END, lambda x_5#736, lambda y_6#737, false)), false) > 0)
+               +- ObjectHashAggregate(keys=[age#726], functions=[collect_set(name#725, 0, 0)], output=[age#726, names#727])
+                  +- Exchange hashpartitioning(age#726, 200), ENSURE_REQUIREMENTS, [plan_id=1409]
+                     +- ObjectHashAggregate(keys=[age#726], functions=[partial_collect_set(name#725, 0, 0)], output=[age#726, buf#744])
+                        +- FileScan parquet [name#725,age#726] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<name:string,age:int>

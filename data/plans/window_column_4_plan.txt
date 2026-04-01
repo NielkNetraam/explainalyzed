@@ -1,33 +1,33 @@
 == Parsed Logical Plan ==
 'Filter '`=`('row_number, 1)
-+- Project [id#671, amount#672, sign#673, row_number#675]
-   +- Project [id#671, amount#672, sign#673, row_number#675, row_number#675]
-      +- Window [row_number() windowspecdefinition(id#671, sign#673 ASC NULLS FIRST, specifiedwindowframe(RowFrame, unboundedpreceding$(), currentrow$())) AS row_number#675], [id#671], [sign#673 ASC NULLS FIRST]
-         +- Project [id#671, amount#672, sign#673]
-            +- Relation [id#671,amount#672,sign#673] parquet
++- Project [id#702, amount#703, sign#704, row_number#706]
+   +- Project [id#702, amount#703, sign#704, row_number#706, row_number#706]
+      +- Window [row_number() windowspecdefinition(id#702, sign#704 ASC NULLS FIRST, specifiedwindowframe(RowFrame, unboundedpreceding$(), currentrow$())) AS row_number#706], [id#702], [sign#704 ASC NULLS FIRST]
+         +- Project [id#702, amount#703, sign#704]
+            +- Relation [id#702,amount#703,sign#704] parquet
 
 == Analyzed Logical Plan ==
 id: int, amount: decimal(10,2), sign: string, row_number: int
-Filter (row_number#675 = 1)
-+- Project [id#671, amount#672, sign#673, row_number#675]
-   +- Project [id#671, amount#672, sign#673, row_number#675, row_number#675]
-      +- Window [row_number() windowspecdefinition(id#671, sign#673 ASC NULLS FIRST, specifiedwindowframe(RowFrame, unboundedpreceding$(), currentrow$())) AS row_number#675], [id#671], [sign#673 ASC NULLS FIRST]
-         +- Project [id#671, amount#672, sign#673]
-            +- Relation [id#671,amount#672,sign#673] parquet
+Filter (row_number#706 = 1)
++- Project [id#702, amount#703, sign#704, row_number#706]
+   +- Project [id#702, amount#703, sign#704, row_number#706, row_number#706]
+      +- Window [row_number() windowspecdefinition(id#702, sign#704 ASC NULLS FIRST, specifiedwindowframe(RowFrame, unboundedpreceding$(), currentrow$())) AS row_number#706], [id#702], [sign#704 ASC NULLS FIRST]
+         +- Project [id#702, amount#703, sign#704]
+            +- Relation [id#702,amount#703,sign#704] parquet
 
 == Optimized Logical Plan ==
-Filter (row_number#675 = 1)
-+- Window [row_number() windowspecdefinition(id#671, sign#673 ASC NULLS FIRST, specifiedwindowframe(RowFrame, unboundedpreceding$(), currentrow$())) AS row_number#675], [id#671], [sign#673 ASC NULLS FIRST]
-   +- WindowGroupLimit [id#671], [sign#673 ASC NULLS FIRST], row_number(), 1
-      +- Relation [id#671,amount#672,sign#673] parquet
+Filter (row_number#706 = 1)
++- Window [row_number() windowspecdefinition(id#702, sign#704 ASC NULLS FIRST, specifiedwindowframe(RowFrame, unboundedpreceding$(), currentrow$())) AS row_number#706], [id#702], [sign#704 ASC NULLS FIRST]
+   +- WindowGroupLimit [id#702], [sign#704 ASC NULLS FIRST], row_number(), 1
+      +- Relation [id#702,amount#703,sign#704] parquet
 
 == Physical Plan ==
 AdaptiveSparkPlan isFinalPlan=false
-+- Filter (row_number#675 = 1)
-   +- Window [row_number() windowspecdefinition(id#671, sign#673 ASC NULLS FIRST, specifiedwindowframe(RowFrame, unboundedpreceding$(), currentrow$())) AS row_number#675], [id#671], [sign#673 ASC NULLS FIRST]
-      +- WindowGroupLimit [id#671], [sign#673 ASC NULLS FIRST], row_number(), 1, Final
-         +- Sort [id#671 ASC NULLS FIRST, sign#673 ASC NULLS FIRST], false, 0
-            +- Exchange hashpartitioning(id#671, 200), ENSURE_REQUIREMENTS, [plan_id=1230]
-               +- WindowGroupLimit [id#671], [sign#673 ASC NULLS FIRST], row_number(), 1, Partial
-                  +- Sort [id#671 ASC NULLS FIRST, sign#673 ASC NULLS FIRST], false, 0
-                     +- FileScan parquet [id#671,amount#672,sign#673] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/transaction_table], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<id:int,amount:decimal(10,2),sign:string>
++- Filter (row_number#706 = 1)
+   +- Window [row_number() windowspecdefinition(id#702, sign#704 ASC NULLS FIRST, specifiedwindowframe(RowFrame, unboundedpreceding$(), currentrow$())) AS row_number#706], [id#702], [sign#704 ASC NULLS FIRST]
+      +- WindowGroupLimit [id#702], [sign#704 ASC NULLS FIRST], row_number(), 1, Final
+         +- Sort [id#702 ASC NULLS FIRST, sign#704 ASC NULLS FIRST], false, 0
+            +- Exchange hashpartitioning(id#702, 200), ENSURE_REQUIREMENTS, [plan_id=1355]
+               +- WindowGroupLimit [id#702], [sign#704 ASC NULLS FIRST], row_number(), 1, Partial
+                  +- Sort [id#702 ASC NULLS FIRST, sign#704 ASC NULLS FIRST], false, 0
+                     +- FileScan parquet [id#702,amount#703,sign#704] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/transaction_table], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<id:int,amount:decimal(10,2),sign:string>

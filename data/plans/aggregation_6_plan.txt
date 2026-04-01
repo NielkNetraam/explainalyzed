@@ -1,0 +1,27 @@
+== Parsed Logical Plan ==
+'Pivot List('name), id#253: int, [1, 2, 3], ['sum('age)]
++- Relation [id#253,name#254,age#255] parquet
+
+== Analyzed Logical Plan ==
+name: string, 1: bigint, 2: bigint, 3: bigint
+Project [name#254, __pivot_sum(age) AS `sum(age)`#272[0] AS 1#273L, __pivot_sum(age) AS `sum(age)`#272[1] AS 2#274L, __pivot_sum(age) AS `sum(age)`#272[2] AS 3#275L]
++- Aggregate [name#254], [name#254, pivotfirst(id#253, sum(age)#264L, 1, 2, 3, 0, 0) AS __pivot_sum(age) AS `sum(age)`#272]
+   +- Aggregate [name#254, id#253], [name#254, id#253, sum(age#255) AS sum(age)#264L]
+      +- Relation [id#253,name#254,age#255] parquet
+
+== Optimized Logical Plan ==
+Project [name#254, __pivot_sum(age) AS `sum(age)`#272[0] AS 1#273L, __pivot_sum(age) AS `sum(age)`#272[1] AS 2#274L, __pivot_sum(age) AS `sum(age)`#272[2] AS 3#275L]
++- Aggregate [name#254], [name#254, pivotfirst(id#253, sum(age)#264L, 1, 2, 3, 0, 0) AS __pivot_sum(age) AS `sum(age)`#272]
+   +- Aggregate [name#254, id#253], [name#254, id#253, sum(age#255) AS sum(age)#264L]
+      +- Relation [id#253,name#254,age#255] parquet
+
+== Physical Plan ==
+AdaptiveSparkPlan isFinalPlan=false
++- Project [name#254, __pivot_sum(age) AS `sum(age)`#272[0] AS 1#273L, __pivot_sum(age) AS `sum(age)`#272[1] AS 2#274L, __pivot_sum(age) AS `sum(age)`#272[2] AS 3#275L]
+   +- HashAggregate(keys=[name#254], functions=[pivotfirst(id#253, sum(age)#264L, 1, 2, 3, 0, 0)], output=[name#254, __pivot_sum(age) AS `sum(age)`#272])
+      +- Exchange hashpartitioning(name#254, 200), ENSURE_REQUIREMENTS, [plan_id=692]
+         +- HashAggregate(keys=[name#254], functions=[partial_pivotfirst(id#253, sum(age)#264L, 1, 2, 3, 0, 0)], output=[name#254, 1#268L, 2#269L, 3#270L])
+            +- HashAggregate(keys=[name#254, id#253], functions=[sum(age#255)], output=[name#254, id#253, sum(age)#264L])
+               +- Exchange hashpartitioning(name#254, id#253, 200), ENSURE_REQUIREMENTS, [plan_id=688]
+                  +- HashAggregate(keys=[name#254, id#253], functions=[partial_sum(age#255)], output=[name#254, id#253, sum#283L])
+                     +- FileScan parquet [id#253,name#254,age#255] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<id:int,name:string,age:int>

@@ -2,7 +2,7 @@ import re
 
 from ea.column_dependency import ColumnDependency, DerivedColumnDependency
 from ea.node.plan_node import PlanNode
-from ea.util import ID_PATTERN
+from ea.util import findall_column_ids
 
 
 class GenerateNode(PlanNode):
@@ -12,8 +12,9 @@ class GenerateNode(PlanNode):
 
         sections = re.split(r", ?(?![^\[]*\])", parameters)
         last_section = len(sections) - 1
-        self.fields = [f.lower() for f in set(re.findall(ID_PATTERN, sections[last_section]))]
-        base_fields = [f.lower() for f in set(re.findall(ID_PATTERN, sections[0]))]
+
+        self.fields = findall_column_ids(sections[last_section])
+        base_fields = findall_column_ids(sections[0])
         self.derived_fields = dict.fromkeys(self.fields, base_fields)
 
     def get_column_dependencies(self) -> dict[str, ColumnDependency]:

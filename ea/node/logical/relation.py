@@ -21,12 +21,11 @@ class RelationNode(PlanNode):
         groups = matches.groups() if matches else ()
 
         fields: list[str] = groups[0].split(",") if groups[0] is not None and groups[0] != "" else []
+        fields = [field.strip() for field in fields]
         self.source_type: str = groups[1]
 
         self.fields: dict[str, ColumnDependency] = {
-            field.strip(): SourceColumnDependency(field.strip(), location=mapping[field.strip()])
-            for field in fields
-            if field.strip() in mapping
+            field.lower(): SourceColumnDependency(field.strip(), location=mapping[field]) for field in fields if field in mapping
         }
         self.table: str = next(field.table for field in self.fields.values() if field.table is not None)  # ty:ignore[unresolved-attribute]
 

@@ -2,7 +2,7 @@ import re
 
 from ea.column_dependency import ColumnDependency, DerivedColumnDependency, SourceColumnDependency
 from ea.node.plan_node import PlanNode
-from ea.util import ID_PATTERN, split_fields, strip_outer_parentheses
+from ea.util import extract_derived_fields, findall_column_ids, split_fields, strip_outer_parentheses
 
 
 class AggregateNode(PlanNode):
@@ -11,18 +11,14 @@ class AggregateNode(PlanNode):
         super().__init__(node_type, level, subset_id, parameters)
         sections = re.findall(r"\[([^\[]*)\]", parameters)
 
-        self.grouping_keys: list[str] = (
-            [] if len(sections) == 1 else [k.lower() for k in set(re.findall(ID_PATTERN, sections[0]))]
-        )
+        self.grouping_keys: list[str] = [] if len(sections) == 1 else findall_column_ids(sections[0])
 
         fields: list[str] = strip_outer_parentheses(sections[len(sections) - 1])
 
         sf = split_fields(fields)
 
-        derived_fields: dict[str, str] = {
-            name_part.lower(): function_part
-            for function_part, name_part in (field.rsplit(" AS ", 1) for field in fields if " AS " in field)
-        }
+        derived_fields: dict[str, str] = extract_derived_fields(fields)
+
         self.derived_fields: dict[str, list[str]] = {
             key: sf[key] for key, value in derived_fields.items() if not ("__literal__" in value or "__none__" in value)
         }

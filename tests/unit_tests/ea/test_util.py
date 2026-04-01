@@ -1,6 +1,6 @@
 import pytest
 
-from ea.util import get_dependencies, split_field
+from ea.util import findall_column_ids, get_dependencies, split_field
 
 get_dependencies_scenarios = {
     "simple": ("age#617", {"age#617"}),
@@ -12,6 +12,7 @@ get_dependencies_scenarios = {
     "with_lambda": ("lambda x_1#6861", set()),
     "with_lambda_full": ("transform(names#679, lambdafunction(upper(lambda x_1#686), lambda x_1#686, false) )", {"names#679"}),
     "pivot": ("pivotfirst(id#219, avg(age)#230, 1, 2, 3, 0, 0) AS __pivot_avg(age)", {"id#219", "avg(age)#230"}),
+    "agg_pivot_number": ("pivotfirst(id#253, sum(age)#264L, 1, 2, 3, 0, 0) AS __pivot_sum(age)", {"id#253", "sum(age)#264l"}),
 }
 
 
@@ -47,3 +48,16 @@ split_field_scenarios = {
 )
 def test_split_field(field: str, expected: tuple[str, set[str]]) -> None:
     assert split_field(field) == expected
+
+
+findall_column_ids_scenarios = {
+    "complex": (
+        "(size(transform(names#727, lambdafunction(CASE WHEN ((lambda y_6#737 % 2) = 0) THEN lambda x_5#736 ELSE upper(lambda x_5#736) END, lambda x_5#736, lambda y_6#737, false)), false) > 0)",
+        {"names#727"},
+    ),
+}
+
+
+@pytest.mark.parametrize(("line", "expected"), findall_column_ids_scenarios.values(), ids=findall_column_ids_scenarios.keys())
+def test_findall_column_ids(line: str, expected: set[str]) -> None:
+    assert set(findall_column_ids(line)) == expected

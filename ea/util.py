@@ -3,19 +3,18 @@ from pathlib import Path
 
 from pyspark.sql import DataFrame, SparkSession
 
-ID_PATTERN = r"(?<!lambda )\b(\w[\w\-]*\#\d*[L]?)"
-ID_PATTERN_2 = r"(?:\blambda\s+[\w#]+)|(`[^`]+`#\d+|[\w]+(?:\([^()]*\))?#\d+)"
+ID_PATTERN = r"(?:\blambda\s+[\w#]+)|(`[^`]+`#\d+|[\w]+(?:\([^()]*\))?#\d+[L]?)"
 
 
 def get_dependencies(function_part: str) -> set[str]:
-    src_fields = set(re.findall(ID_PATTERN_2, function_part))
+    src_fields = set(re.findall(ID_PATTERN, function_part))
 
     return {m.lower() for m in src_fields if m}
 
 
 def split_field(field: str) -> tuple[str, set[str]]:
     if " AS " not in field:
-        return field, {field}
+        return field.lower(), {field.lower()}
 
     name_part = field.rsplit(" AS ", 1)[1].lower()
     function_part = field.rsplit(" AS ", 1)[0]
@@ -59,7 +58,14 @@ def strip_outer_parentheses(s: str) -> list[str]:
 
 
 def findall_column_ids(line: str) -> list[str]:
-    return [cid.lower() for cid in set(re.findall(ID_PATTERN_2, line))]
+    return [cid.lower() for cid in set(re.findall(ID_PATTERN, line)) if cid]
+
+
+def extract_derived_fields(fields: list[str]) -> dict[str, str]:
+    return {
+        name_part.lower(): function_part
+        for function_part, name_part in (field.rsplit(" AS ", 1) for field in fields if " AS " in field)
+    }
 
 
 def get_active_spark_session() -> SparkSession:
