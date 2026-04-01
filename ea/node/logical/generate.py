@@ -12,8 +12,8 @@ class GenerateNode(PlanNode):
 
         sections = re.split(r", ?(?![^\[]*\])", parameters)
         last_section = len(sections) - 1
-        self.fields = list(set(re.findall(ID_PATTERN, sections[last_section])))
-        base_fields = list(set(re.findall(ID_PATTERN, sections[0])))
+        self.fields = [f.lower() for f in set(re.findall(ID_PATTERN, sections[last_section]))]
+        base_fields = [f.lower() for f in set(re.findall(ID_PATTERN, sections[0]))]
         self.derived_fields = dict.fromkeys(self.fields, base_fields)
 
     def get_column_dependencies(self) -> dict[str, ColumnDependency]:

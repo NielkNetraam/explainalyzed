@@ -94,7 +94,7 @@ def create_select_2_plan(spark: SparkSession) -> str:
     lit2 = {"range": {"start": 1, " end": 2}, "length": 2}
 
     df = spark.read.load(str(TABLE_PATH / "sample_table"))
-    df = df.select("id", "name", f.lit(lit1).alias("lit1"), f.lit(lit2.__repr__()).alias("lit2"), f.upper("name"))
+    df = df.select("id", "name", f.lit(lit1).alias("lit1"), f.lit(lit2.__repr__()).alias("lit2"), f.upper("Name"))
     return get_query_plan(df)
 
 

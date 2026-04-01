@@ -10,14 +10,14 @@ ID_PATTERN_2 = r"(?:\blambda\s+[\w#]+)|(`[^`]+`#\d+|[\w]+(?:\([^()]*\))?#\d+)"
 def get_dependencies(function_part: str) -> set[str]:
     src_fields = set(re.findall(ID_PATTERN_2, function_part))
 
-    return {m for m in src_fields if m}
+    return {m.lower() for m in src_fields if m}
 
 
 def split_field(field: str) -> tuple[str, set[str]]:
     if " AS " not in field:
         return field, {field}
 
-    name_part = field.rsplit(" AS ", 1)[1]
+    name_part = field.rsplit(" AS ", 1)[1].lower()
     function_part = field.rsplit(" AS ", 1)[0]
 
     if function_part in ("null", "NULL"):
@@ -59,7 +59,7 @@ def strip_outer_parentheses(s: str) -> list[str]:
 
 
 def findall_column_ids(line: str) -> list[str]:
-    return list(set(re.findall(ID_PATTERN_2, line)))
+    return [cid.lower() for cid in set(re.findall(ID_PATTERN_2, line))]
 
 
 def get_active_spark_session() -> SparkSession:

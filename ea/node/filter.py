@@ -11,7 +11,7 @@ class FilterNode(PlanNode):
         super().__init__(node_type, level, subset_id, parameters)
         self.condition = parameters
 
-        self.filter_fields = list(set(re.findall(ID_PATTERN, parameters)))
+        self.filter_fields = [f.lower() for f in set(re.findall(ID_PATTERN, parameters))]
 
     def get_column_dependencies(self) -> dict[str, ColumnDependency]:
         column_dependency: dict[str, ColumnDependency] = super().get_column_dependencies()

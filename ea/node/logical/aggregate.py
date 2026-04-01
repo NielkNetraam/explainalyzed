@@ -11,14 +11,16 @@ class AggregateNode(PlanNode):
         super().__init__(node_type, level, subset_id, parameters)
         sections = re.findall(r"\[([^\[]*)\]", parameters)
 
-        self.grouping_keys: list[str] = [] if len(sections) == 1 else list(set(re.findall(ID_PATTERN, sections[0])))
+        self.grouping_keys: list[str] = (
+            [] if len(sections) == 1 else [k.lower() for k in set(re.findall(ID_PATTERN, sections[0]))]
+        )
 
         fields: list[str] = strip_outer_parentheses(sections[len(sections) - 1])
 
         sf = split_fields(fields)
 
         derived_fields: dict[str, str] = {
-            name_part: function_part
+            name_part.lower(): function_part
             for function_part, name_part in (field.rsplit(" AS ", 1) for field in fields if " AS " in field)
         }
         self.derived_fields: dict[str, list[str]] = {
