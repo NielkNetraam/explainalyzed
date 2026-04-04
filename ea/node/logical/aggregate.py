@@ -23,14 +23,14 @@ class AggregateNode(PlanNode):
             key: sf[key] for key, value in derived_fields.items() if not ("__literal__" in value or "__none__" in value)
         }
 
-        self.fields = sf
+        self.fields = {gk: [gk] for gk in self.grouping_keys} | sf
 
     def get_column_dependencies(self) -> dict[str, ColumnDependency]:
         column_dependency: dict[str, ColumnDependency] = super().get_column_dependencies()
         column_dependency["__literal__"] = SourceColumnDependency("literal", ["literal"])
         column_dependency["__none__"] = SourceColumnDependency("None", ["literal"])
 
-        grouping_keys: list[ColumnDependency] = [column_dependency[field_id] for field_id in self.grouping_keys]
+        grouping_keys: dict[str, ColumnDependency] = {field_id: column_dependency[field_id] for field_id in self.grouping_keys}
         derived_fields: dict[str, list[ColumnDependency]] = {
             k: [column_dependency[f] for f in v] for k, v in self.derived_fields.items()
         }
@@ -39,7 +39,7 @@ class AggregateNode(PlanNode):
             k: DerivedColumnDependency(
                 k,
                 columns=derived_fields[k] if k in derived_fields else [column_dependency[k]],
-                grouping_keys=grouping_keys,
+                grouping_keys=list(grouping_keys.values()),
             )
             for k in self.fields
         }
