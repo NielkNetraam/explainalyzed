@@ -1,12 +1,12 @@
 == Parsed Logical Plan ==
-LogicalRDD [id#287, name#288, age#289], false
+LogicalRDD [id#1, name#2, age#3], false
 
 == Analyzed Logical Plan ==
 id: int, name: string, age: int
-LogicalRDD [id#287, name#288, age#289], false
+LogicalRDD [id#1, name#2, age#3], false
 
 == Optimized Logical Plan ==
-LogicalRDD [id#287, name#288, age#289], false
+LogicalRDD [id#1, name#2, age#3], false
 
 == Physical Plan ==
-*(1) Scan ExistingRDD[id#287,name#288,age#289]
+*(1) Scan ExistingRDD[id#1,name#2,age#3]

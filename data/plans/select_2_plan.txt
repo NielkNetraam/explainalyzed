@@ -1,17 +1,17 @@
 == Parsed Logical Plan ==
-'Project ['id, 'name, literal_string AS lit1#6, {'range': {'start': 1, ' end': 2}, 'length': 2} AS lit2#7, unresolvedalias('upper('Name))]
-+- Relation [id#3,name#4,age#5] parquet
+'Project ['id, 'name, literal_string AS lit1#4, {'range': {'start': 1, ' end': 2}, 'length': 2} AS lit2#5, unresolvedalias('upper('Name))]
++- Relation [id#1,name#2,age#3] parquet
 
 == Analyzed Logical Plan ==
 id: int, name: string, lit1: string, lit2: string, upper(Name): string
-Project [id#3, name#4, literal_string AS lit1#6, {'range': {'start': 1, ' end': 2}, 'length': 2} AS lit2#7, upper(Name#4) AS upper(Name)#8]
-+- Relation [id#3,name#4,age#5] parquet
+Project [id#1, name#2, literal_string AS lit1#4, {'range': {'start': 1, ' end': 2}, 'length': 2} AS lit2#5, upper(Name#2) AS upper(Name)#6]
++- Relation [id#1,name#2,age#3] parquet
 
 == Optimized Logical Plan ==
-Project [id#3, name#4, literal_string AS lit1#6, {'range': {'start': 1, ' end': 2}, 'length': 2} AS lit2#7, upper(Name#4) AS upper(Name)#8]
-+- Relation [id#3,name#4,age#5] parquet
+Project [id#1, name#2, literal_string AS lit1#4, {'range': {'start': 1, ' end': 2}, 'length': 2} AS lit2#5, upper(Name#2) AS upper(Name)#6]
++- Relation [id#1,name#2,age#3] parquet
 
 == Physical Plan ==
-*(1) Project [id#3, name#4, literal_string AS lit1#6, {'range': {'start': 1, ' end': 2}, 'length': 2} AS lit2#7, upper(Name#4) AS upper(Name)#8]
+*(1) Project [id#1, name#2, literal_string AS lit1#4, {'range': {'start': 1, ' end': 2}, 'length': 2} AS lit2#5, upper(Name#2) AS upper(Name)#6]
 +- *(1) ColumnarToRow
-   +- FileScan parquet [id#3,name#4] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<id:int,name:string>
+   +- FileScan parquet [id#1,name#2] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<id:int,name:string>

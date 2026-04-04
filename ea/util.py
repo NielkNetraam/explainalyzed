@@ -1,5 +1,6 @@
-import re
+from functools import partial
 from pathlib import Path
+from re import Match, findall, sub
 
 from pyspark.sql import DataFrame, SparkSession
 
@@ -7,7 +8,7 @@ ID_PATTERN = r"(?:\blambda\s+[\w#]+)|(`[^`]+`#\d+|[\w]+(?:\([^()]*\))?#\d+[L]?)"
 
 
 def get_dependencies(function_part: str) -> set[str]:
-    src_fields = set(re.findall(ID_PATTERN, function_part))
+    src_fields = set(findall(ID_PATTERN, function_part))
 
     return {m.lower() for m in src_fields if m}
 
@@ -58,7 +59,7 @@ def strip_outer_parentheses(s: str) -> list[str]:
 
 
 def findall_column_ids(line: str) -> list[str]:
-    return [cid.lower() for cid in set(re.findall(ID_PATTERN, line)) if cid]
+    return [cid.lower() for cid in set(findall(ID_PATTERN, line)) if cid]
 
 
 def extract_derived_fields(fields: list[str]) -> dict[str, str]:
@@ -79,7 +80,16 @@ def get_active_spark_session() -> SparkSession:
     return spark
 
 
-def store_plan(plan: str, path: Path) -> None:
+def store_plan(plan: str, path: Path, *, reset_ids: bool = False) -> None:
+    def subtract(match: Match[str], subtract: int) -> str:
+        return str(int(match.group(0)) - subtract)
+
+    if reset_ids:
+        matches = findall(r"#(\d*)", plan)
+        smallest_id = min(int(m) for m in matches)
+
+        plan = sub(r"(?<=#)\d+", partial(subtract, subtract=smallest_id - 1), plan)
+
     with path.open("w") as file:
         file.write(plan)
 

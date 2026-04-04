@@ -141,11 +141,28 @@ def create_derive_plan(spark: SparkSession) -> str:
     return get_query_plan(df)
 
 
-def create_union_plan(spark: SparkSession) -> str:
+def union_query(spark: SparkSession) -> DataFrame:
     df1 = spark.read.load(str(TABLE_PATH / "sample_table"))
     df2 = spark.read.load(str(TABLE_PATH / "sample_table_2"))
-    df = df1.unionByName(df2, allowMissingColumns=True).select("name", "age", "birth_date")
-    return get_query_plan(df)
+    return df1.unionByName(df2, allowMissingColumns=True).select("name", "age", "birth_date")
+
+
+def union_aggregate_query(spark: SparkSession) -> DataFrame:
+    df1 = spark.read.load(str(TABLE_PATH / "sample_table")).withColumn("year", f.lit("new")).select("name", "age", "year")
+    df2 = (
+        spark.read.load(str(TABLE_PATH / "sample_table_2"))
+        .withColumn("year", f.year("birth_date").cast(StringType()))
+        .withColumn("age", f.year(f.current_date()) - f.year("birth_date"))
+    )
+    df3 = (
+        spark.read.load(str(TABLE_PATH / "sample_table_2"))
+        .withColumn("year", f.year("birth_date").cast(StringType()))
+        .withColumn("age", f.year(f.current_date()) - f.year("birth_date"))
+        .groupBy("name", "year")
+        .agg(f.max("age").alias("age"))
+    )
+    df = df1.unionByName(df2, allowMissingColumns=True).unionByName(df3, allowMissingColumns=True)
+    return df.select("name", "age", "year")
 
 
 def create_join_how_plan(spark: SparkSession, how: str) -> str:
@@ -205,8 +222,7 @@ def explode_query(spark: SparkSession) -> DataFrame:
     df = transform_query(spark)
     df = df.withColumn("new_name", f.explode("names_upper2"))
     df = df.withColumn("m", f.create_map("new_name", "age"))
-    df = df.select("*", f.explode("m"))
-    return df
+    return df.select("*", f.explode("m"))
 
 
 def create_aggregation_1_plan(spark: SparkSession) -> str:
@@ -387,34 +403,39 @@ def create_plans_and_store(spark: SparkSession) -> None:
     clean_data_directory(PLAN_PATH)
     PLAN_PATH.mkdir(parents=True, exist_ok=True)
 
-    store_plan(create_select_1_plan(spark), PLAN_PATH / "select_1_plan.txt")
-    store_plan(create_select_2_plan(spark), PLAN_PATH / "select_2_plan.txt")
-    store_plan(get_query_plan(select_re_query(spark)), PLAN_PATH / "select_re_plan.txt")
-    store_plan(create_filter_plan(spark), PLAN_PATH / "filter_plan.txt")
-    store_plan(create_filter_not_in_output_plan(spark), PLAN_PATH / "filter_not_in_output_plan.txt")
-    store_plan(create_derive_plan(spark), PLAN_PATH / "derive_plan.txt")
-    store_plan(create_union_plan(spark), PLAN_PATH / "union_plan.txt")
-    store_plan(create_join_how_plan(spark, "inner"), PLAN_PATH / "join_inner_plan.txt")
-    store_plan(create_join_how_plan(spark, "left"), PLAN_PATH / "join_left_plan.txt")
-    store_plan(create_join_how_plan(spark, "right"), PLAN_PATH / "join_right_plan.txt")
-    store_plan(get_query_plan(join_cross_query(spark, broadcast=False)), PLAN_PATH / "join_cross_plan.txt")
-    store_plan(get_query_plan(join_cross_query(spark, broadcast=True)), PLAN_PATH / "join_cross_broadcast_plan.txt")
-    store_plan(get_query_plan(join_2_query(spark)), PLAN_PATH / "join_2_plan.txt")
-    store_plan(get_query_plan(join_2_query(spark, broadcast=True)), PLAN_PATH / "join_2_broadcast_plan.txt")
-    store_plan(create_aggregation_1_plan(spark), PLAN_PATH / "aggregation_1_plan.txt")
-    store_plan(create_aggregation_2_plan(spark), PLAN_PATH / "aggregation_2_plan.txt")
-    store_plan(create_aggregation_3_plan(spark), PLAN_PATH / "aggregation_3_plan.txt")
-    store_plan(get_query_plan(aggregation_4_query(spark)), PLAN_PATH / "aggregation_4_plan.txt")
-    store_plan(get_query_plan(aggregation_5_query(spark)), PLAN_PATH / "aggregation_5_plan.txt")
-    store_plan(get_query_plan(aggregation_6_query(spark)), PLAN_PATH / "aggregation_6_plan.txt")
-    store_plan(create_rdd_plan(spark), PLAN_PATH / "rdd_plan.txt")
-    store_plan(get_query_plan(union_forest_query(spark)), PLAN_PATH / "union_forest_plan.txt")
-    store_plan(get_query_plan(union_forest_query(spark, cache=True)), PLAN_PATH / "union_forest_cache_plan.txt")
-    store_plan(get_query_plan(window_column_query(spark)), PLAN_PATH / "window_column_plan.txt")
-    store_plan(get_query_plan(window_column_2_query(spark)), PLAN_PATH / "window_column_2_plan.txt")
-    store_plan(get_query_plan(window_column_3_query(spark)), PLAN_PATH / "window_column_3_plan.txt")
-    store_plan(get_query_plan(window_column_4_query(spark)), PLAN_PATH / "window_column_4_plan.txt")
-    store_plan(get_query_plan(transform_query(spark)), PLAN_PATH / "transform_plan.txt")
-    store_plan(get_query_plan(explode_query(spark)), PLAN_PATH / "explode_plan.txt")
+    store_plan(create_select_1_plan(spark), PLAN_PATH / "select_1_plan.txt", reset_ids=True)
+    store_plan(create_select_2_plan(spark), PLAN_PATH / "select_2_plan.txt", reset_ids=True)
+    store_plan(get_query_plan(select_re_query(spark)), PLAN_PATH / "select_re_plan.txt", reset_ids=True)
+    store_plan(create_filter_plan(spark), PLAN_PATH / "filter_plan.txt", reset_ids=True)
+    store_plan(create_filter_not_in_output_plan(spark), PLAN_PATH / "filter_not_in_output_plan.txt", reset_ids=True)
+    store_plan(create_derive_plan(spark), PLAN_PATH / "derive_plan.txt", reset_ids=True)
+    store_plan(get_query_plan(union_query(spark)), PLAN_PATH / "union_plan.txt", reset_ids=True)
+    store_plan(get_query_plan(union_aggregate_query(spark)), PLAN_PATH / "union_aggregate_plan.txt", reset_ids=True)
+    store_plan(create_join_how_plan(spark, "inner"), PLAN_PATH / "join_inner_plan.txt", reset_ids=True)
+    store_plan(create_join_how_plan(spark, "left"), PLAN_PATH / "join_left_plan.txt", reset_ids=True)
+    store_plan(create_join_how_plan(spark, "right"), PLAN_PATH / "join_right_plan.txt", reset_ids=True)
+    store_plan(get_query_plan(join_cross_query(spark, broadcast=False)), PLAN_PATH / "join_cross_plan.txt", reset_ids=True)
+    store_plan(
+        get_query_plan(join_cross_query(spark, broadcast=True)),
+        PLAN_PATH / "join_cross_broadcast_plan.txt",
+        reset_ids=True,
+    )
+    store_plan(get_query_plan(join_2_query(spark)), PLAN_PATH / "join_2_plan.txt", reset_ids=True)
+    store_plan(get_query_plan(join_2_query(spark, broadcast=True)), PLAN_PATH / "join_2_broadcast_plan.txt", reset_ids=True)
+    store_plan(create_aggregation_1_plan(spark), PLAN_PATH / "aggregation_1_plan.txt", reset_ids=True)
+    store_plan(create_aggregation_2_plan(spark), PLAN_PATH / "aggregation_2_plan.txt", reset_ids=True)
+    store_plan(create_aggregation_3_plan(spark), PLAN_PATH / "aggregation_3_plan.txt", reset_ids=True)
+    store_plan(get_query_plan(aggregation_4_query(spark)), PLAN_PATH / "aggregation_4_plan.txt", reset_ids=True)
+    store_plan(get_query_plan(aggregation_5_query(spark)), PLAN_PATH / "aggregation_5_plan.txt", reset_ids=True)
+    store_plan(get_query_plan(aggregation_6_query(spark)), PLAN_PATH / "aggregation_6_plan.txt", reset_ids=True)
+    store_plan(create_rdd_plan(spark), PLAN_PATH / "rdd_plan.txt", reset_ids=True)
+    store_plan(get_query_plan(union_forest_query(spark)), PLAN_PATH / "union_forest_plan.txt", reset_ids=True)
+    store_plan(get_query_plan(union_forest_query(spark, cache=True)), PLAN_PATH / "union_forest_cache_plan.txt", reset_ids=True)
+    store_plan(get_query_plan(window_column_query(spark)), PLAN_PATH / "window_column_plan.txt", reset_ids=True)
+    store_plan(get_query_plan(window_column_2_query(spark)), PLAN_PATH / "window_column_2_plan.txt", reset_ids=True)
+    store_plan(get_query_plan(window_column_3_query(spark)), PLAN_PATH / "window_column_3_plan.txt", reset_ids=True)
+    store_plan(get_query_plan(window_column_4_query(spark)), PLAN_PATH / "window_column_4_plan.txt", reset_ids=True)
+    store_plan(get_query_plan(transform_query(spark)), PLAN_PATH / "transform_plan.txt", reset_ids=True)
+    store_plan(get_query_plan(explode_query(spark)), PLAN_PATH / "explode_plan.txt", reset_ids=True)
 
-    store_plan(get_query_plan(select_1_from_json_plan(spark)), PLAN_PATH / "select_1_from_json_plan.txt")
+    store_plan(get_query_plan(select_1_from_json_plan(spark)), PLAN_PATH / "select_1_from_json_plan.txt", reset_ids=True)

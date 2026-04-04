@@ -7,9 +7,9 @@ flowchart TD
     classDef AGGREGATE stroke:Brown,fill:Chocolate,color:black
     classDef WINDOW stroke:Aqua,fill:Cyan,color:black
 
-    Project#00001["Project: [name#25]"]:::PROJECT
-    Filter#00002["Filter: (isnotnull(id#24) AND (id#24 > 1))"]:::FILTER
-    Relation#00003["sample_table: [id#24, name#25, age#26] parquet"]:::RELATION
+    Project#00001["Project: [name#2]"]:::PROJECT
+    Filter#00002["Filter: (isnotnull(id#1) AND (id#1 > 1))"]:::FILTER
+    Relation#00003["sample_table: [id#1, name#2, age#3] parquet"]:::RELATION
 
     Project#00001 --> Filter#00002
         Filter#00002 --> Relation#00003

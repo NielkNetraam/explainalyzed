@@ -7,13 +7,13 @@ flowchart TD
     classDef AGGREGATE stroke:Brown,fill:Chocolate,color:black
     classDef WINDOW stroke:Aqua,fill:Cyan,color:black
 
-    Project#00001["Project: [id#680, amount#681, sign#682, max_amount_por#684, max_amount_or#686, max_amount_po#688, count_amount_por#690L, count_amount_or#692L, count_amount_po#694L, count_por#696L, count_or#698L, count_po#700L]"]:::PROJECT
-    Window#00002["Window: [count(amount#681) windowspecdefinition(id#680, specifiedwindowframe(RowFrame, 1, unboundedfollowing$())) AS count_amount_por#690L, count(amount#681) windowspecdefinition(id#680, specifiedwindowframe(RowFrame, unboundedpreceding$(), unboundedfollowing$())) AS count_amount_po#694L, count(1) windowspecdefinition(id#680, specifiedwindowframe(RowFrame, 1, unboundedfollowing$())) AS count_por#696L, count(1) windowspecdefinition(id#680, specifiedwindowframe(RowFrame, unboundedpreceding$(), unboundedfollowing$())) AS count_po#700L], [id#680]"]:::WINDOW
-    Project#00003["Project: [id#680, amount#681, sign#682, max_amount_por#684, max_amount_or#686, max_amount_po#688, count_amount_or#692L, count_or#698L]"]:::PROJECT
-    Window#00004["Window: [max(amount#681) windowspecdefinition(id#680, sign#682 ASC NULLS FIRST, specifiedwindowframe(RowFrame, 1, unboundedfollowing$())) AS max_amount_por#684, max(amount#681) windowspecdefinition(id#680, sign#682 ASC NULLS FIRST, specifiedwindowframe(RangeFrame, unboundedpreceding$(), currentrow$())) AS max_amount_po#688], [id#680], [sign#682 ASC NULLS FIRST]"]:::WINDOW
-    Window#00005["Window: [count(amount#681) windowspecdefinition(specifiedwindowframe(RowFrame, 1, unboundedfollowing$())) AS count_amount_or#692L, count(1) windowspecdefinition(specifiedwindowframe(RowFrame, 1, unboundedfollowing$())) AS count_or#698L]"]:::WINDOW
-    Window#00006["Window: [max(amount#681) windowspecdefinition(sign#682 ASC NULLS FIRST, specifiedwindowframe(RowFrame, 1, unboundedfollowing$())) AS max_amount_or#686], [sign#682 ASC NULLS FIRST]"]:::WINDOW
-    Relation#00007["transaction_table: [id#680, amount#681, sign#682] parquet"]:::RELATION
+    Project#00001["Project: [id#1, amount#2, sign#3, max_amount_por#5, max_amount_or#7, max_amount_po#9, count_amount_por#11L, count_amount_or#13L, count_amount_po#15L, count_por#17L, count_or#19L, count_po#21L]"]:::PROJECT
+    Window#00002["Window: [count(amount#2) windowspecdefinition(id#1, specifiedwindowframe(RowFrame, 1, unboundedfollowing$())) AS count_amount_por#11L, count(amount#2) windowspecdefinition(id#1, specifiedwindowframe(RowFrame, unboundedpreceding$(), unboundedfollowing$())) AS count_amount_po#15L, count(1) windowspecdefinition(id#1, specifiedwindowframe(RowFrame, 1, unboundedfollowing$())) AS count_por#17L, count(1) windowspecdefinition(id#1, specifiedwindowframe(RowFrame, unboundedpreceding$(), unboundedfollowing$())) AS count_po#21L], [id#1]"]:::WINDOW
+    Project#00003["Project: [id#1, amount#2, sign#3, max_amount_por#5, max_amount_or#7, max_amount_po#9, count_amount_or#13L, count_or#19L]"]:::PROJECT
+    Window#00004["Window: [max(amount#2) windowspecdefinition(id#1, sign#3 ASC NULLS FIRST, specifiedwindowframe(RowFrame, 1, unboundedfollowing$())) AS max_amount_por#5, max(amount#2) windowspecdefinition(id#1, sign#3 ASC NULLS FIRST, specifiedwindowframe(RangeFrame, unboundedpreceding$(), currentrow$())) AS max_amount_po#9], [id#1], [sign#3 ASC NULLS FIRST]"]:::WINDOW
+    Window#00005["Window: [count(amount#2) windowspecdefinition(specifiedwindowframe(RowFrame, 1, unboundedfollowing$())) AS count_amount_or#13L, count(1) windowspecdefinition(specifiedwindowframe(RowFrame, 1, unboundedfollowing$())) AS count_or#19L]"]:::WINDOW
+    Window#00006["Window: [max(amount#2) windowspecdefinition(sign#3 ASC NULLS FIRST, specifiedwindowframe(RowFrame, 1, unboundedfollowing$())) AS max_amount_or#7], [sign#3 ASC NULLS FIRST]"]:::WINDOW
+    Relation#00007["transaction_table: [id#1, amount#2, sign#3] parquet"]:::RELATION
 
     Project#00001 --> Window#00002
         Window#00002 --> Project#00003

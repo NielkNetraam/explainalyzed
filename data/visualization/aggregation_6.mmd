@@ -7,10 +7,10 @@ flowchart TD
     classDef AGGREGATE stroke:Brown,fill:Chocolate,color:black
     classDef WINDOW stroke:Aqua,fill:Cyan,color:black
 
-    Project#00001["Project: [name#254, __pivot_sum(age) AS `sum(age)`#272[0] AS 1#273L, __pivot_sum(age) AS `sum(age)`#272[1] AS 2#274L, __pivot_sum(age) AS `sum(age)`#272[2] AS 3#275L]"]:::PROJECT
-    Aggregate#00002["Aggregate: [name#254], [name#254, pivotfirst(id#253, sum(age)#264L, 1, 2, 3, 0, 0) AS __pivot_sum(age) AS `sum(age)`#272]"]:::AGGREGATE
-    Aggregate#00003["Aggregate: [name#254, id#253], [name#254, id#253, sum(age#255) AS sum(age)#264L]"]:::AGGREGATE
-    Relation#00004["sample_table: [id#253, name#254, age#255] parquet"]:::RELATION
+    Project#00001["Project: [name#2, __pivot_sum(age) AS `sum(age)`#20[0] AS 1#21L, __pivot_sum(age) AS `sum(age)`#20[1] AS 2#22L, __pivot_sum(age) AS `sum(age)`#20[2] AS 3#23L]"]:::PROJECT
+    Aggregate#00002["Aggregate: [name#2], [name#2, pivotfirst(id#1, sum(age)#12L, 1, 2, 3, 0, 0) AS __pivot_sum(age) AS `sum(age)`#20]"]:::AGGREGATE
+    Aggregate#00003["Aggregate: [name#2, id#1], [name#2, id#1, sum(age#3) AS sum(age)#12L]"]:::AGGREGATE
+    Relation#00004["sample_table: [id#1, name#2, age#3] parquet"]:::RELATION
 
     Project#00001 --> Aggregate#00002
         Aggregate#00002 --> Aggregate#00003

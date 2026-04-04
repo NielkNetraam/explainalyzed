@@ -1,0 +1,57 @@
+== Parsed Logical Plan ==
+'Project ['name, 'age, 'year]
++- Union false, false
+   :- Project [name#2, age#3, year#5, null AS id#25, null AS birth_date#26]
+   :  +- Project [name#2, age#3, year#5]
+   :     +- Project [id#1, name#2, age#3, new AS year#5]
+   :        +- Relation [id#1,name#2,age#3] parquet
+   :- Project [name#7, age#11, year#10, id#6, birth_date#8]
+   :  +- Project [id#6, name#7, birth_date#8, year#10, (year(current_date(Some(Europe/Amsterdam))) - year(birth_date#8)) AS age#11]
+   :     +- Project [id#6, name#7, birth_date#8, cast(year(birth_date#8) as string) AS year#10]
+   :        +- Relation [id#6,name#7,birth_date#8] parquet
+   +- Project [name#13, age#18, year#16, null AS id#27, null AS birth_date#28]
+      +- Aggregate [name#13, year#16], [name#13, year#16, max(age#17) AS age#18]
+         +- Project [id#12, name#13, birth_date#14, year#16, (year(current_date(Some(Europe/Amsterdam))) - year(birth_date#14)) AS age#17]
+            +- Project [id#12, name#13, birth_date#14, cast(year(birth_date#14) as string) AS year#16]
+               +- Relation [id#12,name#13,birth_date#14] parquet
+
+== Analyzed Logical Plan ==
+name: string, age: int, year: string
+Project [name#2, age#3, year#5]
++- Union false, false
+   :- Project [name#2, age#3, year#5, null AS id#25, null AS birth_date#26]
+   :  +- Project [name#2, age#3, year#5]
+   :     +- Project [id#1, name#2, age#3, new AS year#5]
+   :        +- Relation [id#1,name#2,age#3] parquet
+   :- Project [name#7, age#11, year#10, id#6, birth_date#8]
+   :  +- Project [id#6, name#7, birth_date#8, year#10, (year(current_date(Some(Europe/Amsterdam))) - year(birth_date#8)) AS age#11]
+   :     +- Project [id#6, name#7, birth_date#8, cast(year(birth_date#8) as string) AS year#10]
+   :        +- Relation [id#6,name#7,birth_date#8] parquet
+   +- Project [name#13, age#18, year#16, null AS id#27, null AS birth_date#28]
+      +- Aggregate [name#13, year#16], [name#13, year#16, max(age#17) AS age#18]
+         +- Project [id#12, name#13, birth_date#14, year#16, (year(current_date(Some(Europe/Amsterdam))) - year(birth_date#14)) AS age#17]
+            +- Project [id#12, name#13, birth_date#14, cast(year(birth_date#14) as string) AS year#16]
+               +- Relation [id#12,name#13,birth_date#14] parquet
+
+== Optimized Logical Plan ==
+Union false, false
+:- Project [name#2, age#3, new AS year#5]
+:  +- Relation [id#1,name#2,age#3] parquet
+:- Project [name#7, (2026 - year(birth_date#8)) AS age#11, cast(year(birth_date#8) as string) AS year#10]
+:  +- Relation [id#6,name#7,birth_date#8] parquet
++- Aggregate [name#13, year#16], [name#13, max(age#17) AS age#18, year#16]
+   +- Project [name#13, cast(year(birth_date#14) as string) AS year#16, (2026 - year(birth_date#14)) AS age#17]
+      +- Relation [id#12,name#13,birth_date#14] parquet
+
+== Physical Plan ==
+AdaptiveSparkPlan isFinalPlan=false
++- Union
+   :- Project [name#2, age#3, new AS year#5]
+   :  +- FileScan parquet [name#2,age#3] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<name:string,age:int>
+   :- Project [name#7, (2026 - year(birth_date#8)) AS age#11, cast(year(birth_date#8) as string) AS year#10]
+   :  +- FileScan parquet [name#7,birth_date#8] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table_2], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<name:string,birth_date:date>
+   +- HashAggregate(keys=[name#13, year#16], functions=[max(age#17)], output=[name#13, age#18, year#16])
+      +- Exchange hashpartitioning(name#13, year#16, 200), ENSURE_REQUIREMENTS, [plan_id=132]
+         +- HashAggregate(keys=[name#13, year#16], functions=[partial_max(age#17)], output=[name#13, year#16, max#30])
+            +- Project [name#13, cast(year(birth_date#14) as string) AS year#16, (2026 - year(birth_date#14)) AS age#17]
+               +- FileScan parquet [name#13,birth_date#14] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table_2], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<name:string,birth_date:date>

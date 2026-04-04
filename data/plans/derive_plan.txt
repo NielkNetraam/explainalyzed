@@ -1,35 +1,35 @@
 == Parsed Logical Plan ==
 'Project [unresolvedstarwithcolumnsrenames(name, original_name)]
-+- Project [id#28, name#29, age#32, name_upper#33, id_str#34, id_and_name#35, literal#36, none_value#37, conditional_value#38, struct(name, name#29, age, age#32) AS name_age#39]
-   +- Project [id#28, name#29, age#32, name_upper#33, id_str#34, id_and_name#35, literal#36, none_value#37, CASE WHEN (id#28 > 10) THEN name#29 WHEN (id#28 < 0) THEN upper(name#29) ELSE Unknown END AS conditional_value#38]
-      +- Project [id#28, name#29, age#32, name_upper#33, id_str#34, id_and_name#35, literal#36, cast(null as string) AS none_value#37]
-         +- Project [id#28, name#29, age#32, name_upper#33, id_str#34, id_and_name#35, constant_value AS literal#36]
-            +- Project [id#28, name#29, age#32, name_upper#33, id_str#34, concat_ws(~, cast(id#28 as string), name#29) AS id_and_name#35]
-               +- Project [id#28, name#29, age#32, name_upper#33, cast(id#28 as string) AS id_str#34]
-                  +- Project [id#28, name#29, age#32, upper(name#29) AS name_upper#33]
-                     +- Project [id#28, name#29, (age#30 + 1) AS age#32]
-                        +- Relation [id#28,name#29,age#30] parquet
++- Project [id#1, name#2, age#5, name_upper#6, id_str#7, id_and_name#8, literal#9, none_value#10, conditional_value#11, struct(name, name#2, age, age#5) AS name_age#12]
+   +- Project [id#1, name#2, age#5, name_upper#6, id_str#7, id_and_name#8, literal#9, none_value#10, CASE WHEN (id#1 > 10) THEN name#2 WHEN (id#1 < 0) THEN upper(name#2) ELSE Unknown END AS conditional_value#11]
+      +- Project [id#1, name#2, age#5, name_upper#6, id_str#7, id_and_name#8, literal#9, cast(null as string) AS none_value#10]
+         +- Project [id#1, name#2, age#5, name_upper#6, id_str#7, id_and_name#8, constant_value AS literal#9]
+            +- Project [id#1, name#2, age#5, name_upper#6, id_str#7, concat_ws(~, cast(id#1 as string), name#2) AS id_and_name#8]
+               +- Project [id#1, name#2, age#5, name_upper#6, cast(id#1 as string) AS id_str#7]
+                  +- Project [id#1, name#2, age#5, upper(name#2) AS name_upper#6]
+                     +- Project [id#1, name#2, (age#3 + 1) AS age#5]
+                        +- Relation [id#1,name#2,age#3] parquet
 
 == Analyzed Logical Plan ==
 id: int, original_name: string, age: int, name_upper: string, id_str: string, id_and_name: string, literal: string, none_value: string, conditional_value: string, name_age: struct<name:string,age:int>
-Project [id#28, name#29 AS original_name#40, age#32, name_upper#33, id_str#34, id_and_name#35, literal#36, none_value#37, conditional_value#38, name_age#39]
-+- Project [id#28, name#29, age#32, name_upper#33, id_str#34, id_and_name#35, literal#36, none_value#37, conditional_value#38, struct(name, name#29, age, age#32) AS name_age#39]
-   +- Project [id#28, name#29, age#32, name_upper#33, id_str#34, id_and_name#35, literal#36, none_value#37, CASE WHEN (id#28 > 10) THEN name#29 WHEN (id#28 < 0) THEN upper(name#29) ELSE Unknown END AS conditional_value#38]
-      +- Project [id#28, name#29, age#32, name_upper#33, id_str#34, id_and_name#35, literal#36, cast(null as string) AS none_value#37]
-         +- Project [id#28, name#29, age#32, name_upper#33, id_str#34, id_and_name#35, constant_value AS literal#36]
-            +- Project [id#28, name#29, age#32, name_upper#33, id_str#34, concat_ws(~, cast(id#28 as string), name#29) AS id_and_name#35]
-               +- Project [id#28, name#29, age#32, name_upper#33, cast(id#28 as string) AS id_str#34]
-                  +- Project [id#28, name#29, age#32, upper(name#29) AS name_upper#33]
-                     +- Project [id#28, name#29, (age#30 + 1) AS age#32]
-                        +- Relation [id#28,name#29,age#30] parquet
+Project [id#1, name#2 AS original_name#13, age#5, name_upper#6, id_str#7, id_and_name#8, literal#9, none_value#10, conditional_value#11, name_age#12]
++- Project [id#1, name#2, age#5, name_upper#6, id_str#7, id_and_name#8, literal#9, none_value#10, conditional_value#11, struct(name, name#2, age, age#5) AS name_age#12]
+   +- Project [id#1, name#2, age#5, name_upper#6, id_str#7, id_and_name#8, literal#9, none_value#10, CASE WHEN (id#1 > 10) THEN name#2 WHEN (id#1 < 0) THEN upper(name#2) ELSE Unknown END AS conditional_value#11]
+      +- Project [id#1, name#2, age#5, name_upper#6, id_str#7, id_and_name#8, literal#9, cast(null as string) AS none_value#10]
+         +- Project [id#1, name#2, age#5, name_upper#6, id_str#7, id_and_name#8, constant_value AS literal#9]
+            +- Project [id#1, name#2, age#5, name_upper#6, id_str#7, concat_ws(~, cast(id#1 as string), name#2) AS id_and_name#8]
+               +- Project [id#1, name#2, age#5, name_upper#6, cast(id#1 as string) AS id_str#7]
+                  +- Project [id#1, name#2, age#5, upper(name#2) AS name_upper#6]
+                     +- Project [id#1, name#2, (age#3 + 1) AS age#5]
+                        +- Relation [id#1,name#2,age#3] parquet
 
 == Optimized Logical Plan ==
-Project [id#28, name#29 AS original_name#40, age#32, name_upper#33, id_str#34, id_and_name#35, constant_value AS literal#36, null AS none_value#37, conditional_value#38, struct(name, name#29, age, age#32) AS name_age#39]
-+- Project [id#28, name#29, (age#30 + 1) AS age#32, upper(name#29) AS name_upper#33, cast(id#28 as string) AS id_str#34, concat_ws(~, cast(id#28 as string), name#29) AS id_and_name#35, CASE WHEN (id#28 > 10) THEN name#29 WHEN (id#28 < 0) THEN upper(name#29) ELSE Unknown END AS conditional_value#38]
-   +- Relation [id#28,name#29,age#30] parquet
+Project [id#1, name#2 AS original_name#13, age#5, name_upper#6, id_str#7, id_and_name#8, constant_value AS literal#9, null AS none_value#10, conditional_value#11, struct(name, name#2, age, age#5) AS name_age#12]
++- Project [id#1, name#2, (age#3 + 1) AS age#5, upper(name#2) AS name_upper#6, cast(id#1 as string) AS id_str#7, concat_ws(~, cast(id#1 as string), name#2) AS id_and_name#8, CASE WHEN (id#1 > 10) THEN name#2 WHEN (id#1 < 0) THEN upper(name#2) ELSE Unknown END AS conditional_value#11]
+   +- Relation [id#1,name#2,age#3] parquet
 
 == Physical Plan ==
-*(1) Project [id#28, name#29 AS original_name#40, age#32, name_upper#33, id_str#34, id_and_name#35, constant_value AS literal#36, null AS none_value#37, conditional_value#38, struct(name, name#29, age, age#32) AS name_age#39]
-+- *(1) Project [id#28, name#29, (age#30 + 1) AS age#32, upper(name#29) AS name_upper#33, cast(id#28 as string) AS id_str#34, concat_ws(~, cast(id#28 as string), name#29) AS id_and_name#35, CASE WHEN (id#28 > 10) THEN name#29 WHEN (id#28 < 0) THEN upper(name#29) ELSE Unknown END AS conditional_value#38]
+*(1) Project [id#1, name#2 AS original_name#13, age#5, name_upper#6, id_str#7, id_and_name#8, constant_value AS literal#9, null AS none_value#10, conditional_value#11, struct(name, name#2, age, age#5) AS name_age#12]
++- *(1) Project [id#1, name#2, (age#3 + 1) AS age#5, upper(name#2) AS name_upper#6, cast(id#1 as string) AS id_str#7, concat_ws(~, cast(id#1 as string), name#2) AS id_and_name#8, CASE WHEN (id#1 > 10) THEN name#2 WHEN (id#1 < 0) THEN upper(name#2) ELSE Unknown END AS conditional_value#11]
    +- *(1) ColumnarToRow
-      +- FileScan parquet [id#28,name#29,age#30] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<id:int,name:string,age:int>
+      +- FileScan parquet [id#1,name#2,age#3] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<id:int,name:string,age:int>

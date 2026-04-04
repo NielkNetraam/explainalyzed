@@ -8,9 +8,9 @@ flowchart TD
     classDef WINDOW stroke:Aqua,fill:Cyan,color:black
 
     Join#00001["Join: Cross"]:::JOIN
-    Project#00002["Project: [name#79]"]:::PROJECT
-    Relation#00003["sample_table: [id#78, name#79, age#80] parquet"]:::RELATION
-    Relation#00004["transaction_table: [id#81, amount#82, sign#83] parquet"]:::RELATION
+    Project#00002["Project: [name#2]"]:::PROJECT
+    Relation#00003["sample_table: [id#1, name#2, age#3] parquet"]:::RELATION
+    Relation#00004["transaction_table: [id#4, amount#5, sign#6] parquet"]:::RELATION
 
     Join#00001 --> Project#00002
         Project#00002 --> Relation#00003

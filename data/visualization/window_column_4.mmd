@@ -7,10 +7,10 @@ flowchart TD
     classDef AGGREGATE stroke:Brown,fill:Chocolate,color:black
     classDef WINDOW stroke:Aqua,fill:Cyan,color:black
 
-    Filter#00001["Filter: (row_number#706 = 1)"]:::FILTER
-    Window#00002["Window: [row_number() windowspecdefinition(id#702, sign#704 ASC NULLS FIRST, specifiedwindowframe(RowFrame, unboundedpreceding$(), currentrow$())) AS row_number#706], [id#702], [sign#704 ASC NULLS FIRST]"]:::WINDOW
-    WindowGroupLimit#00003["WindowGroupLimit: [id#702], [sign#704 ASC NULLS FIRST], row_number(), 1"]:::WINDOWGROUPLIMIT
-    Relation#00004["transaction_table: [id#702, amount#703, sign#704] parquet"]:::RELATION
+    Filter#00001["Filter: (row_number#5 = 1)"]:::FILTER
+    Window#00002["Window: [row_number() windowspecdefinition(id#1, sign#3 ASC NULLS FIRST, specifiedwindowframe(RowFrame, unboundedpreceding$(), currentrow$())) AS row_number#5], [id#1], [sign#3 ASC NULLS FIRST]"]:::WINDOW
+    WindowGroupLimit#00003["WindowGroupLimit: [id#1], [sign#3 ASC NULLS FIRST], row_number(), 1"]:::WINDOWGROUPLIMIT
+    Relation#00004["transaction_table: [id#1, amount#2, sign#3] parquet"]:::RELATION
 
     Filter#00001 --> Window#00002
         Window#00002 --> WindowGroupLimit#00003

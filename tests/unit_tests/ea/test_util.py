@@ -13,7 +13,14 @@ get_dependencies_scenarios = {
     "with_lambda_full": ("transform(names#679, lambdafunction(upper(lambda x_1#686), lambda x_1#686, false) )", {"names#679"}),
     "pivot": ("pivotfirst(id#219, avg(age)#230, 1, 2, 3, 0, 0) AS __pivot_avg(age)", {"id#219", "avg(age)#230"}),
     "agg_pivot_number": ("pivotfirst(id#253, sum(age)#264L, 1, 2, 3, 0, 0) AS __pivot_sum(age)", {"id#253", "sum(age)#264l"}),
+    "case": ("CASE WHEN (category#401483 = 2) THEN count#401484 ELSE 0 END", {"category#401483", "count#401484"}),
+    "case_with_function": (
+        "CASE WHEN (category#401483 = 2) THEN cast((cast(count#401484 as double) * map(keys: [0.01,0.02,0.05], "
+        "values: [0.01,0.02,0.05])[cast(value#401485 as string)]) as decimal(18,2)) ELSE 0.00 END",
+        {"category#401483", "count#401484", "value#401485"},
+    ),
 }
+# [beb_key#401482, count#401484, value#401485, new AS year#406299, CASE WHEN (category#401483 = 2) THEN count#401484 ELSE 0 END AS counterfeit_count#406506, CASE WHEN (category#401483 = 2) THEN cast((cast(count#401484 as double) * map(keys: [0.01,0.02,0.05,0.10,0.20,0.50,1.00,2.00,5.00,10.00,20.00,50.00,100.00,200.00,500.00], values: [0.01,0.02,0.05,0.1,0.2,0.5,1.0,2.0,5.0,10.0,20.0,50.0,100.0,200.0,500.0])[cast(value#401485 as string)]) as decimal(18,2)) ELSE 0.00 END AS counterfeit_value#406513]
 
 
 @pytest.mark.parametrize(
@@ -38,6 +45,19 @@ split_field_scenarios = {
     ),
     "null": ("null AS age#617", ("age#617", {"__none__"})),
     "literal": ("1 AS age#617", ("age#617", {"__literal__"})),
+    "literal_str": ("new AS age#617", ("age#617", {"__literal__"})),
+    "case": (
+        "CASE WHEN (category#401483 = 2) THEN count#401484 ELSE 0 END AS counterfeit_count#406506",
+        ("counterfeit_count#406506", {"category#401483", "count#401484"}),
+    ),
+    "case_with_function": (
+        "CASE WHEN (category#401483 = 2) THEN cast((cast(count#401484 as double) * map(keys: [0.01,0.02,0.05], "
+        "values: [0.01,0.02,0.05])[cast(value#401485 as string)]) as decimal(18,2)) ELSE 0.00 END AS counterfeit_value#406513",
+        (
+            "counterfeit_value#406513",
+            {"category#401483", "count#401484", "value#401485"},
+        ),
+    ),
 }
 
 
@@ -52,7 +72,8 @@ def test_split_field(field: str, expected: tuple[str, set[str]]) -> None:
 
 findall_column_ids_scenarios = {
     "complex": (
-        "(size(transform(names#727, lambdafunction(CASE WHEN ((lambda y_6#737 % 2) = 0) THEN lambda x_5#736 ELSE upper(lambda x_5#736) END, lambda x_5#736, lambda y_6#737, false)), false) > 0)",
+        "(size(transform(names#727, lambdafunction(CASE WHEN ((lambda y_6#737 % 2) = 0) "
+        "THEN lambda x_5#736 ELSE upper(lambda x_5#736) END, lambda x_5#736, lambda y_6#737, false)), false) > 0)",
         {"names#727"},
     ),
 }

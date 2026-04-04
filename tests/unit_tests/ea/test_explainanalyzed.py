@@ -103,6 +103,26 @@ _get_lineage_scenarios = {
             "sample_table_2.birth_date -- COLUMN --> target.birth_date",
         },
     ),
+    "IF union_aggregate THEN success": (
+        "union_aggregate",
+        {
+            "sample_table.name -- COLUMN --> target.name",
+            "sample_table.age -- COLUMN --> target.age",
+            # "internal.None -- COLUMN --> target.birth_date",
+            "sample_table_2.name -- COLUMN --> target.name",
+            # "internal.None -- COLUMN --> target.age",
+            # "sample_table_2.birth_date -- COLUMN --> target.birth_date",
+            "internal.literal -- COLUMN --> target.year",
+            "sample_table_2.name -- GROUP_BY --> target.name",
+            "sample_table_2.birth_date -- GROUP_BY --> target.name",
+            "sample_table_2.birth_date -- GROUP_BY --> target.age",
+            "sample_table_2.birth_date -- COLUMN --> target.age",
+            "sample_table_2.birth_date -- GROUP_BY --> target.year",
+            "sample_table_2.name -- GROUP_BY --> target.year",
+            "sample_table_2.name -- GROUP_BY --> target.age",
+            "sample_table_2.birth_date -- COLUMN --> target.year",
+        },
+    ),
     "IF join_inner THEN success": (
         "join_inner",
         {

@@ -7,10 +7,10 @@ flowchart TD
     classDef AGGREGATE stroke:Brown,fill:Chocolate,color:black
     classDef WINDOW stroke:Aqua,fill:Cyan,color:black
 
-    Project#00001["Project: [age#710, names#711, transform(names#711, lambdafunction(upper(lambda x_1#718), lambda x_1#718, false)) AS names_upper#717, transform(names#711, lambdafunction(CASE WHEN ((lambda y_3#721 % 2) = 0) THEN lambda x_2#720 ELSE upper(lambda x_2#720) END, lambda x_2#720, lambda y_3#721, false)) AS names_upper2#719]"]:::PROJECT
-    Aggregate#00002["Aggregate: [age#710], [age#710, collect_set(name#709, 0, 0) AS names#711]"]:::AGGREGATE
-    Project#00003["Project: [name#709, age#710]"]:::PROJECT
-    Relation#00004["sample_table: [id#708, name#709, age#710] parquet"]:::RELATION
+    Project#00001["Project: [age#3, names#4, transform(names#4, lambdafunction(upper(lambda x_1#11), lambda x_1#11, false)) AS names_upper#10, transform(names#4, lambdafunction(CASE WHEN ((lambda y_3#14 % 2) = 0) THEN lambda x_2#13 ELSE upper(lambda x_2#13) END, lambda x_2#13, lambda y_3#14, false)) AS names_upper2#12]"]:::PROJECT
+    Aggregate#00002["Aggregate: [age#3], [age#3, collect_set(name#2, 0, 0) AS names#4]"]:::AGGREGATE
+    Project#00003["Project: [name#2, age#3]"]:::PROJECT
+    Relation#00004["sample_table: [id#1, name#2, age#3] parquet"]:::RELATION
 
     Project#00001 --> Aggregate#00002
         Aggregate#00002 --> Project#00003

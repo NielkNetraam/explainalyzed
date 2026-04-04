@@ -7,11 +7,11 @@ flowchart TD
     classDef AGGREGATE stroke:Brown,fill:Chocolate,color:black
     classDef WINDOW stroke:Aqua,fill:Cyan,color:black
 
-    Project#00001["Project: [id#60, coalesce(name#61, name#64) AS name#68, age#62, birth_date#65]"]:::PROJECT
-    Join#00002["Join: LeftOuter, (id#60 = id#63)"]:::JOIN
-    Relation#00003["sample_table: [id#60, name#61, age#62] parquet"]:::RELATION
-    Filter#00004["Filter: isnotnull(id#63)"]:::FILTER
-    Relation#00005["sample_table_2: [id#63, name#64, birth_date#65] parquet"]:::RELATION
+    Project#00001["Project: [id#1, coalesce(name#2, name#5) AS name#9, age#3, birth_date#6]"]:::PROJECT
+    Join#00002["Join: LeftOuter, (id#1 = id#4)"]:::JOIN
+    Relation#00003["sample_table: [id#1, name#2, age#3] parquet"]:::RELATION
+    Filter#00004["Filter: isnotnull(id#4)"]:::FILTER
+    Relation#00005["sample_table_2: [id#4, name#5, birth_date#6] parquet"]:::RELATION
 
     Project#00001 --> Join#00002
         Join#00002 --> Relation#00003

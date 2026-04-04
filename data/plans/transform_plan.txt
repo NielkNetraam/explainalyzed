@@ -1,26 +1,26 @@
 == Parsed Logical Plan ==
 'Project [unresolvedstarwithcolumns(names_upper2, 'transform('names, lambdafunction(CASE WHEN '`=`('`%`(lambda 'y_3, 2), 0) THEN lambda 'x_2 ELSE 'upper(lambda 'x_2) END, lambda 'x_2, lambda 'y_3, false)), None)]
-+- Project [age#710, names#711, transform(names#711, lambdafunction(upper(lambda x_1#718), lambda x_1#718, false)) AS names_upper#717]
-   +- Aggregate [age#710], [age#710, collect_set(name#709, 0, 0) AS names#711]
-      +- Relation [id#708,name#709,age#710] parquet
++- Project [age#3, names#4, transform(names#4, lambdafunction(upper(lambda x_1#11), lambda x_1#11, false)) AS names_upper#10]
+   +- Aggregate [age#3], [age#3, collect_set(name#2, 0, 0) AS names#4]
+      +- Relation [id#1,name#2,age#3] parquet
 
 == Analyzed Logical Plan ==
 age: int, names: array<string>, names_upper: array<string>, names_upper2: array<string>
-Project [age#710, names#711, names_upper#717, transform(names#711, lambdafunction(CASE WHEN ((lambda y_3#721 % 2) = 0) THEN lambda x_2#720 ELSE upper(lambda x_2#720) END, lambda x_2#720, lambda y_3#721, false)) AS names_upper2#719]
-+- Project [age#710, names#711, transform(names#711, lambdafunction(upper(lambda x_1#718), lambda x_1#718, false)) AS names_upper#717]
-   +- Aggregate [age#710], [age#710, collect_set(name#709, 0, 0) AS names#711]
-      +- Relation [id#708,name#709,age#710] parquet
+Project [age#3, names#4, names_upper#10, transform(names#4, lambdafunction(CASE WHEN ((lambda y_3#14 % 2) = 0) THEN lambda x_2#13 ELSE upper(lambda x_2#13) END, lambda x_2#13, lambda y_3#14, false)) AS names_upper2#12]
++- Project [age#3, names#4, transform(names#4, lambdafunction(upper(lambda x_1#11), lambda x_1#11, false)) AS names_upper#10]
+   +- Aggregate [age#3], [age#3, collect_set(name#2, 0, 0) AS names#4]
+      +- Relation [id#1,name#2,age#3] parquet
 
 == Optimized Logical Plan ==
-Project [age#710, names#711, transform(names#711, lambdafunction(upper(lambda x_1#718), lambda x_1#718, false)) AS names_upper#717, transform(names#711, lambdafunction(CASE WHEN ((lambda y_3#721 % 2) = 0) THEN lambda x_2#720 ELSE upper(lambda x_2#720) END, lambda x_2#720, lambda y_3#721, false)) AS names_upper2#719]
-+- Aggregate [age#710], [age#710, collect_set(name#709, 0, 0) AS names#711]
-   +- Project [name#709, age#710]
-      +- Relation [id#708,name#709,age#710] parquet
+Project [age#3, names#4, transform(names#4, lambdafunction(upper(lambda x_1#11), lambda x_1#11, false)) AS names_upper#10, transform(names#4, lambdafunction(CASE WHEN ((lambda y_3#14 % 2) = 0) THEN lambda x_2#13 ELSE upper(lambda x_2#13) END, lambda x_2#13, lambda y_3#14, false)) AS names_upper2#12]
++- Aggregate [age#3], [age#3, collect_set(name#2, 0, 0) AS names#4]
+   +- Project [name#2, age#3]
+      +- Relation [id#1,name#2,age#3] parquet
 
 == Physical Plan ==
 AdaptiveSparkPlan isFinalPlan=false
-+- Project [age#710, names#711, transform(names#711, lambdafunction(upper(lambda x_1#718), lambda x_1#718, false)) AS names_upper#717, transform(names#711, lambdafunction(CASE WHEN ((lambda y_3#721 % 2) = 0) THEN lambda x_2#720 ELSE upper(lambda x_2#720) END, lambda x_2#720, lambda y_3#721, false)) AS names_upper2#719]
-   +- ObjectHashAggregate(keys=[age#710], functions=[collect_set(name#709, 0, 0)], output=[age#710, names#711])
-      +- Exchange hashpartitioning(age#710, 200), ENSURE_REQUIREMENTS, [plan_id=1375]
-         +- ObjectHashAggregate(keys=[age#710], functions=[partial_collect_set(name#709, 0, 0)], output=[age#710, buf#723])
-            +- FileScan parquet [name#709,age#710] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<name:string,age:int>
++- Project [age#3, names#4, transform(names#4, lambdafunction(upper(lambda x_1#11), lambda x_1#11, false)) AS names_upper#10, transform(names#4, lambdafunction(CASE WHEN ((lambda y_3#14 % 2) = 0) THEN lambda x_2#13 ELSE upper(lambda x_2#13) END, lambda x_2#13, lambda y_3#14, false)) AS names_upper2#12]
+   +- ObjectHashAggregate(keys=[age#3], functions=[collect_set(name#2, 0, 0)], output=[age#3, names#4])
+      +- Exchange hashpartitioning(age#3, 200), ENSURE_REQUIREMENTS, [plan_id=1407]
+         +- ObjectHashAggregate(keys=[age#3], functions=[partial_collect_set(name#2, 0, 0)], output=[age#3, buf#16])
+            +- FileScan parquet [name#2,age#3] Batched: true, DataFilters: [], Format: Parquet, Location: InMemoryFileIndex(1 paths)[file:/Users/tisit/project/explainalyzed/data/tables/sample_table], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<name:string,age:int>
